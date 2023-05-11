@@ -1,0 +1,44 @@
+{% load shn_filters %}
+{% load i18n %}
+{% load static %}
+
+
+<div class="p-md-3" id="htmx-body">
+    <h2 class="fw-bold mb-3">{% trans 'تایید شماره موبایل' %}</h2>
+    <p class="mb-3">{% trans 'لطفا رمز یک‌بارمصرف ارسال شده به موبایل خود را وارد نمایید.' %}</p>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}"> {{ message }} </div>
+        {% endfor %}
+    {% endif %}
+    <form class="{% if form.errors %} was-validated{% endif %}" hx-post="{% url 'users:users-hx:confirm-login-htmx' %}"
+          hx-target="#htmx-body" hx-swap="outerHTML" novalidate>
+        <div class="mt-3">
+            <button type="button" class="btn btn-link btn-with-spinner" hx-get="{% url 'users:users-hx:send-otp-login-htmx' %}"
+                    hx-trigger="click" hx-swap="outerHTML" hx-target="#htmx-body">
+                <span>{% trans 'دریافت رمز یک‌بارمصرف جدید' %}</span>
+                <span class="spinner-border text-primary htmx-indicator btn-spinner"></span>
+            </button>
+        </div>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="form-outline mt-3">
+            {{ form.otp|add_class:'form-control rounded-pill' }}
+            {% for error in form.otp.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-primary rounded-pill btn-with-spinner" type="submit">
+                <span>{% trans 'تایید' %}</span>
+                <span class="spinner-border text-light htmx-indicator btn-spinner"></span>
+            </button>
+        </div>
+    </form>
+</div>

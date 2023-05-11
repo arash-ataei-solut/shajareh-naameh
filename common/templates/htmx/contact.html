@@ -1,0 +1,35 @@
+{% load shn_filters %}
+{% load i18n %}
+<form hx-post="{% url 'common:common-hx:anonymous-ticket' %}" hx-target="this" hx-swap="outerHTML" novalidate class="{% if form.errors %} was-validated{% endif %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 form-group">
+            {{ form.name|add_class:'form-control' }}
+            {% for error in form.name.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+
+        </div>
+        <div class="col-md-6 form-group mt-3 mt-md-0">
+            {{ form.email|add_class:'form-control' }}
+            {% for error in form.email.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group mt-3">
+        {{ form.category|add_class:'form-select' }}
+        {% for error in form.category.errors %}
+            <div class=" invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="form-group mt-3">
+        {{ form.description|add_class:'form-control' }}
+        {% for error in form.description.errors %}
+            <div class=" invalid-feedback d-block">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary mt-4" type="submit">{% trans 'ارسال' %}</button>
+    </div>
+</form>

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block content %}
+    <section class="vh-100 p-5" style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-center mx-auto p-3 px-md-5 shadow bg-blur-80 rounded">
+                {% block login_content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

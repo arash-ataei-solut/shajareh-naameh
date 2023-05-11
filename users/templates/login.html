@@ -1,0 +1,46 @@
+{% extends 'login_base.html' %}
+{% load shn_filters %}
+{% load i18n %}
+{% load static %}
+
+
+{% block login_content %}
+    <a href="{% url 'index' %}"><h1>{% trans 'شجره‌نامه' %}</h1></a>
+    <h2 class="fw-bold mb-3">{% trans 'ورود' %}</h2>
+    <p class="mb-3">{% trans 'لطفا اطلاعات کاربری خود را وارد نمایید.' %}</p>
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'users:login' %}" method="post" novalidate>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="form-outline mt-3">
+            {{ form.username|add_class:'form-control rounded-pill' }}
+            {% for error in form.username.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-outline mt-3">
+            {{ form.password|add_class:'form-control rounded-pill' }}
+            {% for error in form.password.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div>
+            <button class="btn btn-primary mt-3 rounded-pill" type="submit">
+                {% trans 'ورود' %}
+            </button>
+        </div>
+    </form>
+    <div>
+        <a class="btn btn-link mt-3" href="{% url 'users:register' %}">
+            {% trans 'ثبت‌نام' %}
+        </a>
+        <a class="btn btn-link mt-3" href="{% url 'users:reset-password' %}">
+            {% trans 'فراموشی رمز عبور' %}
+        </a>
+    </div>
+{% endblock %}

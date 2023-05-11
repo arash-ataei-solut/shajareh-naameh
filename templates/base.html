@@ -1,0 +1,78 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#012">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-title" content="Sea White Diamond">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>{% trans 'شجره‌نامه' %}</title>
+    <meta content="" name="description">
+    <meta content="شجره‌نامه" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'style/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'style/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'style/vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'style/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'style/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'style/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <!-- HTMX js file -->
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'style/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'style/css/shn.css' %}" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: MyResume - v4.9.2
+    * Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body dir="rtl">
+
+{% block content %}
+{% endblock %}
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+</a>
+
+{% block scripts %}
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'style/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+    <script src="{% static 'style/vendor/aos/aos.js' %}"></script>
+    <script src="{% static 'style/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'style/vendor/glightbox/js/glightbox.min.js' %}"></script>
+    <script src="{% static 'style/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'style/vendor/swiper/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'style/vendor/typed.js/typed.min.js' %}"></script>
+    <script src="{% static 'style/vendor/waypoints/noframework.waypoints.js' %}"></script>
+    <script src="{% static 'style/vendor/php-email-form/validate.js' %}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'style/js/main.js' %}"></script>
+
+{% endblock %}
+
+</body>
+
+</html>
