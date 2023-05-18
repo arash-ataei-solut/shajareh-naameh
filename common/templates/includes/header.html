@@ -1,43 +1,94 @@
 {% load i18n %}
 
-<!-- ======= Mobile nav toggle button ======= -->
-<i class="bi bi-list mobile-nav-toggle d-lg-none"></i>
-<!-- ======= Header ======= -->
-<header id="header" class="d-flex flex-column justify-content-center">
 
-    <nav id="navbar" class="navbar nav-menu">
-        <ul>
-            <li>
-                <a href="#hero" class="nav-link scrollto active">
-                    <i class="bx bx-home"></i> <span>{% trans 'خانه' %}</span>
-                </a>
-            </li>
-            <li>
-                <a href="#services" class="nav-link scrollto">
-                    <i class="bx bx-server"></i> <span>{% trans 'خدمات' %}</span>
-                </a>
-            </li>
-            <li>
-                <a href="#facts" class="nav-link scrollto">
-                    <i class='bx bx-line-chart'></i> <span>{% trans 'آمار سایت' %}</span>
-                </a>
-            </li>
-            <li>
-                <a href="#about" class="nav-link scrollto">
-                    <i class="bx bx-info-circle"></i> <span>{% trans 'درباره ما' %}</span>
-                </a>
-            </li>
-            <li>
-                <a href="#contact" class="nav-link scrollto">
-                    <i class="bx bx-envelope"></i> <span>{% trans 'تماس با ما' %}</span>
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'users:login' %}?next={{ request.path }}" class="nav-link scrollto">
-                    <i class="bx bx-log-in"></i> <span>{% trans 'ورود/ثبت‌نام' %}</span>
-                </a>
-            </li>
-        </ul>
-    </nav><!-- .nav-menu -->
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="load" hx-swap="outerHTML"
+                 hx-target="this">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-</header><!-- End Header -->
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark px-2">
+    <div class="container py-2 px-4 rounded-3 bg-dark-blur">
+        <a class="navbar-brand" href="/">{% trans 'شجره‌نامه' %}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active border-end" aria-current="page" href="{% if request.path != '/' %}/{% endif %}#hero">
+                        <i class="fa-solid fa-house"></i> <span>{% trans 'خانه' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle border-end" href="#" id="servicesDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-compass"></i> <span>{% trans 'خدمات' %}</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-tree"></i> <span>{% trans "شجره" %}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-list"></i> <span>{% trans 'لیست اشخاص' %}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'persons:add-person' %}">
+                                <i class="fa-solid fa-user-plus"></i> <span>{% trans 'ایجاد شجره جدید' %}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#facts">
+                        <i class="fa-solid fa-chart-line"></i> <span>{% trans 'آمار سایت' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#about">
+                        <i class="fa-solid fa-circle-info"></i> <span>{% trans 'درباره ما' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#contact">
+                        <i class="fa-solid fa-envelope"></i> <span>{% trans 'تماس با ما' %}</span>
+                    </a>
+                </li>
+            </ul>
+            {% if request.user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-warning dropdown-toggle" id="profileDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i> <span>{{ request.user.mobile }}</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li class="dropdown-item">
+                            <a href="">
+                                <i class="fa-solid fa-address-card"></i> <span>{% trans 'پروفایل' %}</span>
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a href="{% url 'users:logout' %}">
+                                <i class="fa-solid fa-right-from-bracket"></i> <span>{% trans 'خروج' %}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fa-solid fa-right-to-bracket"></i> <span>{% trans 'ورود/ثبت‌نام' %}</span>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</nav>

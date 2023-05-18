@@ -9,16 +9,16 @@
     background: linear-gradient(to right, rgba(2, 39, 73, 1), rgba(17, 97, 232, 1))
 }
 
-.bg-blur-80 {
+.bg-light-blur {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.bg-blur-20 {
+.bg-dark-blur {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .btn-with-spinner {
@@ -32,4 +32,16 @@
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+@media (min-width: 576px) {
+    .one-col-form-width {
+        width: 500px;
+    }
+}
+
+@media (max-width: 576px) {
+    .one-col-form-width {
+        width: 100%;
+    }
 }

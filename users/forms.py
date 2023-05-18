@@ -24,7 +24,7 @@ class RegisterForm(PlaceholderFormMixin, UserCreationForm):
         return str(self.instance.id)
 
 
-class ConfirmOTPForm(forms.Form):
+class ConfirmOTPForm(PlaceholderFormMixin, forms.Form):
     otp = forms.CharField(max_length=5, min_length=5, label=_('رمز یک‌بارمصرف'))
 
     def __init__(self, user, usage, **kwargs):

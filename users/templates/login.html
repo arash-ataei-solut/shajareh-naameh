@@ -17,14 +17,16 @@
             {% endfor %}
         </div>
         {% csrf_token %}
-        <div class="form-outline mt-3">
-            {{ form.username|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.username|add_class:'form-control' }}
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
             {% for error in form.username.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}
         </div>
-        <div class="form-outline mt-3">
-            {{ form.password|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.password|add_class:'form-control' }}
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
             {% for error in form.password.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}

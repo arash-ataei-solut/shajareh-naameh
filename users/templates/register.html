@@ -16,20 +16,23 @@
             {% endfor %}
         </div>
         {% csrf_token %}
-        <div class="form-outline mt-3">
-            {{ form.mobile|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.mobile|add_class:'form-control' }}
+            <label for="{{ form.mobile.id_for_label }}">{{ form.mobile.label }}</label>
             {% for error in form.mobile.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}
         </div>
-        <div class="form-outline mt-3">
-            {{ form.password1|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.password1|add_class:'form-control' }}
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
             {% for error in form.password1.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}
         </div>
-        <div class="form-outline mt-3">
-            {{ form.password2|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.password2|add_class:'form-control' }}
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
             {% for error in form.password2.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}

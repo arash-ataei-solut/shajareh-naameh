@@ -4,9 +4,10 @@
 
 
 {% block content %}
-    <section class="vh-100 p-5" style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
-        <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="text-center mx-auto p-3 px-md-5 shadow bg-blur-80 rounded">
+    <section class="d-flex justify-content-center align-items-center min-vh-100 py-5 px-3"
+             style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
+        <div class="one-col-form-width">
+            <div class="text-center py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                 {% block login_content %}
 
                 {% endblock %}

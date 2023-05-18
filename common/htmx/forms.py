@@ -9,7 +9,6 @@ class PlaceholderFormMixin:
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['placeholder'] = self.fields[field].label
-            self.fields[field].empty_label = self.fields[field].label
 
 
 class AnonymousTicketForm(PlaceholderFormMixin, forms.ModelForm):

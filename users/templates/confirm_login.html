@@ -22,8 +22,9 @@
             {% endfor %}
         </div>
         {% csrf_token %}
-        <div class="form-outline mt-3">
-            {{ form.otp|add_class:'form-control rounded-pill' }}
+        <div class="form-floating mt-3">
+            {{ form.otp|add_class:'form-control' }}
+            <label for="{{ form.otp.id_for_label }}">{{ form.otp.label }}</label>
             {% for error in form.otp.errors %}
                 <div class=" invalid-feedback d-block">{{ error }}</div>
             {% endfor %}
