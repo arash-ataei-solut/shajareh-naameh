@@ -1,0 +1,54 @@
+{% extends 'index_base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block index_content %}
+    <section class="d-flex justify-content-center align-items-center min-vh-100"
+             style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="px-3 py-2 mb-2 shadow bg-light-blur rounded">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <img class="img-thumbnail object-fit-contain profile-image rounded-circle"
+                                     src="{{ object.image.url }}"
+                                     alt="{% trans 'عکس پروفایل' %}" width="100">
+                            </div>
+                            <div class="col-8 d-flex align-items-center">
+
+                                {{ object.mobile }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-2 shadow bg-light-blur rounded">
+                        <a href="{% url 'users:personal-info-profile' %}">
+                            <i class="fa-solid fa-address-card"></i> {% trans 'اطلاعات شخصی' %}
+                        </a>
+                        <hr>
+                        <a href="">
+                            <i class="fa-solid fa-clipboard-check"></i> {% trans 'دسترسی ثبت/تایید شجره‌نامه' %}
+                        </a>
+                        <hr>
+                        <a href="">
+                            <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
+                        </a>
+                    </div>
+                    <div class="p-3 mb-2 text-center shadow bg-light-blur rounded">
+                        <a href="{% url 'users:logout' %}">
+                            <i class="fa-solid fa-right-from-bracket"></i> {% trans 'خروج' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="p-5 shadow bg-light-blur rounded">
+                        {% block profile_content %}
+
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

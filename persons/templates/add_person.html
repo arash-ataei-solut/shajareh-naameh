@@ -2,6 +2,16 @@
 {% load shn_filters %}
 {% load i18n %}
 
+{% block head %}
+    {{ block.super }}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    {{ form.media.js }}
+{% endblock %}
+
 {% block form_content %}
     <h2 class="fw-bold mb-3">{% trans 'ثبت فرد جدید' %}</h2>
     <p class="mb-3">{% trans 'لطفا اطلاعات شخص مورد نظر را وارد نمایید.' %}</p>

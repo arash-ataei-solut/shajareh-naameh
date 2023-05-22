@@ -1,7 +1,8 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -9,11 +10,11 @@ from django_jalali.db import models as j_models
 
 from . import enums
 from .exeptions import SendOTPError, OTPDoesNotExist, OTPExpired, OTPIsInvalid
-from .managers import AuthOTPManager
+from .managers import AuthOTPManager, ShnUserManager
 from .validators import MobileNumberValidator
 
 
-class ShnUser(AbstractUser):
+class ShnUser(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     mobile_validator = MobileNumberValidator()
     mobile = models.CharField(
@@ -25,10 +26,39 @@ class ShnUser(AbstractUser):
             'unique': _("کاربری با این شماره موبایل موجود است."),
         },
     )
-    type = models.IntegerField(
-        verbose_name=_('نوع کاربر'), choices=enums.UserTypeChoices.choices, default=enums.UserTypeChoices.NORMAL
+    national_code = models.CharField(max_length=10, verbose_name=_('کد ملی'), null=True, blank=True)
+    first_name = models.CharField(max_length=100, verbose_name=_('نام'), null=True, blank=True)
+    last_name = models.CharField(max_length=100, verbose_name=_('نام خانوادگی'), null=True, blank=True)
+    image = models.ImageField(verbose_name=_('عکس پروفایل'), default='user.png')
+
+    is_submitter = models.BooleanField(
+        verbose_name=_('کاربر ثبت کننده شجره‌نامه'), default=False,
+        help_text=_('مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به شجره‌نامه اضافه کند یا خیر.')
     )
-    image = models.ImageField(verbose_name=_('عکس'), null=True, blank=True)
+    is_approver = models.BooleanField(
+        verbose_name=_('کاربر تایید کننده شجره‌نامه'), default=False,
+        help_text=_(
+            'مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به شجره‌نامه اضافه کند و یا '
+            'اشخاص اضافه شده به شجره‌نامه توسط کاربران ثبت‌کننده را تایید کند یا خیر.'
+        )
+    )
+
+    is_staff = models.BooleanField(
+        _("staff status"),
+        default=False,
+        help_text=_('مشخص می‌کند که آیا کاربر می‌تواند وارد پنل مدیریت شود یا خیر.'),
+    )
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            'مشخص میکند که آیا کاربر به عنوان فعال در نظر گرفته می‌شود یا خیر.'
+            'به جای حذف کاربر این فیلد غیرفعال می‌شود.'
+        ),
+    )
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+
+    objects = ShnUserManager()
 
     USERNAME_FIELD = 'mobile'
 

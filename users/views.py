@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect
@@ -8,7 +9,7 @@ from django.shortcuts import get_object_or_404, resolve_url
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, DetailView
 
 from users import enums
 from users.exeptions import SendOTPError
@@ -203,3 +204,19 @@ class ConfirmResetPasswordView(FormView):
         form.save()
         self.request.session.pop(RESET_PASSWORD_USER_SESSION)
         return super(ConfirmResetPasswordView, self).form_valid(form)
+
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = ShnUser
+    template_name = 'profile/user_profile_base.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class PersonalInfoProfileView(LoginRequiredMixin, DetailView):
+    model = ShnUser
+    template_name = 'profile/personal_info_profile.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user

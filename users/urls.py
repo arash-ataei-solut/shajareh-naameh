@@ -22,4 +22,6 @@ urlpatterns = [
         name='confirm-reset-password-otp'
     ),
     path('confirm-reset-password/', users_views.ConfirmResetPasswordView.as_view(), name='confirm-reset-password'),
+    path('user-profile/', users_views.UserProfileView.as_view(), name='user-profile'),
+    path('personal-info-profile/', users_views.PersonalInfoProfileView.as_view(), name='personal-info-profile'),
 ]

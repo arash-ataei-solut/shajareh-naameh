@@ -3,5 +3,5 @@ from django.utils.translation import gettext_lazy as _
 
 
 class PlaceTypeChoices(IntegerChoices):
-    TOWN = 1, _('شهرستان')
+    TOWN = 1, _('محله')
     VILLAGE = 2, _('روستا')

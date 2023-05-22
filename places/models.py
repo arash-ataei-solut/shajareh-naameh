@@ -32,15 +32,15 @@ class City(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('نام'))
 
     class Meta:
-        verbose_name = _('شهر')
-        verbose_name_plural = _('شهرها')
+        verbose_name = _('شهرستان')
+        verbose_name_plural = _('شهرستان‌ها')
 
     def __str__(self):
         return self.name
 
 
 class Place(models.Model):
-    city = models.ForeignKey('places.City', on_delete=models.CASCADE, verbose_name=_('شهر'))
+    city = models.ForeignKey('places.City', on_delete=models.CASCADE, verbose_name=_('شهرستان'))
     type = models.IntegerField(verbose_name=_('نوع'), choices=PlaceTypeChoices.choices)
     name = models.CharField(max_length=100, verbose_name=_('نام'))
 
@@ -49,7 +49,7 @@ class Place(models.Model):
         verbose_name_plural = _('مکان‌ها')
 
     def __str__(self):
-        return self.name
+        return f'{self.city.province.country.name} - {self.city.province.name} - {self.name}'
 
 
 class ResidencePlace(models.Model):

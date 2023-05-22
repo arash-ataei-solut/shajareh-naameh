@@ -1,0 +1,25 @@
+{% extends 'profile/user_profile_base.html' %}
+{% load i18n %}
+
+
+{% block profile_content %}
+    <h4>{% trans 'اطلاعات کاربری' %}</h4>
+    <hr class="mt-0">
+    <div class="row g-3 mb-5">
+        <div class="col-md-6">
+            <span>{% trans 'نام' %}: {{ object.first_name|default_if_none:'-' }}</span>
+        </div>
+        <div class="col-md-6">
+            <span>{% trans 'نام‌خانوادگی' %}: {{ object.last_name|default_if_none:'-' }}</span>
+        </div>
+        <div class="col-md-6">
+            <span>{% trans 'موبایل' %}: {{ object.mobile|default_if_none:'-' }}</span>
+        </div>
+        <div class="col-md-6">
+            <span>{% trans 'کدملی' %}: {{ object.national_code|default_if_none:'-' }}</span>
+        </div>
+    </div>
+    <br>
+    <h4>{% trans 'اطلاعات شخصی در شجره‌نامه' %}</h4>
+    <hr class="mt-0">
+{% endblock %}
