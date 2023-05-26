@@ -4,9 +4,14 @@
 <div class="modal fade" id="loginModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="load" hx-swap="outerHTML"
-                 hx-target="this">
-                <div class="spinner-border text-primary"></div>
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="load" hx-swap="outerHTML"
+                     hx-target="this">
+                    <div class="spinner-border text-primary"></div>
+                </div>
             </div>
         </div>
     </div>

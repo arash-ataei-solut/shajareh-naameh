@@ -27,4 +27,9 @@ urlpatterns = [
         users_htmx_views.ConfirmResetPasswordHTMXView.as_view(),
         name='confirm-reset-password-htmx'
     ),
+    path(
+        'update-personal-info-profile-htmx/<uuid:pk>/',
+        users_htmx_views.PersonalInfoProfileUpdateView.as_view(),
+        name='update-personal-info-profile-htmx'
+    ),
 ]

@@ -15,11 +15,11 @@
     {% endif %}
     <form class="{% if form.errors %} was-validated{% endif %}"
           hx-post="{% url 'users:users-hx:confirm-register-htmx' %}"
-          hx-target="#htmx-body" hx-swap="outerHTML" novalidate>
+          hx-target="#loginHtmxBody" hx-swap="outerHTML" novalidate>
         <div class="mt-3">
             <button type="button" class="btn btn-link btn-with-spinner"
                     hx-get="{% url 'users:users-hx:send-otp-register-htmx' %}"
-                    hx-trigger="click" hx-swap="outerHTML" hx-target="#htmx-body">
+                    hx-trigger="click" hx-swap="outerHTML" hx-target="#loginHtmxBody">
                 <span>{% trans 'دریافت رمز یک‌بارمصرف جدید' %}</span>
                 <span class="spinner-border text-primary htmx-indicator btn-spinner"></span>
             </button>
@@ -40,7 +40,7 @@
             {% endfor %}
         </div>
         <div class="mt-3">
-            <button class="btn btn-primary rounded-pill btn-with-spinner" type="submit">
+            <button class="btn btn-primary btn-with-spinner" type="submit">
                 <span>{% trans 'تایید' %}</span>
                 <span class="spinner-border text-light htmx-indicator btn-spinner"></span>
             </button>

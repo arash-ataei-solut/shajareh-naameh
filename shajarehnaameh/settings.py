@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['192.168.1.103', '192.168.1.13', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -173,3 +174,7 @@ CACHES = {
 # SELECT2
 
 SELECT2_CACHE_BACKEND = "select2"
+
+# DAPHNE
+
+ASGI_APPLICATION = "shajarehnaameh.asgi.application"

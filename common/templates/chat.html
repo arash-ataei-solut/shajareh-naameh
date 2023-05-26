@@ -1,0 +1,17 @@
+{% extends 'form_base.html' %}
+
+
+{% block form_content %}
+    <div hx-ext="ws" ws-connect="/ws/chat/">
+        <form ws-send>
+            <input type="text" name="message">
+            <input type="submit">
+        </form>
+        <div id="notifications" hx-swap-oob="beforeend">
+            New message received
+        </div>
+        <div id="chat-log" hx-swap-oob="morphdom">
+            ....
+        </div>
+    </div>
+{% endblock %}

@@ -8,7 +8,7 @@
 
     <h2 class="fw-bold mb-3">{% trans 'ثبت‌نام' %}</h2>
     <p class="mb-3">{% trans 'لطفا اطلاعات کاربری خود را وارد نمایید.' %}</p>
-    <form hx-post="{% url 'users:users-hx:register-htmx' %}" hx-target="#htmx-body" hx-swap="outerHTML" novalidate
+    <form hx-post="{% url 'users:users-hx:register-htmx' %}" hx-target="#loginHtmxBody" hx-swap="outerHTML" novalidate
           class="{% if form.errors %} was-validated{% endif %}">
         <div>
             {% for non_field_error in form.non_field_errors %}
@@ -40,7 +40,7 @@
             {% endfor %}
         </div>
         <div class="mt-3">
-            <button class="btn btn-primary rounded-pill btn-with-spinner" type="submit">
+            <button class="btn btn-primary btn-with-spinner" type="submit">
                 <span>{% trans 'ثبت‌نام' %}</span>
                 <span class="spinner-border text-light htmx-indicator btn-spinner"></span>
             </button>
@@ -48,7 +48,7 @@
     </form>
     <div class="mt-3">
         <button type="button" class="btn btn-link btn-with-spinner" hx-get="{% url 'users:users-hx:login-htmx' %}"
-                hx-trigger="click" hx-swap="outerHTML" hx-target="#htmx-body">
+                hx-trigger="click" hx-swap="outerHTML" hx-target="#loginHtmxBody">
             <span>{% trans 'ورود' %}</span>
             <span class="spinner-border text-primary htmx-indicator btn-spinner"></span>
         </button>

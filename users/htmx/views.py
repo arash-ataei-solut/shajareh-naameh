@@ -1,7 +1,10 @@
 from django.urls import reverse_lazy
+from django.views.generic import UpdateView
 from django_htmx.http import HttpResponseClientRefresh
 
 from users import views as user_views
+from users.forms import PersonalInfoProfileUpdateForm
+from users.models import ShnUser
 
 
 class ShnLoginHTMXView(user_views.ShnLoginView):
@@ -55,3 +58,13 @@ class ConfirmResetPasswordOTPHTMXView(user_views.ConfirmResetPasswordOTPView):
 class ConfirmResetPasswordHTMXView(user_views.ConfirmResetPasswordView):
     template_name = 'htmx/confirm_reset_password_htmx.html'
     success_url = reverse_lazy('users:users-hx:login-htmx')
+
+
+class PersonalInfoProfileUpdateView(UpdateView):
+    model = ShnUser
+    form_class = PersonalInfoProfileUpdateForm
+    template_name = 'profile/htmx/update_personal_info_profile_htmx.html'
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseClientRefresh()

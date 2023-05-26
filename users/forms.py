@@ -70,3 +70,9 @@ class ConfirmResetPasswordForm(PlaceholderFormMixin, SetPasswordForm):
             raise ValidationError(_('شماره موبایل شما تایید نشده است.'))
         return super(ConfirmResetPasswordForm, self).clean()
 
+
+class PersonalInfoProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ShnUser
+        fields = ['first_name', 'last_name', 'national_code']
+
