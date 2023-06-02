@@ -15,7 +15,6 @@ from .validators import MobileNumberValidator
 
 
 class ShnUser(AbstractBaseUser, PermissionsMixin):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     mobile_validator = MobileNumberValidator()
     mobile = models.CharField(
         _('شماره موبایل'),
@@ -27,8 +26,6 @@ class ShnUser(AbstractBaseUser, PermissionsMixin):
         },
     )
     national_code = models.CharField(max_length=10, verbose_name=_('کد ملی'), null=True, blank=True)
-    first_name = models.CharField(max_length=100, verbose_name=_('نام'), null=True, blank=True)
-    last_name = models.CharField(max_length=100, verbose_name=_('نام خانوادگی'), null=True, blank=True)
     image = models.ImageField(verbose_name=_('عکس پروفایل'), default='user.png')
 
     is_submitter = models.BooleanField(
@@ -106,6 +103,9 @@ class ShnUser(AbstractBaseUser, PermissionsMixin):
         validity_period = timezone.now() - timezone.timedelta(minutes=validity_minutes)
         return self.authotp_set.filter(confirmed=True, usage=usage, created_at__gt=validity_period).exists()
 
+    def unread_notifications(self):
+        return self.notification_set.filter(read=False)
+
 
 class AuthOTP(models.Model):
     user = models.ForeignKey('users.ShnUser', on_delete=models.CASCADE, verbose_name=_('کاربر'))
@@ -135,7 +135,7 @@ class Notification(models.Model):
     user = models.ForeignKey('users.ShnUser', on_delete=models.CASCADE, verbose_name=_('کاربر'))
     title = models.CharField(max_length=40, verbose_name=_('عنوان'))
     content = models.TextField(verbose_name=_('محتوا'))
-    seen = models.BooleanField(verbose_name=_('خوانده شده'), default=False)
+    read = models.BooleanField(verbose_name=_('خوانده شده'), default=False)
     created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
 
     class Meta:

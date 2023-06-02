@@ -28,8 +28,13 @@ urlpatterns = [
         name='confirm-reset-password-htmx'
     ),
     path(
-        'update-personal-info-profile-htmx/<uuid:pk>/',
+        'update-personal-info-profile-htmx/',
         users_htmx_views.PersonalInfoProfileUpdateView.as_view(),
         name='update-personal-info-profile-htmx'
+    ),
+    path(
+        'unread-notifications-htmx/',
+        users_htmx_views.UnreadNotificationsHTMXView.as_view(),
+        name='unread-notifications-htmx'
     ),
 ]

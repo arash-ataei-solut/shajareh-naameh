@@ -1,10 +1,16 @@
+import datetime
+from time import sleep
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import StreamingHttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views import View
+from django.views.generic import UpdateView, ListView
 from django_htmx.http import HttpResponseClientRefresh
 
 from users import views as user_views
 from users.forms import PersonalInfoProfileUpdateForm
-from users.models import ShnUser
+from users.models import ShnUser, Notification
 
 
 class ShnLoginHTMXView(user_views.ShnLoginView):
@@ -60,11 +66,23 @@ class ConfirmResetPasswordHTMXView(user_views.ConfirmResetPasswordView):
     success_url = reverse_lazy('users:users-hx:login-htmx')
 
 
-class PersonalInfoProfileUpdateView(UpdateView):
+class PersonalInfoProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = ShnUser
     form_class = PersonalInfoProfileUpdateForm
     template_name = 'profile/htmx/update_personal_info_profile_htmx.html'
 
+    def get_object(self, queryset=None):
+        return self.request.user
+
     def form_valid(self, form):
         self.object = form.save()
         return HttpResponseClientRefresh()
+
+
+class UnreadNotificationsHTMXView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'htmx/unread_notifications_htmx.html'
+
+    def get_queryset(self):
+        return self.request.user.unread_notifications()[:10]
+

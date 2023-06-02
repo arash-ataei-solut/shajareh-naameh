@@ -12,7 +12,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="updatePersonalInfoModalHTMX"
-                         hx-get="{% url 'users:users-hx:update-personal-info-profile-htmx' pk=object.pk %}"
+                         hx-get="{% url 'users:users-hx:update-personal-info-profile-htmx' %}"
                          hx-trigger="shown.bs.modal from:#updatePersonalInfoModal" hx-swap="outerHTML"
                          hx-target="this">
                         <div class="d-flex align-content-center justify-content-center p-3">
@@ -37,12 +37,6 @@
     </h4>
     <hr class="mt-0">
     <div class="row g-3 mb-5">
-        <div class="col-md-6">
-            <span>{% trans 'نام' %}: {{ object.first_name|default_if_none:'-' }}</span>
-        </div>
-        <div class="col-md-6">
-            <span>{% trans 'نام‌خانوادگی' %}: {{ object.last_name|default_if_none:'-' }}</span>
-        </div>
         <div class="col-md-6">
             <span>{% trans 'موبایل' %}: {{ object.mobile|default_if_none:'-' }}</span>
         </div>

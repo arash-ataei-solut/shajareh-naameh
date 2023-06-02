@@ -74,5 +74,5 @@ class ConfirmResetPasswordForm(PlaceholderFormMixin, SetPasswordForm):
 class PersonalInfoProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = ShnUser
-        fields = ['first_name', 'last_name', 'national_code']
+        fields = ['national_code']
 

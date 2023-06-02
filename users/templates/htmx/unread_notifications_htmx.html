@@ -1,0 +1,33 @@
+{% load i18n %}
+
+
+<div class="dropdown">
+    <button class="btn text-warning" id="notificationDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        {% if request.user.unread_notifications.exists %}
+            <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                                {{ request.user.unread_notifications.count }}
+                                <span class="visually-hidden">{% trans 'اعلان‌های خوانده نشده' %}</span>
+                            </span>
+        {% endif %}
+        <i class="fa-solid fa-bell{% if request.user.unread_notifications.exists %} fa-shake{% endif %}"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-lg-start dropdown-menu-end dropdown-menu-shn" aria-labelledby="notificationDropdown">
+        {% for object in object_list %}
+            <li class="dropdown-item text-truncate">
+                {{ object.title }}
+            </li>
+        {% endfor %}
+        <li class="dropdown-item">
+            <a href="">
+                <i class="fa-solid fa-list"></i> {% trans 'لیست اعلان‌ها' %}
+                {% if request.user.unread_notifications.count|add:'-10' > 0 %}
+                {% endif %}
+                <span class="badge rounded-pill bg-danger">
+                    {{ request.user.unread_notifications.count|add:'-10' }}
+                    <span class="visually-hidden">{% trans 'اعلان‌های خوانده نشده' %}</span>
+                </span>
+            </a>
+        </li>
+    </ul>
+</div>
