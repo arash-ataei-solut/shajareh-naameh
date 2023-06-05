@@ -2,19 +2,19 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
-from django.views.generic import CreateView, FormView, DetailView
+from django.views.generic import CreateView, FormView, DetailView, ListView, TemplateView
 
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
-from users.models import ShnUser
+from users.models import ShnUser, Notification
 
 OTP_USER_SESSION = 'registered_user_id'
 RESET_PASSWORD_USER_SESSION = 'reset_password_user_id'
@@ -206,17 +206,36 @@ class ConfirmResetPasswordView(FormView):
         return super(ConfirmResetPasswordView, self).form_valid(form)
 
 
-class UserProfileView(LoginRequiredMixin, DetailView):
-    model = ShnUser
-    template_name = 'profile/user_profile_base.html'
+class UserProfileViewMixin:
 
-    def get_object(self, queryset=None):
-        return self.request.user
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileViewMixin, self).get_context_data(**kwargs)
+        context.update({'user': self.request.user})
+        return context
 
 
-class PersonalInfoProfileView(LoginRequiredMixin, DetailView):
+class PersonalInfoProfileView(LoginRequiredMixin, UserProfileViewMixin, TemplateView):
     model = ShnUser
     template_name = 'profile/personal_info_profile.html'
 
-    def get_object(self, queryset=None):
-        return self.request.user
+    def get_context_data(self, **kwargs):
+        context = super(PersonalInfoProfileView, self).get_context_data(**kwargs)
+        context.update({'person': getattr(self.request.user, 'person', None)})
+        return context
+
+
+class NotificationsListProfileView(LoginRequiredMixin, UserProfileViewMixin, ListView):
+    model = Notification
+    template_name = 'profile/notifications_list_profile.html'
+
+    def get_queryset(self):
+        return self.request.user.notification_set.all()
+
+
+class ChangePasswordView(PasswordChangeView):
+    template_name = 'profile/change_password_profile.html'
+    success_url = reverse_lazy('users:change-password-done-profile')
+
+
+class ChangePasswordDoneView(PasswordChangeDoneView):
+    template_name = 'profile/change_password_done_profile.html'

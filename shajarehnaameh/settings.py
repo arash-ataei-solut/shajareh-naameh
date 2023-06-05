@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'django_htmx',
     'django_select2',
+    'django_jalali',
 
     'common',
     'places',

@@ -25,7 +25,6 @@ class ShnUser(AbstractBaseUser, PermissionsMixin):
             'unique': _("کاربری با این شماره موبایل موجود است."),
         },
     )
-    national_code = models.CharField(max_length=10, verbose_name=_('کد ملی'), null=True, blank=True)
     image = models.ImageField(verbose_name=_('عکس پروفایل'), default='user.png')
 
     is_submitter = models.BooleanField(
@@ -134,7 +133,8 @@ class AuthOTP(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey('users.ShnUser', on_delete=models.CASCADE, verbose_name=_('کاربر'))
     title = models.CharField(max_length=40, verbose_name=_('عنوان'))
-    content = models.TextField(verbose_name=_('محتوا'))
+    description = models.TextField(verbose_name=_('محتوا'))
+    url = models.URLField(verbose_name=_('لینک'))
     read = models.BooleanField(verbose_name=_('خوانده شده'), default=False)
     created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
 

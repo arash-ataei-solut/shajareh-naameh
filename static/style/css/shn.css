@@ -51,6 +51,10 @@
     height: 85px;
 }
 
+.dropdown-menu-shn {
+    max-height: 50vh;
+}
+
 @media (min-width: 576px) {
     .dropdown-menu-shn {
         width: 400px;

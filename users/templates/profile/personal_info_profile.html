@@ -2,49 +2,19 @@
 {% load i18n %}
 
 
-{% block content %}
-    <div class="modal fade" id="updatePersonalInfoModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{% trans 'ویرایش اطلاعات کاربری' %}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="updatePersonalInfoModalHTMX"
-                         hx-get="{% url 'users:users-hx:update-personal-info-profile-htmx' %}"
-                         hx-trigger="shown.bs.modal from:#updatePersonalInfoModal" hx-swap="outerHTML"
-                         hx-target="this">
-                        <div class="d-flex align-content-center justify-content-center p-3">
-                            <span class="spinner-border text-primary"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{ block.super }}
-{% endblock %}
-
-
 {% block profile_content %}
-    <h4>
-        <span>{% trans 'اطلاعات کاربری' %} </span>
-        <a data-bs-toggle="modal" data-bs-target="#updatePersonalInfoModal">
-            <i class="fa-solid fa-pen-to-square"></i>
-        </a>
-    </h4>
+    <h4>{% trans 'اطلاعات شخصی' %}</h4>
     <hr class="mt-0">
-    <div class="row g-3 mb-5">
-        <div class="col-md-6">
-            <span>{% trans 'موبایل' %}: {{ object.mobile|default_if_none:'-' }}</span>
+    {% if person is None %}
+        <div class="alert alert-warning text-center">
+            <h1>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </h1>
+            <p>{% trans 'اطلاعات شما در شجره‌نامه ثبت نشده است.' %}</p>
+            <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در شجره‌نامه پیدا کنید.' %}</p>
+            <button class="btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass"></i> {% trans 'جستجو در شجره‌نامه' %}
+            </button>
         </div>
-        <div class="col-md-6">
-            <span>{% trans 'کدملی' %}: {{ object.national_code|default_if_none:'-' }}</span>
-        </div>
-    </div>
-    <br>
-    <h4>{% trans 'اطلاعات شخصی در شجره‌نامه' %}</h4>
-    <hr class="mt-0">
+    {% endif %}
 {% endblock %}

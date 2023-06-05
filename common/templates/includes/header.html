@@ -8,8 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="load" hx-swap="outerHTML"
-                     hx-target="this">
+                <div class="text-center" hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="show.bs.modal from:#loginModal" hx-swap="outerHTML">
                     <div class="spinner-border text-primary"></div>
                 </div>
             </div>
@@ -24,7 +23,7 @@
         </a>
         <div class="d-flex">
             {% if request.user.is_authenticated %}
-                <div hx-get="{% url 'users:users-hx:unread-notifications-htmx' %}"
+                <div hx-get="{% url 'users:users-hx:unread-notifications-icon-htmx' %}"
                      hx-trigger="load, htmx:wsAfterMessage" hx-ext="ws"
                      ws-connect="/ws/notification/">
 
@@ -35,10 +34,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-            <ul class="navbar-nav">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link active border-end" aria-current="page" href="{% if request.path != '/' %}/{% endif %}#hero">
+                    <a class="nav-link border-end" aria-current="page" href="{% if request.path != '/' %}/{% endif %}#hero">
                         <i class="fa-solid fa-house"></i> <span>{% trans 'خانه' %}</span>
                     </a>
                 </li>
@@ -76,7 +75,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#contact">
+                    <a class="nav-link" href="{% if request.path != '/' %}/{% endif %}#contact">
                         <i class="fa-solid fa-envelope"></i> <span>{% trans 'تماس با ما' %}</span>
                     </a>
                 </li>
@@ -89,7 +88,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profileDropdown">
                         <li class="dropdown-item">
-                            <a href="{% url 'users:user-profile' %}">
+                            <a href="{% url 'users:personal-info-profile' %}">
                                 <i class="fa-solid fa-address-card"></i> <span>{% trans 'پروفایل' %}</span>
                             </a>
                         </li>

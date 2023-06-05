@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from . import managers
 from .enums import GenderChoices
 from django_jalali.db import models as j_models
 
 
 class Person(models.Model):
+    user = models.OneToOneField('users.ShnUser', on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=150, verbose_name=_('اسم'))
     last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'))
     gender = models.IntegerField(verbose_name=_('جنسیت'), choices=GenderChoices.choices)
@@ -33,6 +35,8 @@ class Person(models.Model):
     )
     death_year = models.SmallIntegerField(verbose_name=_('سال وفات'), null=True, blank=True)
     death_date = j_models.jDateField(verbose_name=_('تاریخ وفات'), null=True, blank=True)
+
+    objects = managers.PersonManager()
 
     class Meta:
         verbose_name = _('شخص')

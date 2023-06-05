@@ -19,4 +19,4 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_discard(channel_name, self.channel_name)
 
     async def send_notification(self, event):
-        await self.send(text_data='')
+        await self.send(text_data='rrrr')

@@ -1,0 +1,554 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-04 10:37+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: common/models.py:7 common/models.py:19 places/models.py:8
+#: places/models.py:20 places/models.py:32 places/models.py:45
+msgid "نام"
+msgstr ""
+
+#: common/models.py:10
+msgid "دسته‌بندی تیکت"
+msgstr ""
+
+#: common/models.py:11
+msgid "دسته‌بندی‌های تیکت"
+msgstr ""
+
+#: common/models.py:18
+msgid "ایمیل"
+msgstr ""
+
+#: common/models.py:20
+msgid "دسته‌بندی"
+msgstr ""
+
+#: common/models.py:21
+msgid "شرح تیکت"
+msgstr ""
+
+#: common/models.py:22 users/models.py:114 users/models.py:140
+msgid "زمان ایجاد"
+msgstr ""
+
+#: common/models.py:23
+msgid "پاسخ تیکت"
+msgstr ""
+
+#: common/models.py:24
+msgid "زمان پاسخ"
+msgstr ""
+
+#: common/models.py:27
+msgid "تیکت"
+msgstr ""
+
+#: common/models.py:28
+msgid "تیکت‌ها"
+msgstr ""
+
+#: common/models.py:37
+msgid "پاسخ داده شده"
+msgstr ""
+
+#: common/models.py:37
+msgid "در انتظار پاسخ"
+msgstr ""
+
+#: common/models.py:39
+msgid "وضعیت پاسخ"
+msgstr ""
+
+#: common/templates/htmx/contact.html:33
+msgid "ارسال"
+msgstr ""
+
+#: common/templates/includes/header.html:23 common/templates/index.html:13
+#: templates/base.html:19 users/templates/login.html:8
+msgid "شجره‌نامه"
+msgstr ""
+
+#: common/templates/includes/header.html:42
+msgid "خانه"
+msgstr ""
+
+#: common/templates/includes/header.html:48 common/templates/index.html:29
+msgid "خدمات"
+msgstr ""
+
+#: common/templates/includes/header.html:53 common/templates/index.html:44
+msgid "شجره"
+msgstr ""
+
+#: common/templates/includes/header.html:58 common/templates/index.html:59
+msgid "لیست اشخاص"
+msgstr ""
+
+#: common/templates/includes/header.html:63 common/templates/index.html:75
+msgid "ایجاد شجره جدید"
+msgstr ""
+
+#: common/templates/includes/header.html:70 common/templates/index.html:91
+msgid "آمار سایت"
+msgstr ""
+
+#: common/templates/includes/header.html:75 common/templates/index.html:134
+msgid "درباره ما"
+msgstr ""
+
+#: common/templates/includes/header.html:80 common/templates/index.html:197
+msgid "تماس با ما"
+msgstr ""
+
+#: common/templates/includes/header.html:93
+msgid "پروفایل"
+msgstr ""
+
+#: common/templates/includes/header.html:100
+msgid "پنل مدیریت"
+msgstr ""
+
+#: common/templates/includes/header.html:106
+#: users/templates/profile/user_profile_base.html:46
+msgid "خروج"
+msgstr ""
+
+#: common/templates/includes/header.html:113
+msgid "ورود/ثبت‌نام"
+msgstr ""
+
+#: common/templates/index.html:45
+msgid "نمایش درختی تمام اشخاص ثبت شده به ترتیب از ریشه‌ها تا برگ‌ها"
+msgstr ""
+
+#: common/templates/index.html:60
+msgid "لیست تمام اشخاص ثبت شده، با قابلیت جستجو و فیلتر‌های مختلف"
+msgstr ""
+
+#: common/templates/index.html:76
+msgid "ثبت یک شخص جدید و اضافه کردن ریشه‌ها و شاخه‌ها"
+msgstr ""
+
+#: common/templates/index.html:92
+msgid "آمار اطلاعات ذخیره شده در سایت شجره‌نامه"
+msgstr ""
+
+#: persons/enums.py:6
+msgid "مرد"
+msgstr ""
+
+#: persons/enums.py:7
+msgid "زن"
+msgstr ""
+
+#: persons/models.py:9
+msgid "اسم"
+msgstr ""
+
+#: persons/models.py:10
+msgid "فامیلی"
+msgstr ""
+
+#: persons/models.py:11
+msgid "جنسیت"
+msgstr ""
+
+#: persons/models.py:15
+msgid "پدر"
+msgstr ""
+
+#: persons/models.py:20
+msgid "مادر"
+msgstr ""
+
+#: persons/models.py:24
+msgid "همسر"
+msgstr ""
+
+#: persons/models.py:26
+msgid "سال تولد"
+msgstr ""
+
+#: persons/models.py:27
+msgid "تاریخ تولد"
+msgstr ""
+
+#: persons/models.py:29
+msgid "محل تولد"
+msgstr ""
+
+#: persons/models.py:32 places/models.py:61
+msgid "محل سکونت"
+msgstr ""
+
+#: persons/models.py:34
+msgid "سال وفات"
+msgstr ""
+
+#: persons/models.py:35
+msgid "تاریخ وفات"
+msgstr ""
+
+#: persons/models.py:38
+msgid "شخص"
+msgstr ""
+
+#: persons/models.py:39
+msgid "اشخاص"
+msgstr ""
+
+#: persons/templates/add_person.html:16
+msgid "ثبت فرد جدید"
+msgstr ""
+
+#: persons/templates/add_person.html:17
+msgid "لطفا اطلاعات شخص مورد نظر را وارد نمایید."
+msgstr ""
+
+#: persons/templates/add_person.html:113
+#: users/templates/profile/htmx/update_personal_info_profile_htmx.html:27
+msgid "ذخیره"
+msgstr ""
+
+#: places/enums.py:6
+msgid "محله"
+msgstr ""
+
+#: places/enums.py:7
+msgid "روستا"
+msgstr ""
+
+#: places/models.py:11 places/models.py:19
+msgid "کشور"
+msgstr ""
+
+#: places/models.py:12
+msgid "کشورها"
+msgstr ""
+
+#: places/models.py:23 places/models.py:31
+msgid "استان"
+msgstr ""
+
+#: places/models.py:24
+msgid "استان‌ها"
+msgstr ""
+
+#: places/models.py:35 places/models.py:43
+msgid "شهرستان"
+msgstr ""
+
+#: places/models.py:36
+msgid "شهرستان‌ها"
+msgstr ""
+
+#: places/models.py:44
+msgid "نوع"
+msgstr ""
+
+#: places/models.py:48 places/models.py:56
+msgid "مکان"
+msgstr ""
+
+#: places/models.py:49
+msgid "مکان‌ها"
+msgstr ""
+
+#: places/models.py:57
+msgid "از سال"
+msgstr ""
+
+#: places/models.py:58
+msgid "تا سال"
+msgstr ""
+
+#: places/models.py:62
+msgid "محل‌های سکونت"
+msgstr ""
+
+#: shajarehnaameh/settings.py:130
+msgid "فارسی"
+msgstr ""
+
+#: shajarehnaameh/settings.py:131
+msgid "انگلیسی"
+msgstr ""
+
+#: users/enums.py:6 users/templates/htmx/login_htmx.html:45
+#: users/templates/htmx/register_htmx.html:9
+#: users/templates/htmx/register_htmx.html:44 users/templates/login.html:42
+#: users/templates/register.html:8 users/templates/register.html:42
+msgid "ثبت‌نام"
+msgstr ""
+
+#: users/enums.py:7
+msgid "فراموشی رمز‌عبور"
+msgstr ""
+
+#: users/forms.py:28 users/models.py:113 users/models.py:121
+msgid "رمز یک‌بارمصرف"
+msgstr ""
+
+#: users/forms.py:40
+msgid "لطفا یک رمز یک‌بارمصرف جدید دریافت کنید."
+msgstr ""
+
+#: users/forms.py:42
+msgid "رمز یک‌بارمصرف وارد شده صحیح نیست."
+msgstr ""
+
+#: users/forms.py:52 users/models.py:20
+msgid "شماره موبایل"
+msgstr ""
+
+#: users/forms.py:59
+msgid "شماره موبایل وارد شده در سامانه ثبت نشده‌است."
+msgstr ""
+
+#: users/forms.py:70
+msgid "شماره موبایل شما تایید نشده است."
+msgstr ""
+
+#: users/models.py:25
+msgid "کاربری با این شماره موبایل موجود است."
+msgstr ""
+
+#: users/models.py:28
+msgid "کد ملی"
+msgstr ""
+
+#: users/models.py:29 users/templates/profile/user_profile_base.html:17
+msgid "عکس پروفایل"
+msgstr ""
+
+#: users/models.py:32
+msgid "کاربر ثبت کننده شجره‌نامه"
+msgstr ""
+
+#: users/models.py:33
+msgid "مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به شجره‌نامه اضافه کند یا خیر."
+msgstr ""
+
+#: users/models.py:36
+msgid "کاربر تایید کننده شجره‌نامه"
+msgstr ""
+
+#: users/models.py:38
+msgid ""
+"مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به شجره‌نامه اضافه کند و یا "
+"اشخاص اضافه شده به شجره‌نامه توسط کاربران ثبت‌کننده را تایید کند یا خیر."
+msgstr ""
+
+#: users/models.py:44
+msgid "staff status"
+msgstr ""
+
+#: users/models.py:46
+msgid "مشخص می‌کند که آیا کاربر می‌تواند وارد پنل مدیریت شود یا خیر."
+msgstr ""
+
+#: users/models.py:49
+msgid "active"
+msgstr ""
+
+#: users/models.py:52
+msgid ""
+"مشخص میکند که آیا کاربر به عنوان فعال در نظر گرفته می‌شود یا خیر.به جای حذف "
+"کاربر این فیلد غیرفعال می‌شود."
+msgstr ""
+
+#: users/models.py:56
+msgid "date joined"
+msgstr ""
+
+#: users/models.py:63 users/models.py:111 users/models.py:135
+msgid "کاربر"
+msgstr ""
+
+#: users/models.py:64
+msgid "کاربران"
+msgstr ""
+
+#: users/models.py:112
+msgid "کاربرد"
+msgstr ""
+
+#: users/models.py:115
+msgid "تعداد تلاش"
+msgstr ""
+
+#: users/models.py:116
+msgid "تایید شده"
+msgstr ""
+
+#: users/models.py:122
+msgid "رمز‌های یک‌بارمصرف"
+msgstr ""
+
+#: users/models.py:136
+msgid "عنوان"
+msgstr ""
+
+#: users/models.py:137
+msgid "محتوا"
+msgstr ""
+
+#: users/models.py:138
+msgid "لینک"
+msgstr ""
+
+#: users/models.py:139
+msgid "خوانده شده"
+msgstr ""
+
+#: users/models.py:143
+msgid "اعلان"
+msgstr ""
+
+#: users/models.py:144
+msgid "اعلان‌ها"
+msgstr ""
+
+#: users/templates/confirm_login.html:8 users/templates/confirm_register.html:8
+#: users/templates/confirm_reset_password.html:8
+#: users/templates/confirm_reset_password_otp.html:8
+#: users/templates/htmx/confirm_login_htmx.html:9
+#: users/templates/htmx/confirm_register_htmx.html:9
+#: users/templates/htmx/confirm_reset_password_htmx.html:9
+#: users/templates/htmx/confirm_reset_password_otp_htmx.html:9
+msgid "تایید شماره موبایل"
+msgstr ""
+
+#: users/templates/confirm_login.html:9 users/templates/confirm_register.html:9
+#: users/templates/confirm_reset_password.html:9
+#: users/templates/confirm_reset_password_otp.html:9
+#: users/templates/htmx/confirm_login_htmx.html:10
+#: users/templates/htmx/confirm_register_htmx.html:10
+#: users/templates/htmx/confirm_reset_password_htmx.html:10
+#: users/templates/htmx/confirm_reset_password_otp_htmx.html:10
+msgid "لطفا رمز یک‌بارمصرف ارسال شده به موبایل خود را وارد نمایید."
+msgstr ""
+
+#: users/templates/confirm_login.html:16
+#: users/templates/confirm_register.html:16
+#: users/templates/confirm_reset_password.html:16
+#: users/templates/confirm_reset_password_otp.html:16
+#: users/templates/htmx/confirm_login_htmx.html:22
+#: users/templates/htmx/confirm_register_htmx.html:23
+#: users/templates/htmx/confirm_reset_password_htmx.html:23
+#: users/templates/htmx/confirm_reset_password_otp_htmx.html:23
+msgid "دریافت رمز یک‌بارمصرف جدید"
+msgstr ""
+
+#: users/templates/confirm_login.html:34
+#: users/templates/confirm_register.html:34
+#: users/templates/confirm_reset_password.html:41
+#: users/templates/confirm_reset_password_otp.html:34
+#: users/templates/htmx/confirm_login_htmx.html:43
+#: users/templates/htmx/confirm_register_htmx.html:44
+#: users/templates/htmx/confirm_reset_password_htmx.html:51
+#: users/templates/htmx/confirm_reset_password_otp_htmx.html:44
+#: users/templates/htmx/reset_password_htmx.html:35
+#: users/templates/reset_password.html:33
+msgid "تایید"
+msgstr ""
+
+#: users/templates/htmx/login_htmx.html:9
+#: users/templates/htmx/login_htmx.html:37
+#: users/templates/htmx/register_htmx.html:52
+#: users/templates/htmx/reset_password_htmx.html:43
+#: users/templates/login.html:9 users/templates/login.html:36
+#: users/templates/register.html:48 users/templates/reset_password.html:39
+msgid "ورود"
+msgstr ""
+
+#: users/templates/htmx/login_htmx.html:10
+#: users/templates/htmx/register_htmx.html:10 users/templates/login.html:10
+#: users/templates/register.html:9
+msgid "لطفا اطلاعات کاربری خود را وارد نمایید."
+msgstr ""
+
+#: users/templates/htmx/login_htmx.html:51
+#: users/templates/htmx/reset_password_htmx.html:9
+#: users/templates/login.html:45 users/templates/reset_password.html:8
+msgid "فراموشی رمز عبور"
+msgstr ""
+
+#: users/templates/htmx/reset_password_htmx.html:10
+#: users/templates/reset_password.html:9
+msgid "لطفا شماره موبایل خود را وارد نمایید."
+msgstr ""
+
+#: users/templates/htmx/unread_notifications_htmx.html:16
+#: users/templates/profile/notifications_list_profile.html:9
+#: users/templates/profile/user_profile_base.html:37
+msgid "لیست اعلان‌ها"
+msgstr ""
+
+#: users/templates/htmx/unread_notifications_icon_htmx.html:10
+msgid "اعلان‌های خوانده نشده"
+msgstr ""
+
+#: users/templates/profile/notifications_list_profile.html:23
+msgid "اعلانی برای شما موجو نیست."
+msgstr ""
+
+#: users/templates/profile/personal_info_profile.html:10
+msgid "ویرایش اطلاعات کاربری"
+msgstr ""
+
+#: users/templates/profile/personal_info_profile.html:33
+msgid "اطلاعات کاربری"
+msgstr ""
+
+#: users/templates/profile/personal_info_profile.html:41
+msgid "موبایل"
+msgstr ""
+
+#: users/templates/profile/personal_info_profile.html:44
+msgid "کدملی"
+msgstr ""
+
+#: users/templates/profile/personal_info_profile.html:48
+msgid "اطلاعات شخصی در شجره‌نامه"
+msgstr ""
+
+#: users/templates/profile/user_profile_base.html:29
+msgid "اطلاعات شخصی"
+msgstr ""
+
+#: users/templates/profile/user_profile_base.html:32
+msgid "دسترسی ثبت/تایید شجره‌نامه"
+msgstr ""
+
+#: users/templates/profile/user_profile_base.html:40
+msgid "تغییر گذرواژه"
+msgstr ""
+
+#: users/validators.py:10
+msgid "یک شماره موبایل معتبر وارد کنید."
+msgstr ""
+
+#: users/views.py:84
+msgid "رمز یک‌بارمصرف به موبایل شما ارسال شد."
+msgstr ""
+
+#: users/views.py:88
+msgid "ارسال رمز یک‌بارمصرف با خطا روبرو شد. لطفا لحظاتی بعد دوباره تلاش کنید."
+msgstr ""

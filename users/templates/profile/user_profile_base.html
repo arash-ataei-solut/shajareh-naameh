@@ -13,36 +13,41 @@
                         <div class="row g-2">
                             <div class="col-4">
                                 <img class="img-thumbnail object-fit-contain profile-image rounded-circle"
-                                     src="{{ object.image.url }}"
+                                     src="{{ user.image.url }}"
                                      alt="{% trans 'عکس پروفایل' %}" width="100">
                             </div>
                             <div class="col-8 d-flex align-items-center">
 
-                                {{ object.mobile }}
+                                {{ user.mobile }}
                             </div>
                         </div>
                     </div>
-                    <div class="p-3 mb-2 shadow bg-light-blur rounded">
-                        <a href="{% url 'users:personal-info-profile' %}">
+                    <div class="list-group list-group-flush p-3 mb-2 bg-light-blur shadow rounded">
+                        {% url 'users:personal-info-profile' as personal_info_url %}
+                        <a class="list-group-item list-group-item-action{% if request.path == personal_info_url %} active{% endif %}"
+                           href="{{ personal_info_url }}">
                             <i class="fa-solid fa-address-card"></i> {% trans 'اطلاعات شخصی' %}
                         </a>
-                        <hr>
-                        <a href="">
-                            <i class="fa-solid fa-user-check"></i> {% trans 'دسترسی ثبت/تایید شجره‌نامه' %}
+                        {% url 'users:notifications-list-profile' as notifications_list_url %}
+                        <a class="list-group-item list-group-item-action{% if request.path == notifications_list_url %} active{% endif %}"
+                           href="{{ notifications_list_url }}">
+                            <i class="fa-solid fa-bell"></i> {% trans 'لیست اعلان‌ها' %}
                         </a>
-                        <hr>
-                        <a href="">
+                        {% url 'users:change-password-profile' as change_profile_url %}
+                        <a class="list-group-item list-group-item-action{% if request.path == change_profile_url %} active{% endif %}"
+                           href="{{ change_profile_url }}">
                             <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
                         </a>
                     </div>
-                    <div class="p-3 mb-2 text-center shadow bg-light-blur rounded">
-                        <a href="{% url 'users:logout' %}">
+                    <div class="list-group list-group-flush p-3 bg-light-blur shadow rounded">
+                        <a class="list-group-item list-group-item-action text-center"
+                           href="{% url 'users:logout' %}">
                             <i class="fa-solid fa-right-from-bracket"></i> {% trans 'خروج' %}
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="p-5 shadow bg-light-blur rounded">
+                    <div class="p-lg-5 p-sm-4 p-3 shadow bg-light-blur rounded">
                         {% block profile_content %}
 
                         {% endblock %}

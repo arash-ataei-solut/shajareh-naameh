@@ -1,0 +1,21 @@
+{% load i18n %}
+
+
+<div class="dropdown">
+    <button class="btn text-warning" id="notificationDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        {% if object_list_count > 0 %}
+            <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                <span>{{ object_list_count }}</span>
+                <span class="visually-hidden">{% trans 'اعلان‌های خوانده نشده' %}</span>
+            </span>
+        {% endif %}
+        <i class="fa-solid fa-bell{% if object_list_count > 0 %} fa-shake{% endif %}"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-lg-start dropdown-menu-end dropdown-menu-shn overflow-auto"
+        aria-labelledby="notificationDropdown"
+        hx-get="{% url 'users:users-hx:unread-notifications-htmx' %}"
+        hx-trigger="show.bs.dropdown from:#notificationDropdown"
+    >
+    </ul>
+</div>

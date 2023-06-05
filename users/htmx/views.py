@@ -1,16 +1,11 @@
-import datetime
-from time import sleep
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import StreamingHttpResponse
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import UpdateView, ListView
+from django.views.generic import ListView, FormView
 from django_htmx.http import HttpResponseClientRefresh
 
 from users import views as user_views
-from users.forms import PersonalInfoProfileUpdateForm
-from users.models import ShnUser, Notification
+from users.htmx.forms import FindMyselfForm
+from users.models import Notification
 
 
 class ShnLoginHTMXView(user_views.ShnLoginView):
@@ -66,17 +61,14 @@ class ConfirmResetPasswordHTMXView(user_views.ConfirmResetPasswordView):
     success_url = reverse_lazy('users:users-hx:login-htmx')
 
 
-class PersonalInfoProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = ShnUser
-    form_class = PersonalInfoProfileUpdateForm
-    template_name = 'profile/htmx/update_personal_info_profile_htmx.html'
+class UnreadNotificationsIconHTMXView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'htmx/unread_notifications_icon_htmx.html'
 
-    def get_object(self, queryset=None):
-        return self.request.user
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return HttpResponseClientRefresh()
+    def get_queryset(self):
+        queryset = self.request.user.unread_notifications()
+        self.extra_context = {'object_list_count': queryset.count()}
+        return queryset
 
 
 class UnreadNotificationsHTMXView(LoginRequiredMixin, ListView):
@@ -84,5 +76,19 @@ class UnreadNotificationsHTMXView(LoginRequiredMixin, ListView):
     template_name = 'htmx/unread_notifications_htmx.html'
 
     def get_queryset(self):
-        return self.request.user.unread_notifications()[:10]
+        pk_list = list(self.request.user.unread_notifications().values_list('pk', flat=True))
+        queryset = Notification.objects.filter(pk__in=pk_list)
+        queryset.update(read=True)
+        self.extra_context = {'object_list_count': queryset.count()}
+        return queryset
 
+
+class FindMyselfView(LoginRequiredMixin, FormView):
+    form_class = FindMyselfForm
+    template_name = 'profile/htmx/find_myself_htmx.html'
+    
+    def form_valid(self, form):
+        my_person_qs = form.find_me()
+        if my_person_qs:
+            return super(FindMyselfView, self).form_valid(form)
+        return super(FindMyselfView, self).form_valid(form)
