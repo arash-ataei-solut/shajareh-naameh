@@ -9,8 +9,9 @@ from django.shortcuts import get_object_or_404, resolve_url
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
-from django.views.generic import CreateView, FormView, DetailView, ListView, TemplateView
+from django.views.generic import CreateView, FormView, ListView, TemplateView
 
+from common.mixins import HTMXViewMixin
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
@@ -20,9 +21,10 @@ OTP_USER_SESSION = 'registered_user_id'
 RESET_PASSWORD_USER_SESSION = 'reset_password_user_id'
 
 
-class ShnLoginView(LoginView):
+class ShnLoginView(HTMXViewMixin, LoginView):
     form_class = LoginForm
-    template_name = 'login.html'
+    template_name = 'registration/login.html'
+    htmx_template_name = 'registration/htmx/login_htmx.html'
     send_otp_url = reverse_lazy('users:send-otp-login')
     redirect_authenticated_user = True
 
@@ -42,10 +44,11 @@ class ShnLoginView(LoginView):
         return self.success_response()
 
 
-class RegisterView(CreateView):
+class RegisterView(HTMXViewMixin, CreateView):
     model = ShnUser
     form_class = RegisterForm
-    template_name = 'register.html'
+    template_name = 'registration/register.html'
+    htmx_template_name = 'registration/htmx/register_htmx.html'
     success_url = reverse_lazy('users:send-otp-register')
 
     def form_valid(self, form):
@@ -206,17 +209,10 @@ class ConfirmResetPasswordView(FormView):
         return super(ConfirmResetPasswordView, self).form_valid(form)
 
 
-class UserProfileViewMixin:
-
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileViewMixin, self).get_context_data(**kwargs)
-        context.update({'user': self.request.user})
-        return context
-
-
-class PersonalInfoProfileView(LoginRequiredMixin, UserProfileViewMixin, TemplateView):
+class PersonalInfoProfileView(LoginRequiredMixin, HTMXViewMixin, TemplateView):
     model = ShnUser
     template_name = 'profile/personal_info_profile.html'
+    htmx_template_name = 'profile/htmx/person_info_profile_htmx.html'
 
     def get_context_data(self, **kwargs):
         context = super(PersonalInfoProfileView, self).get_context_data(**kwargs)
@@ -224,18 +220,21 @@ class PersonalInfoProfileView(LoginRequiredMixin, UserProfileViewMixin, Template
         return context
 
 
-class NotificationsListProfileView(LoginRequiredMixin, UserProfileViewMixin, ListView):
+class NotificationsListProfileView(LoginRequiredMixin, HTMXViewMixin, ListView):
     model = Notification
     template_name = 'profile/notifications_list_profile.html'
+    htmx_template_name = 'profile/htmx/notifications_list_profile_htmx.html'
 
     def get_queryset(self):
         return self.request.user.notification_set.all()
 
 
-class ChangePasswordView(PasswordChangeView):
+class ChangePasswordView(HTMXViewMixin, PasswordChangeView):
     template_name = 'profile/change_password_profile.html'
     success_url = reverse_lazy('users:change-password-done-profile')
+    htmx_template_name = 'profile/htmx/change_password_profile_htmx.html'
 
 
-class ChangePasswordDoneView(PasswordChangeDoneView):
+class ChangePasswordDoneView(HTMXViewMixin, PasswordChangeDoneView):
     template_name = 'profile/change_password_done_profile.html'
+    htmx_template_name = 'profile/htmx/change_password_done_profile_htmx.html'

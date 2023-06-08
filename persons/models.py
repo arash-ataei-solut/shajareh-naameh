@@ -14,12 +14,14 @@ class Person(models.Model):
     father = models.ForeignKey(
         'self', on_delete=models.PROTECT,
         related_name='father_children',
-        verbose_name=_('پدر')
+        verbose_name=_('پدر'),
+        null=True, blank=True
     )
     mother = models.ForeignKey(
         'self', on_delete=models.PROTECT,
         related_name='mother_children',
-        verbose_name=_('مادر')
+        verbose_name=_('مادر'),
+        null=True, blank=True
     )
     spouse = models.ManyToManyField(
         'self',

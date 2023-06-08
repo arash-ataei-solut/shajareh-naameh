@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="list-group list-group-flush p-3 mb-2 bg-light-blur shadow rounded">
+                    <div class="list-group list-group-flush p-3 mb-2 bg-light-blur shadow rounded" hx-boost="true" hx-target="#profileContent">
                         {% url 'users:personal-info-profile' as personal_info_url %}
                         <a class="list-group-item list-group-item-action{% if request.path == personal_info_url %} active{% endif %}"
                            href="{{ personal_info_url }}">
@@ -47,7 +47,8 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="p-lg-5 p-sm-4 p-3 shadow bg-light-blur rounded">
+                    <div id="profileContent" class="p-lg-5 p-sm-4 p-3 shadow bg-light-blur rounded" hx-boost="true"
+                         hx-target="this">
                         {% block profile_content %}
 
                         {% endblock %}

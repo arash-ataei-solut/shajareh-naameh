@@ -1,0 +1,9 @@
+{% extends 'registration/login_base.html' %}
+{% load shn_filters %}
+{% load i18n %}
+{% load static %}
+
+
+{% block login_content %}
+    {% include 'registration/htmx/login_htmx.html' %}
+{% endblock %}

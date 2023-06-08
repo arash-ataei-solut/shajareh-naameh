@@ -1,11 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, TemplateView
 from django_htmx.http import HttpResponseClientRefresh
 
 from users import views as user_views
-from users.htmx.forms import FindMyselfForm
-from users.models import Notification
+from users.models import Notification, ShnUser
 
 
 class ShnLoginHTMXView(user_views.ShnLoginView):
@@ -83,12 +83,28 @@ class UnreadNotificationsHTMXView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class FindMyselfView(LoginRequiredMixin, FormView):
-    form_class = FindMyselfForm
-    template_name = 'profile/htmx/find_myself_htmx.html'
-    
-    def form_valid(self, form):
-        my_person_qs = form.find_me()
-        if my_person_qs:
-            return super(FindMyselfView, self).form_valid(form)
-        return super(FindMyselfView, self).form_valid(form)
+class PersonalInfoProfileHTMXView(LoginRequiredMixin, TemplateView):
+    model = ShnUser
+    template_name = 'profile/personal_info_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonalInfoProfileHTMXView, self).get_context_data(**kwargs)
+        context.update({'person': getattr(self.request.user, 'person', None)})
+        return context
+
+
+class NotificationsListProfileHTMXView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'profile/notifications_list_profile.html'
+
+    def get_queryset(self):
+        return self.request.user.notification_set.all()
+
+
+class ChangePasswordHTMXView(PasswordChangeView):
+    template_name = 'profile/change_password_profile.html'
+    success_url = reverse_lazy('users:change-password-done-profile')
+
+
+class ChangePasswordDoneHTMXView(PasswordChangeDoneView):
+    template_name = 'profile/change_password_done_profile.html'

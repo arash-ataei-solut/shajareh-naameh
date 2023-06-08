@@ -37,4 +37,14 @@ urlpatterns = [
         users_htmx_views.UnreadNotificationsIconHTMXView.as_view(),
         name='unread-notifications-icon-htmx'
     ),
+    path(
+        'change-password-profile-htmx/',
+        users_htmx_views.ChangePasswordHTMXView.as_view(),
+        name='change-password-profile-htmx'
+    ),
+    path(
+        'change-password-done-profile-htmx/',
+        users_htmx_views.ChangePasswordDoneHTMXView.as_view(),
+        name='change-password-done-profile-htmx'
+    )
 ]

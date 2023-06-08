@@ -3,18 +3,5 @@
 
 
 {% block profile_content %}
-    <h4>{% trans 'اطلاعات شخصی' %}</h4>
-    <hr class="mt-0">
-    {% if person is None %}
-        <div class="alert alert-warning text-center">
-            <h1>
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </h1>
-            <p>{% trans 'اطلاعات شما در شجره‌نامه ثبت نشده است.' %}</p>
-            <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در شجره‌نامه پیدا کنید.' %}</p>
-            <button class="btn btn-primary">
-                <i class="fa-solid fa-magnifying-glass"></i> {% trans 'جستجو در شجره‌نامه' %}
-            </button>
-        </div>
-    {% endif %}
+    {% include 'profile/htmx/person_info_profile_htmx.html' %}
 {% endblock %}
