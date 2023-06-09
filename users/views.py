@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView
+from django_htmx.http import HttpResponseClientRefresh
 
 from common.mixins import HTMXViewMixin
 from users import enums
@@ -29,6 +30,8 @@ class ShnLoginView(HTMXViewMixin, LoginView):
     redirect_authenticated_user = True
 
     def success_response(self):
+        if self.request.htmx:
+            return HttpResponseClientRefresh()
         return HttpResponseRedirect(self.get_success_url())
 
     def confirm_required_response(self):
@@ -130,9 +133,10 @@ class ConfirmOTOViewMixin:
         return super(ConfirmOTOViewMixin, self).form_valid(form)
 
 
-class ConfirmRegisterOTPView(ConfirmOTOViewMixin, FormView):
+class ConfirmRegisterOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
-    template_name = 'confirm_register.html'
+    template_name = 'registration/confirm_register.html'
+    htmx_template_name = 'registration/htmx/confirm_register_htmx.html'
     success_url = reverse_lazy('users:login')
 
 
@@ -141,9 +145,10 @@ class SendLoginOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-login')
 
 
-class ConfirmLoginOTPView(ConfirmOTOViewMixin, FormView):
+class ConfirmLoginOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
-    template_name = 'confirm_login.html'
+    template_name = 'registration/confirm_login.html'
+    htmx_template_name = 'registration/htmx/confirm_login_htmx.html'
 
     def get_success_url(self):
         return resolve_url(settings.LOGIN_REDIRECT_URL)
@@ -157,9 +162,10 @@ class ConfirmLoginOTPView(ConfirmOTOViewMixin, FormView):
         return self.success_response()
 
 
-class ResetPasswordView(FormView):
+class ResetPasswordView(HTMXViewMixin, FormView):
     form_class = ResetPasswordForm
-    template_name = 'reset_password.html'
+    template_name = 'registration/reset_password.html'
+    htmx_template_name = 'registration/htmx/reset_password_htmx.html'
     success_url = reverse_lazy('users:send-otp-reset-password')
 
     def form_valid(self, form):
@@ -174,9 +180,10 @@ class SendResetPasswordOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-reset-password-otp')
 
 
-class ConfirmResetPasswordOTPView(ConfirmOTOViewMixin, FormView):
+class ConfirmResetPasswordOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.RESET_PASSWORD
-    template_name = 'confirm_reset_password_otp.html'
+    template_name = 'registration/confirm_reset_password_otp.html'
+    htmx_template_name = 'registration/htmx/confirm_reset_password_otp_htmx.html'
     success_url = reverse_lazy('users:confirm-reset-password')
     
     def form_valid(self, form):
@@ -185,9 +192,10 @@ class ConfirmResetPasswordOTPView(ConfirmOTOViewMixin, FormView):
         return super(ConfirmResetPasswordOTPView, self).form_valid(form)
 
 
-class ConfirmResetPasswordView(FormView):
+class ConfirmResetPasswordView(HTMXViewMixin, FormView):
     form_class = ConfirmResetPasswordForm
-    template_name = 'confirm_reset_password.html'
+    template_name = 'registration/confirm_reset_password.html'
+    htmx_template_name = 'registration/htmx/confirm_reset_password_htmx.html'
     success_url = reverse_lazy('users:login')
 
     def get_user_from_session(self):
@@ -209,7 +217,7 @@ class ConfirmResetPasswordView(FormView):
         return super(ConfirmResetPasswordView, self).form_valid(form)
 
 
-class PersonalInfoProfileView(LoginRequiredMixin, HTMXViewMixin, TemplateView):
+class PersonalInfoProfileView(HTMXViewMixin, LoginRequiredMixin, TemplateView):
     model = ShnUser
     template_name = 'profile/personal_info_profile.html'
     htmx_template_name = 'profile/htmx/person_info_profile_htmx.html'
@@ -220,7 +228,7 @@ class PersonalInfoProfileView(LoginRequiredMixin, HTMXViewMixin, TemplateView):
         return context
 
 
-class NotificationsListProfileView(LoginRequiredMixin, HTMXViewMixin, ListView):
+class NotificationsListProfileView(HTMXViewMixin, LoginRequiredMixin, ListView):
     model = Notification
     template_name = 'profile/notifications_list_profile.html'
     htmx_template_name = 'profile/htmx/notifications_list_profile_htmx.html'

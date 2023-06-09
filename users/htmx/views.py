@@ -9,7 +9,7 @@ from users.models import Notification, ShnUser
 
 
 class ShnLoginHTMXView(user_views.ShnLoginView):
-    template_name = 'htmx/login_htmx.html'
+    template_name = 'registration/htmx/login_htmx.html'
     send_otp_url = reverse_lazy('users:users-hx:send-otp-login-htmx')
     redirect_authenticated_user = False
 
@@ -18,7 +18,7 @@ class ShnLoginHTMXView(user_views.ShnLoginView):
 
 
 class RegisterHTMXView(user_views.RegisterView):
-    template_name = 'htmx/register_htmx.html'
+    template_name = 'registration/htmx/register_htmx.html'
     success_url = reverse_lazy('users:users-hx:send-otp-register-htmx')
 
 
@@ -27,7 +27,7 @@ class SendOTPRegisterHTMXView(user_views.SendRegisterOTPView):
 
 
 class ConfirmRegisterHTMXView(user_views.ConfirmRegisterOTPView):
-    template_name = 'htmx/confirm_register_htmx.html'
+    template_name = 'registration/htmx/confirm_register_htmx.html'
     success_url = reverse_lazy('users:users-hx:login-htmx')
 
 
@@ -36,14 +36,14 @@ class SendOTPLoginHTMXView(user_views.SendLoginOTPView):
 
 
 class ConfirmLoginHTMXView(user_views.ConfirmLoginOTPView):
-    template_name = 'htmx/confirm_login_htmx.html'
+    template_name = 'registration/htmx/confirm_login_htmx.html'
 
     def success_response(self):
         return HttpResponseClientRefresh()
 
 
 class ResetPasswordHTMXView(user_views.ResetPasswordView):
-    template_name = 'htmx/reset_password_htmx.html'
+    template_name = 'registration/htmx/reset_password_htmx.html'
     success_url = reverse_lazy('users:users-hx:send-otp-reset-password-htmx')
 
 
@@ -52,18 +52,18 @@ class SendOTPResetPasswordHTMXView(user_views.SendResetPasswordOTPView):
 
 
 class ConfirmResetPasswordOTPHTMXView(user_views.ConfirmResetPasswordOTPView):
-    template_name = 'htmx/confirm_reset_password_otp_htmx.html'
+    template_name = 'registration/htmx/confirm_reset_password_otp_htmx.html'
     success_url = reverse_lazy('users:users-hx:confirm-reset-password-htmx')
 
 
 class ConfirmResetPasswordHTMXView(user_views.ConfirmResetPasswordView):
-    template_name = 'htmx/confirm_reset_password_htmx.html'
+    template_name = 'registration/htmx/confirm_reset_password_htmx.html'
     success_url = reverse_lazy('users:users-hx:login-htmx')
 
 
 class UnreadNotificationsIconHTMXView(LoginRequiredMixin, ListView):
     model = Notification
-    template_name = 'htmx/unread_notifications_icon_htmx.html'
+    template_name = 'registration/htmx/unread_notifications_icon_htmx.html'
 
     def get_queryset(self):
         queryset = self.request.user.unread_notifications()
@@ -73,7 +73,7 @@ class UnreadNotificationsIconHTMXView(LoginRequiredMixin, ListView):
 
 class UnreadNotificationsHTMXView(LoginRequiredMixin, ListView):
     model = Notification
-    template_name = 'htmx/unread_notifications_htmx.html'
+    template_name = 'registration/htmx/unread_notifications_htmx.html'
 
     def get_queryset(self):
         pk_list = list(self.request.user.unread_notifications().values_list('pk', flat=True))
