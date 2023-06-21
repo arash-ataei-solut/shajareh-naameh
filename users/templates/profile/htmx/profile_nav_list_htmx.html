@@ -1,0 +1,18 @@
+{% load i18n %}
+
+
+{% url 'users:personal-info-profile' as personal_info_url %}
+<a class="list-group-item list-group-item-action{% if request.path == personal_info_url %} active{% endif %}"
+   href="{{ personal_info_url }}">
+    <i class="fa-solid fa-address-card"></i> {% trans 'اطلاعات شخصی' %}
+</a>
+{% url 'users:notifications-list-profile' as notifications_list_url %}
+<a class="list-group-item list-group-item-action{% if request.path == notifications_list_url %} active{% endif %}"
+   href="{{ notifications_list_url }}">
+    <i class="fa-solid fa-bell"></i> {% trans 'لیست اعلان‌ها' %}
+</a>
+{% url 'users:change-password-profile' as change_profile_url %}
+<a class="list-group-item list-group-item-action{% if request.path == change_profile_url %} active{% endif %}"
+   href="{{ change_profile_url }}">
+    <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
+</a>

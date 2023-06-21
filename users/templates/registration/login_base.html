@@ -4,14 +4,15 @@
 
 
 {% block content %}
-    <section class="d-flex justify-content-center align-items-center min-vh-100 py-5 px-3"
-             style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
-        <div class="one-col-form-width">
-            <div class="text-center py-5 px-3 px-sm-5 shadow bg-light-blur rounded" hx-boost="true" hx-target="this">
-                {% block login_content %}
+    <div style="background: url({% static 'style/img/hero-bg.png' %}) center center no-repeat">
+        <section class="d-flex justify-content-center align-items-center min-vh-100 py-5 px-3">
+            <div class="one-col-form-width">
+                <div class="text-center shadow bg-light-blur rounded" hx-boost="true" hx-target="this">
+                    {% block login_content %}
 
-                {% endblock %}
+                    {% endblock %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 {% endblock %}

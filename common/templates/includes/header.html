@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" hx-boost="true" hx-target="this">
-                <div class="text-center" hx-get="{% url 'users:users-hx:login-htmx' %}" hx-trigger="show.bs.modal from:#loginModal">
+                <div class="text-center" hx-get="{% url 'users:login' %}" hx-trigger="show.bs.modal from:#loginModal">
                     <div class="spinner-border text-primary"></div>
                 </div>
             </div>

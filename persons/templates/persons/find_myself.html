@@ -1,0 +1,10 @@
+{% extends 'form_base.html' %}
+{% load i18n %}
+
+
+{% block form_content %}
+    <h2>{% trans 'جستجو در شجره‌نامه' %}</h2>
+    <form action="{% url 'persons:find-myself' %}">
+
+    </form>
+{% endblock %}

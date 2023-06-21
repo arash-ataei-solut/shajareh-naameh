@@ -151,6 +151,8 @@ class ConfirmLoginOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
     htmx_template_name = 'registration/htmx/confirm_login_htmx.html'
 
     def get_success_url(self):
+        if self.request.htmx:
+            return HttpResponseClientRefresh()
         return resolve_url(settings.LOGIN_REDIRECT_URL)
 
     def success_response(self):

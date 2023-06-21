@@ -1,19 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, CreateView
 
-from persons.htmx.forms import FindMyselfForm, AddMyPersonForm
+from persons.forms import FindMyselfForm
+from persons.htmx.forms import AddMyPersonForm
 from persons.models import Person
-
-
-class FindMyselfView(LoginRequiredMixin, FormView):
-    form_class = FindMyselfForm
-    template_name = 'profile/htmx/find_myself_htmx.html'
-
-    def form_valid(self, form):
-        my_person_qs = form.find_me()
-        if my_person_qs:
-            return super(FindMyselfView, self).form_valid(form)
-        return super(FindMyselfView, self).form_valid(form)
 
 
 class AddMyPersonView(LoginRequiredMixin, CreateView):

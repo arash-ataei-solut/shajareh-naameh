@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.admin.widgets import AutocompleteSelect
+from django.utils.translation import gettext as _
 
 from common.htmx.forms import PlaceholderFormMixin
 from persons.models import Person
@@ -17,3 +17,16 @@ class AddPersonForm(PlaceholderFormMixin, forms.ModelForm):
         widgets = {
             'birth_place': PlaceWidget
         }
+
+
+class FindMyselfForm(forms.Form):
+    first_name = forms.CharField(label=_('نام'))
+    father_name = forms.CharField(label=_('نام پدر'))
+    mother_name = forms.CharField(label=_('نام مادر'))
+
+    def find_me(self):
+        first_name = self.cleaned_data['first_name']
+        father_name = self.cleaned_data['father_name']
+        mother_name = self.cleaned_data['mother_name']
+        my_person_qs = Person.objects.find_me(first_name, father_name, mother_name)
+        return my_person_qs

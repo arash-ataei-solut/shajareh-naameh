@@ -1,5 +1,13 @@
 {% load i18n %}
 
+
+{% if request.htmx %}
+    <div id="profileNavList" hx-swap-oob="innerHTML">
+        {% include 'profile/htmx/profile_nav_list_htmx.html' %}
+    </div>
+{% endif %}
+
+
 <h4>{% trans 'اطلاعات شخصی' %}</h4>
 <hr class="mt-0">
 {% if person is None %}

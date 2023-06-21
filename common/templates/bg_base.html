@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <div class="pt-5" style="background: url({% static 'style/img/hero-bg.png' %}) no-repeat center center fixed">
+
+        {% include 'includes/header.html' %}
+
+        {% block bg_content %}
+        {% endblock %}
+
+        {% include 'includes/footer.html' %}
+
+    </div>
+
+{% endblock %}

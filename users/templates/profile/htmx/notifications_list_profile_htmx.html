@@ -2,7 +2,13 @@
 {% load i18n %}
 
 
-{{ request.LANGUAGE_CODE }}
+{% if request.htmx %}
+    <div id="profileNavList" hx-swap-oob="innerHTML">
+        {% include 'profile/htmx/profile_nav_list_htmx.html' %}
+    </div>
+{% endif %}
+
+
 <h4>
     <span>{% trans 'لیست اعلان‌ها' %} </span>
 </h4>
