@@ -1,0 +1,33 @@
+{% load i18n %}
+<h2>{% trans 'جستجو در شجره‌نامه' %}</h2>
+<form action="{% url 'persons:find-myself' %}" method="post">
+    <div>
+        {% for non_field_error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ non_field_error }}
+            </div>
+        {% endfor %}
+    </div>
+    {% csrf_token %}
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
+        <div class="col">
+            {% include 'components/input_component.html' with field=form.first_name %}
+        </div>
+        <div class="col">
+            {% include 'components/input_component.html' with field=form.last_name %}
+        </div>
+        <div class="col">
+            {% include 'components/input_component.html' with field=form.father_name %}
+        </div>
+        <div class="col">
+            {% include 'components/input_component.html' with field=form.mother_name %}
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary mt-3 rounded-pill" type="submit">
+            {% trans 'جستجو' %}
+        </button>
+    </div>
+
+</form>

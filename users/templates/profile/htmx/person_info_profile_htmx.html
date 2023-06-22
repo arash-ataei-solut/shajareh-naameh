@@ -17,8 +17,8 @@
         </h1>
         <p>{% trans 'اطلاعات شما در شجره‌نامه یافت نشد.' %}</p>
         <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در شجره‌نامه پیدا کنید.' %}</p>
-        <button class="btn btn-primary">
+        <a class="btn btn-primary" href="{% url 'persons:find-myself' %}" hx-boost="false">
             <i class="fa-solid fa-magnifying-glass"></i> {% trans 'جستجو در شجره‌نامه' %}
-        </button>
+        </a>
     </div>
 {% endif %}

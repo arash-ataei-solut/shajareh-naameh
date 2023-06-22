@@ -1,10 +1,12 @@
 {% load shn_filters %}
 
-<input class="form-control" type="{{ field.field.widget.input_type }}" name="{{ field.name }}"
-       id="{{ field.id_for_label }}" placeholder="{{ field.label }}"{% if field.required %} required{% endif %}
-       {% for name, value in field.field.widget.attrs.items %}{% if value is not False %}
-       {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
-<label for="{{ field.id_for_label }}">{{ field.label }}</label>
-{% for error in field.errors %}
-    <div class=" invalid-feedback d-block">{{ error }}</div>
-{% endfor %}
+<div class="form-floating">
+    <input class="form-control" type="{{ field.field.widget.input_type }}" name="{{ field.name }}"
+           id="{{ field.id_for_label }}" placeholder="{{ field.label }}"{% if field.required %} required{% endif %}
+           {% for name, value in field.field.widget.attrs.items %}{% if value is not False %}
+           {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% for error in field.errors %}
+        <div class=" invalid-feedback d-block">{{ error }}</div>
+    {% endfor %}
+</div>
