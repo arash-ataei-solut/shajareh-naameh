@@ -45,4 +45,8 @@ class Person(models.Model):
         verbose_name_plural = _('اشخاص')
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name} - {self.father.first_name}'
+        return self.full_name
+
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'

@@ -22,8 +22,8 @@ class FindMyselfView(HTMXViewMixin, LoginRequiredMixin, FormView):
         context = self.get_context_data()
         context.update(
             {
-                'myself_person_queryset': myself_person_queryset,
-                'myself_person_does_not_exist': not myself_person_queryset.exists(),
+                'myself_person_list': myself_person_queryset,
+                'myself_person_exists': myself_person_queryset.exists(),
             }
         )
         if self.request.htmx:
@@ -35,5 +35,4 @@ class FindMyselfView(HTMXViewMixin, LoginRequiredMixin, FormView):
             request=self.request,
             template=list_template_name,
             context=context,
-            using=self.template_engine,
         )
