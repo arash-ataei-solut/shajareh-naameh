@@ -1,0 +1,31 @@
+{% extends 'bg_base.html' %}
+{% load shn_filters %}
+{% load i18n %}
+
+{% block head %}
+    {{ block.super }}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    {{ form.media.js }}
+{% endblock %}
+
+{% block bg_content %}
+    <section class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="container text-center">
+            <div class="row gx-3">
+                <div class="col-6 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                    <h2>{% trans 'اطلاعات پدر' %}</h2>
+                </div>
+                <div class="col-6 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                    <h2>{% trans 'اطلاعات مادر' %}</h2>
+                </div>
+                <div class="col-12 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h2>{% trans 'اطلاعات عمومی' %}</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

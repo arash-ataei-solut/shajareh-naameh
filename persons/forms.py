@@ -6,7 +6,31 @@ from persons.models import Person
 from places.forms import PlaceWidget
 
 
-class AddPersonForm(PlaceholderFormMixin, forms.ModelForm):
+class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'gender', 'birth_year',
+        ]
+        widgets = {
+            'birth_place': PlaceWidget
+        }
+
+
+class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
+    user = forms.HiddenInput()
+
+    class Meta:
+        model = Person
+        fields = [
+            'user', 'first_name', 'last_name', 'gender', 'birth_year',
+        ]
+        widgets = {
+            'birth_place': PlaceWidget
+        }
+
+
+class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [

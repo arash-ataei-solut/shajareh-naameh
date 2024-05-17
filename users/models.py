@@ -110,7 +110,8 @@ class AuthOTP(models.Model):
     user = models.ForeignKey('users.ShnUser', on_delete=models.CASCADE, verbose_name=_('کاربر'))
     usage = models.CharField(max_length=2, verbose_name=_('کاربرد'), choices=enums.OTPUsageChoices.choices)
     code = models.CharField(max_length=5, verbose_name=_('رمز یک‌بارمصرف'))
-    created_at = models.DateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('زمان ویرایش'))
     attempts = models.PositiveSmallIntegerField(verbose_name=_('تعداد تلاش'), default=0)
     confirmed = models.BooleanField(verbose_name=_('تایید شده'), default=False)
 
@@ -119,7 +120,7 @@ class AuthOTP(models.Model):
     class Meta:
         verbose_name = _('رمز یک‌بارمصرف')
         verbose_name_plural = _('رمز‌های یک‌بارمصرف')
-        ordering = ('created_at', )
+        ordering = ('-created_at', )
 
     @property
     def expired(self) -> bool:

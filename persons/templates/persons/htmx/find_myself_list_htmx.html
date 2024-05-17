@@ -36,8 +36,8 @@
             </h1>
             <p>{% trans 'اطلاعات شما در شجره‌نامه یافت نشد.' %}</p>
             <p>{% trans 'شما می‌توانید از طریق لینک زیر اطلاعات خود، خانواده‌ و شجره‌نامه‌تان را در شجره‌نامه ثبت کنید.' %}</p>
-            <a class="btn btn-primary" href="{% url 'persons:find-myself' %}" hx-boost="false">
-                <i class="fa-solid fa-magnifying-glass"></i> {% trans 'ثبت اطلاعات' %}
+            <a class="btn btn-primary" href="{% url 'persons:person-add-myself' %}" hx-boost="false">
+                <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات' %}
             </a>
         </div>
     {% endif %}

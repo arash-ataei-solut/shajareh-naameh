@@ -1,16 +1,15 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, resolve_url
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView
-from django_htmx.http import HttpResponseClientRefresh
+from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin
 from users import enums
@@ -31,7 +30,7 @@ class ShnLoginView(HTMXViewMixin, LoginView):
 
     def success_response(self):
         if self.request.htmx:
-            return HttpResponseClientRefresh()
+            return HttpResponseClientRedirect(self.get_success_url())
         return HttpResponseRedirect(self.get_success_url())
 
     def confirm_required_response(self):
@@ -127,10 +126,15 @@ class ConfirmOTOViewMixin:
         )
         return kwargs
 
+    def success_response(self):
+        if self.request.htmx:
+            return HttpResponseClientRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
+
     def form_valid(self, form):
         form.confirm()
         self.request.session.pop(OTP_USER_SESSION)
-        return super(ConfirmOTOViewMixin, self).form_valid(form)
+        return self.success_response()
 
 
 class ConfirmRegisterOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
@@ -149,19 +153,12 @@ class ConfirmLoginOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
     template_name = 'registration/confirm_login.html'
     htmx_template_name = 'registration/htmx/confirm_login_htmx.html'
-
-    def get_success_url(self):
-        if self.request.htmx:
-            return HttpResponseClientRefresh()
-        return resolve_url(settings.LOGIN_REDIRECT_URL)
-
-    def success_response(self):
-        return HttpResponseRedirect(self.get_success_url())
+    success_url = reverse_lazy('index')
 
     def form_valid(self, form):
-        super(ConfirmLoginOTPView, self).form_valid(form)
+        response = super(ConfirmLoginOTPView, self).form_valid(form)
         auth_login(self.request, form.user)
-        return self.success_response()
+        return response
 
 
 class ResetPasswordView(HTMXViewMixin, FormView):
