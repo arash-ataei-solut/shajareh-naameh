@@ -1,24 +1,27 @@
 import copy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, UpdateView, DetailView
+from django_htmx.http import HttpResponseClientRefresh, HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin
+from persons import forms
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.mixins import IsSubmitterMixin
 from persons.models import Person
 
 
-class PersonAddView(LoginRequiredMixin, IsSubmitterMixin, CreateView):
+class PersonAddView(LoginRequiredMixin, CreateView):
     template_name = 'persons/person_add.html'
     form_class = PersonAddForm
     success_url = reverse_lazy('persons:person-detail')
 
 
-class PersonAddMyselfView(LoginRequiredMixin, IsSubmitterMixin, CreateView):
+class PersonAddMyselfView(PersonAddView):
     template_name = 'persons/person_add_myself.html'
     form_class = PersonAddMyselfForm
     success_url = reverse_lazy('persons:person-detail-myself')
@@ -30,6 +33,45 @@ class PersonAddMyselfView(LoginRequiredMixin, IsSubmitterMixin, CreateView):
             data.update({'user': self.request.user})
             kwargs.update({'data': data})
         return kwargs
+
+
+class PersonAddFatherView(HTMXViewMixin, PersonAddView):
+    template_name = 'persons/person_add_father.html'
+    htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
+    form_class = forms.PersonAddFatherForm
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
+        return self.person
+
+    def get_form_kwargs(self):
+        kwargs = super(PersonAddFatherView, self).get_form_kwargs()
+        kwargs.update({'person': self.get_person()})
+        return kwargs
+
+    def success_response(self):
+        if self.request.htmx:
+            return HttpResponseClientRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_valid(self, form):
+        super(PersonAddFatherView, self).form_valid(form)
+        return self.success_response()
+
+
+class PersonAddFatherMyselfView(PersonAddFatherView):
+    def get_success_url(self):
+        return reverse('persons:person-detail-myself')
+
+    def get_person(self):
+        if hasattr(self.request.user, 'person'):
+            return self.request.user.person
+        return Http404(
+            "No Person matches the given query."
+        )
 
 
 class PersonUpdateView(LoginRequiredMixin, IsSubmitterMixin, UpdateView):

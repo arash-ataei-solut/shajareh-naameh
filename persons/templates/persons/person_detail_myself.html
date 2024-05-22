@@ -14,16 +14,75 @@
 
 {% block bg_content %}
     <section class="d-flex justify-content-center align-items-center min-vh-100">
-        <div class="container text-center">
-            <div class="row gx-3">
-                <div class="col-6 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
-                    <h2>{% trans 'اطلاعات پدر' %}</h2>
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات پدر' %}</h4>
+                        <hr class="mt-0">
+                        {% if object.father %}
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام' %}: </span>{{ object.father.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.father.last_name }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <a class="btn btn-primary" hx-get="{% url 'persons:person-add-father-myself' %}" hx-target="this" hx-swap="outerHTML">
+                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات پدر' %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="col-6 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
-                    <h2>{% trans 'اطلاعات مادر' %}</h2>
+                <div class="col-md-6">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات مادر' %}</h4>
+                        <hr class="mt-0">
+                        {% if object.mother %}
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام' %}: </span>{{ object.mother.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.mother.last_name }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <a class="btn btn-primary" type="submit">
+                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات مادر' %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="col-12 py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
-                        <h2>{% trans 'اطلاعات عمومی' %}</h2>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات عمومی' %}</h4>
+                        <hr class="mt-0">
+                        <div class="row g-2">
+                            <div class="col-lg-4 col-md-3">
+                                <span>{% trans 'نام' %}: </span>{{ object.first_name }}
+                            </div>
+                            <div class="col-lg-4 col-md-3">
+                                <span>{% trans 'نام خانوادگی' %}: </span>{{ object.last_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات شخصی' %}</h4>
+                        <hr class="mt-0">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات فرزندها' %}</h4>
+                        <hr class="mt-0">
+                    </div>
                 </div>
             </div>
         </div>

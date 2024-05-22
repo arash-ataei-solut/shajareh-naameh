@@ -1,0 +1,60 @@
+{% load shn_filters %}
+{% load i18n %}
+
+<div hx-boost="true" hx-target="this" hx-swap="outerHTML">
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add-father-myself' %}" method="post"
+          novalidate>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="row row-cols-md-2 g-2">
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.first_name|add_class:'form-control' }}
+                    <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                    {% for error in form.first_name.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.last_name|add_class:'form-control' }}
+                    <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                    {% for error in form.last_name.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.gender|add_class:'form-control' }}
+                    <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                    {% for error in form.gender.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.birth_year|add_class:'form-control' }}
+                    <label for="{{ form.birth_year.id_for_label }}">{{ form.birth_year.label }}</label>
+                    {% for error in form.birth_year.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary mt-3 rounded-pill" type="submit">
+                {% trans 'ذخیره' %}
+            </button>
+        </div>
+    </form>
+</div>

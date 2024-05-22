@@ -25,9 +25,25 @@ class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
         fields = [
             'user', 'first_name', 'last_name', 'gender', 'birth_year',
         ]
-        widgets = {
-            'birth_place': PlaceWidget
-        }
+
+
+class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'gender', 'birth_year'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.person = kwargs.pop('person')
+        super(PersonAddFatherForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        father = super(PersonAddFatherForm, self).save(commit)
+        self.person.father = father
+        self.person.save()
+        return father
+
 
 
 class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
