@@ -1,7 +1,9 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
 from common.htmx.forms import PlaceholderFormMixin
+from persons import enums
 from persons.models import Person
 from places.forms import PlaceWidget
 
@@ -31,19 +33,50 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year'
+            'first_name', 'last_name', 'birth_year'
         ]
 
     def __init__(self, *args, **kwargs):
         self.person = kwargs.pop('person')
-        super(PersonAddFatherForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        if self.person.father:
+            raise ValidationError(
+                'پدر این شخص ثبت شده‌است.', code='duplicate_mother'
+            )
 
     def save(self, commit=True):
-        father = super(PersonAddFatherForm, self).save(commit)
+        self.instance.gender = enums.GenderChoices.MALE
+        father = super().save(commit)
         self.person.father = father
         self.person.save()
         return father
 
+
+class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'birth_year'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.person = kwargs.pop('person')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        if self.person.mother:
+            raise ValidationError(
+                'مادر این شخص ثبت شده‌است.', code='duplicate_mother'
+            )
+
+    def save(self, commit=True):
+        self.instance.gender = enums.GenderChoices.FEMALE
+        mother = super().save(commit)
+        self.person.mother = mother
+        self.person.save()
+        return mother
 
 
 class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):

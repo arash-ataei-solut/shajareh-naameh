@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, UpdateView, DetailView
 from django_htmx.http import HttpResponseClientRefresh, HttpResponseClientRedirect
 
-from common.mixins import HTMXViewMixin
+from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons import forms
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.mixins import IsSubmitterMixin
@@ -35,7 +35,7 @@ class PersonAddMyselfView(PersonAddView):
         return kwargs
 
 
-class PersonAddFatherView(HTMXViewMixin, PersonAddView):
+class PersonAddFatherView(HTMXFormViewMixin, PersonAddView):
     template_name = 'persons/person_add_father.html'
     htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
@@ -48,21 +48,42 @@ class PersonAddFatherView(HTMXViewMixin, PersonAddView):
         return self.person
 
     def get_form_kwargs(self):
-        kwargs = super(PersonAddFatherView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update({'person': self.get_person()})
         return kwargs
 
-    def success_response(self):
-        if self.request.htmx:
-            return HttpResponseClientRedirect(self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
-
-    def form_valid(self, form):
-        super(PersonAddFatherView, self).form_valid(form)
-        return self.success_response()
-
 
 class PersonAddFatherMyselfView(PersonAddFatherView):
+    def get_success_url(self):
+        return reverse('persons:person-detail-myself')
+
+    def get_person(self):
+        if hasattr(self.request.user, 'person'):
+            return self.request.user.person
+        return Http404(
+            "No Person matches the given query."
+        )
+
+
+class PersonAddMotherView(HTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/person_add_mother.html'
+    htmx_template_name = 'persons/htmx/person_add_mother_htmx.html'
+    form_class = forms.PersonAddMotherForm
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
+        return self.person
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'person': self.get_person()})
+        return kwargs
+
+
+class PersonAddMotherMyselfView(PersonAddMotherView):
     def get_success_url(self):
         return reverse('persons:person-detail-myself')
 

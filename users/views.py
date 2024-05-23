@@ -5,13 +5,13 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django_htmx.http import HttpResponseClientRedirect
 
-from common.mixins import HTMXViewMixin
+from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
@@ -21,26 +21,19 @@ OTP_USER_SESSION = 'registered_user_id'
 RESET_PASSWORD_USER_SESSION = 'reset_password_user_id'
 
 
-class ShnLoginView(HTMXViewMixin, LoginView):
+class ShnLoginView(HTMXFormViewMixin, LoginView):
     form_class = LoginForm
     template_name = 'registration/login.html'
     htmx_template_name = 'registration/htmx/login_htmx.html'
-    send_otp_url = reverse_lazy('users:send-otp-login')
     redirect_authenticated_user = True
-
-    def success_response(self):
-        if self.request.htmx:
-            return HttpResponseClientRedirect(self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
-
-    def confirm_required_response(self):
-        return HttpResponseRedirect(str(self.send_otp_url))
+    success_url = reverse_lazy('index')
 
     def form_valid(self, form):
         user = form.get_user()
         if not user.has_valid_otp(usage=enums.OTPUsageChoices.REGISTER):
             self.request.session[OTP_USER_SESSION] = str(user.id)
-            return self.confirm_required_response()
+            self.success_url = reverse('users:send-otp-login')
+            return self.success_response()
 
         auth_login(self.request, form.get_user())
         return self.success_response()
@@ -126,18 +119,13 @@ class ConfirmOTOViewMixin:
         )
         return kwargs
 
-    def success_response(self):
-        if self.request.htmx:
-            return HttpResponseClientRedirect(self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
-
     def form_valid(self, form):
         form.confirm()
         self.request.session.pop(OTP_USER_SESSION)
         return self.success_response()
 
 
-class ConfirmRegisterOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmRegisterOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
     template_name = 'registration/confirm_register.html'
     htmx_template_name = 'registration/htmx/confirm_register_htmx.html'
@@ -149,7 +137,7 @@ class SendLoginOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-login')
 
 
-class ConfirmLoginOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmLoginOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
     template_name = 'registration/confirm_login.html'
     htmx_template_name = 'registration/htmx/confirm_login_htmx.html'
@@ -179,7 +167,7 @@ class SendResetPasswordOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-reset-password-otp')
 
 
-class ConfirmResetPasswordOTPView(HTMXViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmResetPasswordOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
     usage = enums.OTPUsageChoices.RESET_PASSWORD
     template_name = 'registration/confirm_reset_password_otp.html'
     htmx_template_name = 'registration/htmx/confirm_reset_password_otp_htmx.html'

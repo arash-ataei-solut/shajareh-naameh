@@ -10,7 +10,13 @@
 
 <h4>{% trans 'اطلاعات شخصی' %}</h4>
 <hr class="mt-0">
-{% if person is None %}
+{% if person %}
+    <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'persons:person-detail-myself' %}" hx-boost="false">
+            <i class="fa-solid fa-magnifying-glass"></i> {% trans 'اطلاعات خانواده' %}
+        </a>
+    </div>
+{% else %}
     <div class="alert alert-warning text-center">
         <h1>
             <i class="fa-solid fa-triangle-exclamation"></i>
