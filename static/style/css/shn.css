@@ -16,13 +16,13 @@ html {
 .bg-light-blur {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .bg-dark-blur {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 .btn-with-spinner {

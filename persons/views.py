@@ -95,6 +95,66 @@ class PersonAddMotherMyselfView(PersonAddMotherView):
         )
 
 
+class PersonAddSpouseView(HTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/person_add_spouse.html'
+    htmx_template_name = 'persons/htmx/person_add_spouse_htmx.html'
+    form_class = forms.PersonAddSpouseForm
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
+        return self.person
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'person': self.get_person()})
+        return kwargs
+
+
+class PersonAddSpouseMyselfView(PersonAddSpouseView):
+    def get_success_url(self):
+        return reverse('persons:person-detail-myself')
+
+    def get_person(self):
+        if hasattr(self.request.user, 'person'):
+            return self.request.user.person
+        return Http404(
+            "No Person matches the given query."
+        )
+
+
+class PersonAddChildView(HTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/person_add_child.html'
+    htmx_template_name = 'persons/htmx/person_add_child_htmx.html'
+    form_class = forms.PersonAddChildForm
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
+        return self.person
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'person': self.get_person()})
+        return kwargs
+
+
+class PersonAddChildMyselfView(PersonAddChildView):
+    def get_success_url(self):
+        return reverse('persons:person-detail-myself')
+
+    def get_person(self):
+        if hasattr(self.request.user, 'person'):
+            return self.request.user.person
+        return Http404(
+            "No Person matches the given query."
+        )
+
+
 class PersonUpdateView(LoginRequiredMixin, IsSubmitterMixin, UpdateView):
     template_name = 'persons/person_update.html'
     form_class = PersonUpdateForm

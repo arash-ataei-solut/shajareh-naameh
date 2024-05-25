@@ -79,6 +79,44 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
         return mother
 
 
+class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'gender', 'birth_year'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.person = kwargs.pop('person')
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        spouse = super().save(commit)
+        self.person.spouse.add(spouse)
+        return spouse
+
+
+class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'gender', 'birth_year'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.person = kwargs.pop('person')
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        child = super().save(commit)
+        if self.person.gender == enums.GenderChoices.MALE:
+            child.father = self.person
+        elif self.person.gender == enums.GenderChoices.FEMALE:
+            child.mother = self.person
+        child.save()
+        return child
+
+
 class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person

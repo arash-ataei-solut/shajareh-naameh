@@ -28,6 +28,9 @@
                                 <div class="col-md-6">
                                     <span>{% trans 'نام خانوادگی' %}: </span>{{ object.father.last_name }}
                                 </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
+                                </div>
                             </div>
                         {% else %}
                             <div class="text-center">
@@ -50,6 +53,9 @@
                                 <div class="col-md-6">
                                     <span>{% trans 'نام خانوادگی' %}: </span>{{ object.mother.last_name }}
                                 </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
+                                </div>
                             </div>
                         {% else %}
                             <div class="text-center">
@@ -62,7 +68,7 @@
                 </div>
                 <div class="col-12">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
-                        <h4>{% trans 'اطلاعات عمومی' %}</h4>
+                        <h4>{% trans 'اطلاعات شخص' %}</h4>
                         <hr class="mt-0">
                         <div class="row row-cols-lg-4 row-cols-md-2 g-2">
                             <div class="col">
@@ -77,24 +83,61 @@
                             <div class="col">
                                 <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
                             </div>
+                            <div class="col">
+                                <span>{% trans 'تاریخ تولد' %}: </span>{{ object.birth_date|default_if_none:'-' }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
+                            </div>
+                            {% if object.death_year %}
+                                <div class="col">
+                                    <span>{% trans 'سال مرگ' %}: </span>{{ object.death_year|default_if_none:'-' }}
+                                </div>
+                            {% endif %}
+                            {% if object.death_date %}
+                                <div class="col">
+                                    <span>{% trans 'تاریخ مرگ' %}: </span>{{ object.death_date|default_if_none:'-' }}
+                                </div>
+                            {% endif %}
                         </div>
-
-                        <br>
-
-                        <h4>{% trans 'اطلاعات شخصی' %}</h4>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات همسر' %}</h4>
                         <hr class="mt-0">
-                        <div class="row row-cols-lg-4 row-cols-md-2 g-2">
+                        <div class="row row-cols-md-2 g-2">
+                            {% for spouse in object.spouse.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ spouse.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ spouse.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ spouse.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
                             <div class="col">
-                                <span>{% trans 'نام' %}: </span>{{ object.first_name }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'نام خانوادگی' %}: </span>{{ object.last_name }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
+                                <div class="py-3 px-2 border rounded">
+                                    <div class="text-center">
+                                        <a class="btn btn-primary" hx-boost="true"
+                                           href="{% url 'persons:person-add-spouse-myself' %}" hx-target="this"
+                                           hx-swap="outerHTML">
+                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات همسر' %}
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,6 +146,60 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات فرزندها' %}</h4>
                         <hr class="mt-0">
+                        <div class="row row-cols-md-2 g-2">
+                            {% for child in object.father_children.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ child.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ child.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for child in object.mother_children.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ child.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ child.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="col">
+                                <div class="py-3 px-2 border rounded">
+                                    <div class="text-center">
+                                        <a class="btn btn-primary" hx-boost="true"
+                                           href="{% url 'persons:person-add-child-myself' %}" hx-target="this"
+                                           hx-swap="outerHTML">
+                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات فرزند' %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
