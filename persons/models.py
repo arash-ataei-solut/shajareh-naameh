@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from users.models import ShnUser
 from . import managers
 from .enums import GenderChoices
 from django_jalali.db import models as j_models
@@ -37,6 +38,10 @@ class Person(models.Model):
     )
     death_year = models.SmallIntegerField(verbose_name=_('سال وفات'), null=True, blank=True)
     death_date = j_models.jDateField(verbose_name=_('تاریخ وفات'), null=True, blank=True)
+
+    created_by = models.ForeignKey(ShnUser, on_delete=models.SET_NULL, verbose_name=_('ثبت شده توسط'))
+    created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
+    updated_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان آخرین ویرایش'))
 
     objects = managers.PersonManager()
 

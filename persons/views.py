@@ -1,17 +1,16 @@
 import copy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, UpdateView, DetailView
-from django_htmx.http import HttpResponseClientRefresh, HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons import forms
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
-from persons.mixins import IsSubmitterMixin
+from persons.mixins import IsSubmitterMixin, IsPersonCreatedByOrIsOwner
 from persons.models import Person
 
 
@@ -27,7 +26,28 @@ class PersonAddMyselfView(PersonAddView):
     success_url = reverse_lazy('persons:person-detail-myself')
 
     def get_form_kwargs(self):
-        kwargs = super(PersonAddMyselfView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
+        if self.request.method == 'POST':
+            data = copy.copy(kwargs['data'])
+            data.update({'user': self.request.user})
+            kwargs.update({'data': data})
+        return kwargs
+
+
+class PersonUpdateViewOrIsOwner(IsPersonCreatedByOrIsOwner, HTMXFormViewMixin, UpdateView):
+    template_name = 'persons/person_update.html'
+    htmx_template_name = 'persons/htmx/person_update_htmx.html'
+    form_class = PersonUpdateForm
+    success_url = reverse_lazy('persons:person-detail')
+
+
+class PersonUpdateMyselfView(PersonUpdateViewOrIsOwner):
+    template_name = 'persons/person_add_myself.html'
+    form_class = PersonUpdateForm
+    success_url = reverse_lazy('persons:person-detail-myself')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
         if self.request.method == 'POST':
             data = copy.copy(kwargs['data'])
             data.update({'user': self.request.user})

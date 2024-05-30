@@ -14,9 +14,6 @@ class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'gender', 'birth_year',
         ]
-        widgets = {
-            'birth_place': PlaceWidget
-        }
 
 
 class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
@@ -27,6 +24,18 @@ class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
         fields = [
             'user', 'first_name', 'last_name', 'gender', 'birth_year',
         ]
+
+
+class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = [
+            'first_name', 'last_name', 'gender', 'birth_year',
+            'birth_date', 'birth_place', 'death_year', 'death_date'
+        ]
+        widgets = {
+            'birth_place': PlaceWidget
+        }
 
 
 class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
@@ -45,6 +54,7 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
             raise ValidationError(
                 'پدر این شخص ثبت شده‌است.', code='duplicate_mother'
             )
+        return super().clean()
 
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.MALE
@@ -70,6 +80,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
             raise ValidationError(
                 'مادر این شخص ثبت شده‌است.', code='duplicate_mother'
             )
+        return super().clean()
 
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.FEMALE
@@ -115,19 +126,6 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
             child.mother = self.person
         child.save()
         return child
-
-
-class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
-    class Meta:
-        model = Person
-        fields = [
-            'first_name', 'last_name', 'gender', 'birth_year',
-            'birth_date', 'birth_place', 'residence_place',
-            'death_year', 'death_date'
-        ]
-        widgets = {
-            'birth_place': PlaceWidget
-        }
 
 
 class FindMyselfForm(forms.Form):
