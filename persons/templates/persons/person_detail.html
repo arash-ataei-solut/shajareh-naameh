@@ -1,4 +1,4 @@
-{% extends 'form_base.html' %}
+{% extends 'bg_base.html' %}
 {% load shn_filters %}
 {% load i18n %}
 
@@ -12,107 +12,203 @@
     {{ form.media.js }}
 {% endblock %}
 
-{% block form_content %}
-    <h2 class="fw-bold mb-3">{% trans 'ثبت فرد جدید' %}</h2>
-    <p class="mb-3">{% trans 'لطفا اطلاعات شخص مورد نظر را وارد نمایید.' %}</p>
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add' %}" method="post"
-          novalidate>
-        <div>
-            {% for non_field_error in form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ non_field_error }}
-                </div>
-            {% endfor %}
-        </div>
-        {% csrf_token %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-3">
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.first_name|add_class:'form-control' }}
-                    <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-                    {% for error in form.first_name.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.last_name|add_class:'form-control' }}
-                    <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-                    {% for error in form.last_name.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.gender|add_class:'form-control' }}
-                    <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
-                    {% for error in form.gender.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.birth_year|add_class:'form-control' }}
-                    <label for="{{ form.birth_year.id_for_label }}">{{ form.birth_year.label }}</label>
-                    {% for error in form.birth_year.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.birth_date|add_class:'form-control' }}
-                    <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label }}</label>
-                    {% for error in form.birth_date.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.birth_place|add_class:'form-control' }}
-                    <label for="{{ form.birth_place.id_for_label }}">{{ form.birth_place.label }}</label>
-                    {% for error in form.birth_place.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.residence_place|add_class:'form-control' }}
-                    <label for="{{ form.residence_place.id_for_label }}">{{ form.residence_place.label }}</label>
-                    {% for error in form.residence_place.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.death_year|add_class:'form-control' }}
-                    <label for="{{ form.otp.id_for_label }}">{{ form.otp.label }}</label>
-                    {% for error in form.death_year.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    {{ form.death_date|add_class:'form-control' }}
-                    <label for="{{ form.death_date.id_for_label }}">{{ form.death_date.label }}</label>
-                    {% for error in form.death_date.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
+{% block bg_content %}
+    <section class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات پدر' %}</h4>
+                        <hr class="mt-0">
+                        {% if object.father %}
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام' %}: </span>{{ object.father.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.father.last_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
+                                </div>
+                            </div>
 
-            <div class="col-12">
-                <button class="btn btn-primary mt-3 rounded-pill" type="submit">
-                    {% trans 'ذخیره' %}
-                </button>
+                            <div class="text-center">
+                                <a class="btn btn-primary" href="{% url 'persons:person-detail' pk=object.father.pk %}">
+                                    <i class="fa-solid fa-plus"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <a class="btn btn-primary" hx-boost="true" href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="this" hx-swap="outerHTML">
+                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات پدر' %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات مادر' %}</h4>
+                        <hr class="mt-0">
+                        {% if object.mother %}
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام' %}: </span>{{ object.mother.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.mother.last_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <a class="btn btn-primary" hx-boost="true" href="{% url 'persons:person-add-mother' person_pk=person.pk %}" hx-target="this" hx-swap="outerHTML">
+                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات مادر' %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات شخص' %}</h4>
+                        <hr class="mt-0">
+                        <div class="row row-cols-lg-4 row-cols-md-2 g-2">
+                            <div class="col">
+                                <span>{% trans 'نام' %}: </span>{{ object.first_name }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'نام خانوادگی' %}: </span>{{ object.last_name }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'تاریخ تولد' %}: </span>{{ object.birth_date|default_if_none:'-' }}
+                            </div>
+                            <div class="col">
+                                <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
+                            </div>
+                            {% if object.death_year %}
+                                <div class="col">
+                                    <span>{% trans 'سال مرگ' %}: </span>{{ object.death_year|default_if_none:'-' }}
+                                </div>
+                            {% endif %}
+                            {% if object.death_date %}
+                                <div class="col">
+                                    <span>{% trans 'تاریخ مرگ' %}: </span>{{ object.death_date|default_if_none:'-' }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات همسر' %}</h4>
+                        <hr class="mt-0">
+                        <div class="row row-cols-md-2 g-2">
+                            {% for spouse in object.spouse.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ spouse.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ spouse.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ spouse.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="col">
+                                <div class="py-3 px-2 border rounded">
+                                    <div class="text-center">
+                                        <a class="btn btn-primary" hx-boost="true"
+                                           href="{% url 'persons:person-add-spouse' person_pk=person.pk %}" hx-target="this"
+                                           hx-swap="outerHTML">
+                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات همسر' %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات فرزندها' %}</h4>
+                        <hr class="mt-0">
+                        <div class="row row-cols-md-2 g-2">
+                            {% for child in object.father_children.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ child.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ child.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for child in object.mother_children.all %}
+                                <div class="col">
+                                    <div class="py-3 px-2 border rounded">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'نام' %}: </span>{{ child.first_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'نام خانوادگی' %}: </span>{{ child.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="col">
+                                <div class="py-3 px-2 border rounded">
+                                    <div class="text-center">
+                                        <a class="btn btn-primary" hx-boost="true"
+                                           href="{% url 'persons:person-add-child' person_pk=person.pk %}" hx-target="this"
+                                           hx-swap="outerHTML">
+                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات فرزند' %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
+    </section>
 {% endblock %}

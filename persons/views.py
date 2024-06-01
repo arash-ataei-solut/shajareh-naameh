@@ -1,6 +1,7 @@
 import copy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -17,182 +18,99 @@ from persons.models import Person
 class PersonAddView(LoginRequiredMixin, CreateView):
     template_name = 'persons/person_add.html'
     form_class = PersonAddForm
-    success_url = reverse_lazy('persons:person-detail')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.method == 'POST':
+            data = copy.copy(kwargs['data'])
+            data.update({'created_by': self.request.user})
+            kwargs.update({'data': data})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.object.pk})
+
 
 
 class PersonAddMyselfView(PersonAddView):
     template_name = 'persons/person_add_myself.html'
     form_class = PersonAddMyselfForm
-    success_url = reverse_lazy('persons:person-detail-myself')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         if self.request.method == 'POST':
-            data = copy.copy(kwargs['data'])
+            data = kwargs['data']
             data.update({'user': self.request.user})
             kwargs.update({'data': data})
         return kwargs
 
 
-class PersonUpdateViewOrIsOwner(IsPersonCreatedByOrIsOwner, HTMXFormViewMixin, UpdateView):
+class PersonUpdateView(HTMXFormViewMixin, UpdateView):
     template_name = 'persons/person_update.html'
     htmx_template_name = 'persons/htmx/person_update_htmx.html'
     form_class = PersonUpdateForm
     success_url = reverse_lazy('persons:person-detail')
 
+    def get_queryset(self):
+        return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
-class PersonUpdateMyselfView(PersonUpdateViewOrIsOwner):
-    template_name = 'persons/person_add_myself.html'
-    form_class = PersonUpdateForm
-    success_url = reverse_lazy('persons:person-detail-myself')
+
+class PersonAddRelativesMixin:
+    def get(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        queryset = Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        return get_object_or_404(queryset, id=self.kwargs['person_pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'person': self.person})
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        if self.request.method == 'POST':
-            data = copy.copy(kwargs['data'])
-            data.update({'user': self.request.user})
-            kwargs.update({'data': data})
+        kwargs.update({'person': self.person})
         return kwargs
 
 
-class PersonAddFatherView(HTMXFormViewMixin, PersonAddView):
+class PersonAddFatherView(PersonAddRelativesMixin, HTMXFormViewMixin, PersonAddView):
     template_name = 'persons/person_add_father.html'
     htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
 
-    def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
-    def get_person(self):
-        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
-        return self.person
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'person': self.get_person()})
-        return kwargs
-
-
-class PersonAddFatherMyselfView(PersonAddFatherView):
-    def get_success_url(self):
-        return reverse('persons:person-detail-myself')
-
-    def get_person(self):
-        if hasattr(self.request.user, 'person'):
-            return self.request.user.person
-        return Http404(
-            "No Person matches the given query."
-        )
-
-
-class PersonAddMotherView(HTMXFormViewMixin, PersonAddView):
+class PersonAddMotherView(PersonAddRelativesMixin, HTMXFormViewMixin, PersonAddView):
     template_name = 'persons/person_add_mother.html'
     htmx_template_name = 'persons/htmx/person_add_mother_htmx.html'
     form_class = forms.PersonAddMotherForm
 
-    def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
-    def get_person(self):
-        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
-        return self.person
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'person': self.get_person()})
-        return kwargs
-
-
-class PersonAddMotherMyselfView(PersonAddMotherView):
-    def get_success_url(self):
-        return reverse('persons:person-detail-myself')
-
-    def get_person(self):
-        if hasattr(self.request.user, 'person'):
-            return self.request.user.person
-        return Http404(
-            "No Person matches the given query."
-        )
-
-
-class PersonAddSpouseView(HTMXFormViewMixin, PersonAddView):
+class PersonAddSpouseView(PersonAddRelativesMixin, HTMXFormViewMixin, PersonAddView):
     template_name = 'persons/person_add_spouse.html'
     htmx_template_name = 'persons/htmx/person_add_spouse_htmx.html'
     form_class = forms.PersonAddSpouseForm
 
-    def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
-    def get_person(self):
-        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
-        return self.person
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'person': self.get_person()})
-        return kwargs
-
-
-class PersonAddSpouseMyselfView(PersonAddSpouseView):
-    def get_success_url(self):
-        return reverse('persons:person-detail-myself')
-
-    def get_person(self):
-        if hasattr(self.request.user, 'person'):
-            return self.request.user.person
-        return Http404(
-            "No Person matches the given query."
-        )
-
-
-class PersonAddChildView(HTMXFormViewMixin, PersonAddView):
+class PersonAddChildView(PersonAddRelativesMixin, HTMXFormViewMixin, PersonAddView):
     template_name = 'persons/person_add_child.html'
     htmx_template_name = 'persons/htmx/person_add_child_htmx.html'
     form_class = forms.PersonAddChildForm
 
-    def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
-
-    def get_person(self):
-        self.person = get_object_or_404(Person, id=self.kwargs['person_id'])
-        return self.person
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'person': self.get_person()})
-        return kwargs
-
-
-class PersonAddChildMyselfView(PersonAddChildView):
-    def get_success_url(self):
-        return reverse('persons:person-detail-myself')
-
-    def get_person(self):
-        if hasattr(self.request.user, 'person'):
-            return self.request.user.person
-        return Http404(
-            "No Person matches the given query."
-        )
-
-
-class PersonUpdateView(LoginRequiredMixin, IsSubmitterMixin, UpdateView):
-    template_name = 'persons/person_update.html'
-    form_class = PersonUpdateForm
-    queryset = Person.objects.all()
-    success_url = reverse_lazy('persons:person-detail')
-
 
 class PersonDetailView(LoginRequiredMixin, IsSubmitterMixin, DetailView):
     template_name = 'persons/person_detail.html'
-    queryset = Person.objects.all()
 
-
-class PersonDetailMyselfView(LoginRequiredMixin, IsSubmitterMixin, DetailView):
-    template_name = 'persons/person_detail_myself.html'
-    queryset = Person.objects.all()
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Person, user_id=self.request.user.id)
+    def get_queryset(self):
+        return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
 
 class FindMyselfView(HTMXViewMixin, LoginRequiredMixin, FormView):

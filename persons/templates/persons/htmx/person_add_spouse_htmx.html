@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <div hx-boost="true" hx-target="this" hx-swap="outerHTML">
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add-spouse-myself' %}" method="post"
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add-spouse' person_pk=person.pk %}" method="post"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}

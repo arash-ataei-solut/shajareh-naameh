@@ -9,20 +9,23 @@ from places.forms import PlaceWidget
 
 
 class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
+    created_by = forms.HiddenInput()
+
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year',
+            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
 
 
 class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
     user = forms.HiddenInput()
+    created_by = forms.HiddenInput()
 
     class Meta:
         model = Person
         fields = [
-            'user', 'first_name', 'last_name', 'gender', 'birth_year',
+            'user', 'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
 
 
@@ -42,7 +45,7 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'birth_year'
+            'first_name', 'last_name', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -68,7 +71,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'birth_year'
+            'first_name', 'last_name', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -94,7 +97,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year'
+            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -111,7 +114,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year'
+            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):

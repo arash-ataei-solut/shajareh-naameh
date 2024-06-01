@@ -8,7 +8,11 @@ from django_jalali.db import models as j_models
 
 
 class Person(models.Model):
-    user = models.OneToOneField('users.ShnUser', on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.OneToOneField(
+        'users.ShnUser', on_delete=models.SET_NULL,
+        related_name='person',
+        null=True, blank=True,
+    )
     first_name = models.CharField(max_length=150, verbose_name=_('اسم'))
     last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'))
     gender = models.IntegerField(verbose_name=_('جنسیت'), choices=GenderChoices.choices)
@@ -39,7 +43,11 @@ class Person(models.Model):
     death_year = models.SmallIntegerField(verbose_name=_('سال وفات'), null=True, blank=True)
     death_date = j_models.jDateField(verbose_name=_('تاریخ وفات'), null=True, blank=True)
 
-    created_by = models.ForeignKey(ShnUser, on_delete=models.SET_NULL, verbose_name=_('ثبت شده توسط'))
+    created_by = models.ForeignKey(
+        'users.ShnUser', on_delete=models.CASCADE,
+        related_name='created_persons', related_query_name='created_person',
+        verbose_name=_('ثبت شده توسط')
+    )
     created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
     updated_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان آخرین ویرایش'))
 

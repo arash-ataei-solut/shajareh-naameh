@@ -12,7 +12,7 @@
 <hr class="mt-0">
 {% if person %}
     <div class="text-center">
-        <a class="btn btn-primary" href="{% url 'persons:person-detail-myself' %}" hx-boost="false">
+        <a class="btn btn-primary" href="{% url 'persons:person-detail' pk=person.pk %}" hx-boost="false">
             <i class="fa-solid fa-magnifying-glass"></i> {% trans 'اطلاعات خانواده' %}
         </a>
     </div>

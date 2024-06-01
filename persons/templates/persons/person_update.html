@@ -1,6 +1,8 @@
 {% extends 'form_base.html' %}
+{% load i18n %}
 
 
 {% block form_content %}
+    <h2 class="fw-bold mb-3">{% trans 'ویرایش اطلاعات شخص' %}</h2>
     {% include 'persons/htmx/person_update_htmx.html' %}
 {% endblock %}
