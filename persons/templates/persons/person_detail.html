@@ -33,15 +33,17 @@
                                 </div>
                             </div>
 
-                            <div class="text-center">
-                                <a class="btn btn-primary" href="{% url 'persons:person-detail' pk=object.father.pk %}">
-                                    <i class="fa-solid fa-plus"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                            <div class="text-center mt-3">
+                                <a class="btn btn-info" href="{% url 'persons:person-detail' pk=object.father.pk %}">
+                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
                                 </a>
                             </div>
                         {% else %}
                             <div class="text-center">
-                                <a class="btn btn-primary" hx-boost="true" href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="this" hx-swap="outerHTML">
-                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات پدر' %}
+                                <a class="btn btn-primary" hx-boost="true"
+                                   href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="this"
+                                   hx-swap="outerHTML">
+                                    <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات پدر' %}
                                 </a>
                             </div>
                         {% endif %}
@@ -63,10 +65,18 @@
                                     <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
                                 </div>
                             </div>
+
+                            <div class="text-center mt-3">
+                                <a class="btn btn-info" href="{% url 'persons:person-detail' pk=object.mother.pk %}">
+                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
+                                </a>
+                            </div>
                         {% else %}
                             <div class="text-center">
-                                <a class="btn btn-primary" hx-boost="true" href="{% url 'persons:person-add-mother' person_pk=person.pk %}" hx-target="this" hx-swap="outerHTML">
-                                    <i class="fa-solid fa-plus"></i> {% trans 'ثبت اطلاعات مادر' %}
+                                <a class="btn btn-primary" hx-boost="true"
+                                   href="{% url 'persons:person-add-mother' person_pk=person.pk %}" hx-target="this"
+                                   hx-swap="outerHTML">
+                                    <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
                                 </a>
                             </div>
                         {% endif %}
@@ -76,36 +86,42 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات شخص' %}</h4>
                         <hr class="mt-0">
-                        <div class="row row-cols-lg-4 row-cols-md-2 g-2">
-                            <div class="col">
-                                <span>{% trans 'نام' %}: </span>{{ object.first_name }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'نام خانوادگی' %}: </span>{{ object.last_name }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'تاریخ تولد' %}: </span>{{ object.birth_date|default_if_none:'-' }}
-                            </div>
-                            <div class="col">
-                                <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
-                            </div>
-                            {% if object.death_year %}
+                        <div id="personalInfo">
+                            <div class="row row-cols-lg-4 row-cols-md-2 g-2">
+                                <div class="col">
+                                    <span>{% trans 'نام' %}: </span>{{ object.first_name }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.last_name }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'تاریخ تولد' %}: </span>{{ object.birth_date|default_if_none:'-' }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
+                                </div>
                                 <div class="col">
                                     <span>{% trans 'سال مرگ' %}: </span>{{ object.death_year|default_if_none:'-' }}
                                 </div>
-                            {% endif %}
-                            {% if object.death_date %}
                                 <div class="col">
                                     <span>{% trans 'تاریخ مرگ' %}: </span>{{ object.death_date|default_if_none:'-' }}
                                 </div>
-                            {% endif %}
+                            </div>
+                            <div class="text-center mt-3">
+                                <a class="btn btn-primary" hx-boost="true"
+                                   href="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personalInfo"
+                                   hx-swap="outerHTML">
+                                    <i class="fa-solid fa-edit"></i> {% trans 'ویرایش اطلاعات' %}
+                                </a>
+                            </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-12">
@@ -115,7 +131,7 @@
                         <div class="row row-cols-md-2 g-2">
                             {% for spouse in object.spouse.all %}
                                 <div class="col">
-                                    <div class="py-3 px-2 border rounded">
+                                    <div class="p-3 border rounded">
                                         <div class="row row-cols-md-2 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ spouse.first_name }}
@@ -130,6 +146,13 @@
                                                 <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year }}
                                             </div>
                                         </div>
+
+                                        <div class="text-center mt-3">
+                                            <a class="btn btn-info"
+                                               href="{% url 'persons:person-detail' pk=spouse.pk %}">
+                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات همسر' %}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -138,9 +161,10 @@
                                 <div class="py-3 px-2 border rounded">
                                     <div class="text-center">
                                         <a class="btn btn-primary" hx-boost="true"
-                                           href="{% url 'persons:person-add-spouse' person_pk=person.pk %}" hx-target="this"
+                                           href="{% url 'persons:person-add-spouse' person_pk=person.pk %}"
+                                           hx-target="this"
                                            hx-swap="outerHTML">
-                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات همسر' %}
+                                            <i class="fa-solid fa-plus-circle"></i> {% trans 'افزودن اطلاعات همسر' %}
                                         </a>
                                     </div>
                                 </div>
@@ -155,7 +179,7 @@
                         <div class="row row-cols-md-2 g-2">
                             {% for child in object.father_children.all %}
                                 <div class="col">
-                                    <div class="py-3 px-2 border rounded">
+                                    <div class="p-3 border rounded">
                                         <div class="row row-cols-md-2 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ child.first_name }}
@@ -170,12 +194,19 @@
                                                 <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
                                             </div>
                                         </div>
+
+                                        <div class="text-center mt-3">
+                                            <a class="btn btn-info"
+                                               href="{% url 'persons:person-detail' pk=child.pk %}">
+                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
                             {% for child in object.mother_children.all %}
                                 <div class="col">
-                                    <div class="py-3 px-2 border rounded">
+                                    <div class="p-3 border rounded">
                                         <div class="row row-cols-md-2 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ child.first_name }}
@@ -189,6 +220,13 @@
                                             <div class="col">
                                                 <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
                                             </div>
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <a class="btn btn-info"
+                                               href="{% url 'persons:person-detail' pk=child.pk %}">
+                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -198,9 +236,10 @@
                                 <div class="py-3 px-2 border rounded">
                                     <div class="text-center">
                                         <a class="btn btn-primary" hx-boost="true"
-                                           href="{% url 'persons:person-add-child' person_pk=person.pk %}" hx-target="this"
+                                           href="{% url 'persons:person-add-child' person_pk=person.pk %}"
+                                           hx-target="this"
                                            hx-swap="outerHTML">
-                                            <i class="fa-solid fa-plus"></i> {% trans 'افزودن اطلاعات فرزند' %}
+                                            <i class="fa-solid fa-plus-circle"></i> {% trans 'افزودن اطلاعات فرزند' %}
                                         </a>
                                     </div>
                                 </div>
