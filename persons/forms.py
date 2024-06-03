@@ -1,9 +1,8 @@
 from django import forms
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from django_jalali.forms import jDateField, jDateInput
 
+from common.fields import SearchableSelect
 from common.htmx.forms import PlaceholderFormMixin
 from persons import enums
 from persons.models import Person
@@ -32,8 +31,6 @@ class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
 
 
 class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
-    birth_date = jDateField(input_formats=['%Y/%m/%d'])
-
     class Meta:
         model = Person
         fields = [
@@ -41,7 +38,9 @@ class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
             'birth_date', 'birth_place', 'death_year', 'death_date'
         ]
         widgets = {
-            'birth_place': PlaceWidget,
+            'birth_place': SearchableSelect(),
+            'birth_date': forms.TextInput({'data-jdp': '', 'autocomplete': 'off'}),
+            'death_date': forms.TextInput({'data-jdp': '', 'autocomplete': 'off'})
         }
 
 

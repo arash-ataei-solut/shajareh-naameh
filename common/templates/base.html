@@ -36,6 +36,10 @@
         <!-- JalaliDatePicker -->
         <link type="text/css" rel="stylesheet" href="{% static 'JalaliDatePicker/jalalidatepicker.min.css' %}" />
 
+        <!-- HTMX swap oob -->
+        <div id="HTMXSwapOOBCSS"></div>
+    {% endblock %}
+    {% block main_head %}
         <!-- Template Main CSS File -->
         <link href="{% static 'style/css/style.css' %}" rel="stylesheet">
         <link href="{% static 'style/css/shn.css' %}" rel="stylesheet">
@@ -72,9 +76,13 @@
     <!-- JalaliDatePicker -->
     <script type="text/javascript" src="{% static 'JalaliDatePicker/jalalidatepicker.min.js' %}"></script>
 
+    <!-- HTMX swap oob -->
+    <div id="HTMXSwapOOBJS"></div>
+
+{% endblock %}
+{% block main_scripts %}
     <!-- Template Main JS File -->
     <script src="{% static 'style/js/main.js' %}"></script>
-
 {% endblock %}
 
 </body>

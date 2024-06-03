@@ -101,7 +101,7 @@
                                     <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'تاریخ تولد' %}: </span>{{ object.birth_date|default_if_none:'-' }}
+                                    <span>{% trans 'تاریخ تولد' %}: </span><span dir="ltr">{{ object.birth_date|default_if_none:'-' }}</span>
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
@@ -110,7 +110,7 @@
                                     <span>{% trans 'سال مرگ' %}: </span>{{ object.death_year|default_if_none:'-' }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'تاریخ مرگ' %}: </span>{{ object.death_date|default_if_none:'-' }}
+                                    <span>{% trans 'تاریخ مرگ' %}: </span><span dir="ltr">{{ object.death_date|default_if_none:'-' }}</span>
                                 </div>
                             </div>
                             <div class="text-center mt-3">

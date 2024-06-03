@@ -270,4 +270,7 @@
 
 // JalaliDatePicker
 jalaliDatepicker.startWatch();
-// jalaliDatepicker.updateOptions({separatorChars: {date: '-'}});
+jalaliDatepicker.updateOptions({separatorChars: {date: '-'}});
+
+// Select2
+$('.select2-selection__rendered').addClass('form-aaaaaaaaaaaaaaaaaaaaaaaaa')

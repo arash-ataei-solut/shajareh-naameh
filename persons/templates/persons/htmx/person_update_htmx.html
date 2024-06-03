@@ -1,6 +1,14 @@
 {% load shn_filters %}
 {% load i18n %}
 
+<div hx-swap-oob="beforeend" id="HTMXSwapOOBCSS">
+    {{ form.media.css }}
+</div>
+
+<div hx-swap-oob="beforeend" id="HTMXSwapOOBJS">
+    {{ form.media.js }}
+</div>
+
 <div hx-boost="true" hx-target="this" hx-swap="outerHTML">
     <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-update' pk=object.pk %}" method="post"
           novalidate>
@@ -70,7 +78,7 @@
             <div class="col">
                 <div class="form-floating">
                     {{ form.death_year|add_class:'form-control' }}
-                    <label for="{{ form.otp.id_for_label }}">{{ form.otp.label }}</label>
+                    <label for="{{ form.death_year.id_for_label }}">{{ form.death_year.label }}</label>
                     {% for error in form.death_year.errors %}
                         <div class=" invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
