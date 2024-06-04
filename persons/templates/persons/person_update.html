@@ -1,9 +1,13 @@
 {% extends 'form_base.html' %}
 {% load i18n %}
+{% load static %}
 
 {% block head %}
     {{ block.super }}
     {{ form.media.css }}
+    <!-- Select2 bootstrap5 theme -->
+    <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'select2/shn.css' %}" />
 {% endblock %}
 
 {% block scripts %}

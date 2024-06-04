@@ -38,10 +38,6 @@ html {
     right: 0;
 }
 
-.select2-selection {
-    height: calc(3.5rem + calc(var(--bs-border-width) * 2));
-}
-
 @media (min-width: 576px) {
     .one-col-form-width {
         width: 500px;

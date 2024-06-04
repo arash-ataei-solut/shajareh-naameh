@@ -38,7 +38,7 @@ class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
             'birth_date', 'birth_place', 'death_year', 'death_date'
         ]
         widgets = {
-            'birth_place': SearchableSelect(),
+            'birth_place': PlaceWidget,
             'birth_date': forms.TextInput({'data-jdp': '', 'autocomplete': 'off'}),
             'death_date': forms.TextInput({'data-jdp': '', 'autocomplete': 'off'})
         }

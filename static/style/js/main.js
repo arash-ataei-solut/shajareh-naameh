@@ -274,3 +274,6 @@ jalaliDatepicker.updateOptions({separatorChars: {date: '-'}});
 
 // Select2
 $('.select2-selection__rendered').addClass('form-aaaaaaaaaaaaaaaaaaaaaaaaa')
+$( '#id_birth_place' ).select2( {
+    theme: 'bootstrap-5'
+} );

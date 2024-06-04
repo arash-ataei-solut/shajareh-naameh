@@ -1,11 +1,15 @@
 {% load shn_filters %}
 {% load i18n %}
+{% load static %}
 
-<div hx-swap-oob="beforeend" id="HTMXSwapOOBCSS">
+<div hx-swap-oob="beforebegin" id="HTMXSwapOOBCSS">
     {{ form.media.css }}
+    <!-- Select2 bootstrap5 theme -->
+    <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'select2/shn.css' %}" />
 </div>
 
-<div hx-swap-oob="beforeend" id="HTMXSwapOOBJS">
+<div hx-swap-oob="beforebegin" id="HTMXSwapOOBJS">
     {{ form.media.js }}
 </div>
 
