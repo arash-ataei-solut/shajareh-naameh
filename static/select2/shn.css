@@ -2,6 +2,3 @@
     min-height: calc(3.5rem + calc(var(--bs-border-width) * 2));
     padding-top: 1.625rem;
 }
-
-.select2-selection {
-}
