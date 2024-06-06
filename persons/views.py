@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, UpdateView, DetailView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
-from persons import forms
+from persons import forms, matchmakers
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.mixins import IsSubmitterMixin, IsPersonCreatedByOrIsOwner
 from persons.models import Person
@@ -89,6 +89,11 @@ class PersonAddFatherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVi
     template_name = 'persons/person_add_father.html'
     htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
+
+    def form_valid(self, form):
+        if matchmakers.father_matched(form.instance):
+            return super().form_valid(form)
+        return super().form_valid(form)
 
 
 class PersonAddMotherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):

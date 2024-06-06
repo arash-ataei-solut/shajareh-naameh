@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import ShnUser
 from . import managers
-from .enums import GenderChoices
+from .enums import GenderChoices, MatchingStatusChoices, RelationChoices
 from django_jalali.db import models as j_models
 
 
@@ -52,6 +52,12 @@ class Person(models.Model):
     created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
     updated_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان آخرین ویرایش'))
 
+    matching_status = models.IntegerField(
+        choices=MatchingStatusChoices.choices,
+        default=MatchingStatusChoices.NO_MATCH,
+        verbose_name=_('وضعیت تطابق')
+    )
+
     objects = managers.PersonManager()
 
     class Meta:
@@ -64,3 +70,21 @@ class Person(models.Model):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+
+class RelationMatchingRequest(models.Model):
+    person = models.ForeignKey(
+        'persons.Person', on_delete=models.CASCADE,
+        related_name='relation_requests', related_query_name='relation_request',
+        verbose_name=_('شخص')
+    )
+    related_person = models.ForeignKey(
+        'persons.Person', on_delete=models.CASCADE,
+        related_name='relation_requests_related', related_query_name='relation_request_related',
+        verbose_name=_('شخص وابسته')
+    )
+    relation = models.CharField(max_length=10, choices=RelationChoices.choices, verbose_name=_('نسبت'))
+
+    class Meta:
+        verbose_name = _('درخواست تطابق وابستگان')
+        verbose_name_plural = _('درخواست‌های تطابق وابستگان')
