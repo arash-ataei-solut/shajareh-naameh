@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import ShnUser
 from . import managers
-from .enums import GenderChoices, MatchingStatusChoices, RelationChoices
+from .enums import GenderChoices, MatchingStatusChoices, RelationChoices, RelationRequestStatusChoices
 from django_jalali.db import models as j_models
 
 
@@ -71,6 +71,10 @@ class Person(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    @property
+    def is_matching(self):
+        return bool(self.matching_status == MatchingStatusChoices.MATCHING)
+
 
 class RelationMatchingRequest(models.Model):
     person = models.ForeignKey(
@@ -78,13 +82,32 @@ class RelationMatchingRequest(models.Model):
         related_name='relation_requests', related_query_name='relation_request',
         verbose_name=_('شخص')
     )
-    related_person = models.ForeignKey(
+    related_person = models.OneToOneField(
         'persons.Person', on_delete=models.CASCADE,
-        related_name='relation_requests_related', related_query_name='relation_request_related',
+        related_name='relation_request_related',
         verbose_name=_('شخص وابسته')
+    )
+    similar_related_person = models.OneToOneField(
+        'persons.Person', on_delete=models.CASCADE,
+        related_name='relation_request_similar_related',
+        verbose_name=_('شخص وابسته مشابه'),
+        null=True, blank=True,
+    )
+    status = models.IntegerField(
+        choices=RelationRequestStatusChoices.choices,
+        default=RelationRequestStatusChoices.AWAITING_SIMILAR,
+        verbose_name=_('وضعیت')
     )
     relation = models.CharField(max_length=10, choices=RelationChoices.choices, verbose_name=_('نسبت'))
 
     class Meta:
         verbose_name = _('درخواست تطابق وابستگان')
         verbose_name_plural = _('درخواست‌های تطابق وابستگان')
+
+    @property
+    def is_awaiting_similar(self):
+        return bool(self.status == RelationRequestStatusChoices.AWAITING_SIMILAR)
+
+    @property
+    def is_awaiting_confirmation(self):
+        return bool(self.status == RelationRequestStatusChoices.AWAITING_CONFIRMATION)

@@ -32,12 +32,30 @@
                                     <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
                                 </div>
                             </div>
-
-                            <div class="text-center mt-3">
-                                <a class="btn btn-info" href="{% url 'persons:person-detail' pk=object.father.pk %}">
-                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
-                                </a>
-                            </div>
+                            
+                            {% if object.father.is_matchhing %}
+                                {% if object.father.relation_request_related.is_awaiting_similar %}
+                                    <div class="text-center mt-3">
+                                        <a class="btn btn-info"
+                                           href="{% url 'persons:person-detail' pk=object.father.pk %}">
+                                            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                        </a>
+                                    </div>
+                                {% elif object.father.relation_request_related.is_awaiting_confirmation %}
+                                    <div class="text-center mt-3">
+                                        <a class="btn btn-info"
+                                           href="{% url 'persons:person-detail' pk=object.father.pk %}">
+                                            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                        </a>
+                                    </div>
+                                {% endif %} 
+                            {% else %}
+                                <div class="text-center mt-3">
+                                    <a class="btn btn-info" href="{% url 'persons:person-detail' pk=object.father.pk %}">
+                                        <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                    </a>
+                                </div>
+                            {% endif %} 
                         {% else %}
                             <div class="text-center">
                                 <a class="btn btn-primary" hx-boost="true"

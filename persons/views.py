@@ -10,6 +10,7 @@ from django.views.generic import CreateView, FormView, UpdateView, DetailView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons import forms, matchmakers
+from persons.enums import MatchingStatusChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.mixins import IsSubmitterMixin, IsPersonCreatedByOrIsOwner
 from persons.models import Person
@@ -91,9 +92,12 @@ class PersonAddFatherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVi
     form_class = forms.PersonAddFatherForm
 
     def form_valid(self, form):
-        if matchmakers.father_matched(form.instance):
-            return super().form_valid(form)
-        return super().form_valid(form)
+        father = form.save()
+        if matchmakers.person_can_be_matched(father):
+            father.matching_status = MatchingStatusChoices.MATCHING
+            father.save()
+            # TODO Return redirect to matching page
+        return self.success_response()
 
 
 class PersonAddMotherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
@@ -119,6 +123,13 @@ class PersonDetailView(LoginRequiredMixin, IsSubmitterMixin, DetailView):
 
     def get_queryset(self):
         return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+
+
+class RelationRequestSetSimilarView(HTMXFormViewMixin, LoginRequiredMixin, FormView):
+    template_name = 'persons/relation_request_set_similar.html'
+    htmx_template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
+    form_class = forms.RelationRequestSetSimilarForm
+
 
 
 class FindMyselfView(HTMXViewMixin, LoginRequiredMixin, FormView):

@@ -4,7 +4,8 @@ from django.utils.translation import gettext as _
 
 from common.fields import SearchableSelect
 from common.htmx.forms import PlaceholderFormMixin
-from persons import enums
+from persons import enums, matchmakers
+from persons.enums import RelationChoices
 from persons.models import Person
 from places.forms import PlaceWidget
 
@@ -132,6 +133,17 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
             child.mother = self.person
         child.save()
         return child
+
+
+class RelationRequestSetSimilarForm(forms.Form):
+    similar_person = forms.ChoiceField(
+        label=_('شخص مشابه'),
+        empty_label=_('هیچکدام')
+    )
+
+    def __init__(self, person: Person, relation: RelationChoices, *args, **kwargs):
+        self.fields['similar_person'].choices = matchmakers.similar_persons_choices(person, relation)
+        super().__init__()
 
 
 class FindMyselfForm(forms.Form):

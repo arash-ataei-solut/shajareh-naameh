@@ -19,5 +19,8 @@ urlpatterns = [
 
     path('person-update/<int:pk>/', PersonUpdateView.as_view(), name='person-update'),
     path('person-detail/<int:pk>/', PersonDetailView.as_view(), name='person-detail'),
+
+    path('relation-request-set-similar/', )
+
     path('find-myself/', FindMyselfView.as_view(), name='find-myself'),
 ]

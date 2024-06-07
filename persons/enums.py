@@ -18,3 +18,11 @@ class RelationChoices(TextChoices):
     MOTHER = 'MOTHER', _('مادر')
     SPOUSE = 'SPOUSE', _('همسر')
     CHILD = 'CHILD', _('فرزند')
+
+
+class RelationRequestStatusChoices(IntegerChoices):
+    AWAITING_SIMILAR = 0, _('در انتظار تعیین مشابه')
+    SIMILAR_IS_SET = 1, _('مشابه تعیین شده‌است')
+    AWAITING_CONFIRMATION = 2, _('در انتظار تایید تطابق')
+    MATCHING_IS_DONE = 3, _('تطابق انجام شده‌است')
+    REJECTED_SIMILARITY = 4, _('تشابه رد شد')
