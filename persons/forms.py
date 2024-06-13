@@ -138,7 +138,6 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
 class RelationRequestSetSimilarForm(forms.Form):
     similar_person = forms.ChoiceField(
         label=_('شخص مشابه'),
-        empty_label=_('هیچکدام')
     )
 
     def __init__(self, person: Person, relation: RelationChoices, *args, **kwargs):

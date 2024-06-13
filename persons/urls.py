@@ -1,13 +1,12 @@
 from django.urls import path
 
 from persons import views
-from persons.views import PersonAddView, FindMyselfView, PersonUpdateView, PersonDetailView, PersonAddMyselfView
 
 app_name = 'persons'
 
 urlpatterns = [
-    path('person-add/', PersonAddView.as_view(), name='person-add'),
-    path('person-add-myself/', PersonAddMyselfView.as_view(), name='person-add-myself'),
+    path('person-add/', views.PersonAddView.as_view(), name='person-add'),
+    path('person-add-myself/', views.PersonAddMyselfView.as_view(), name='person-add-myself'),
 
     path('person-add-father/<int:person_pk>/', views.PersonAddFatherView.as_view(), name='person-add-father'),
 
@@ -17,10 +16,14 @@ urlpatterns = [
 
     path('person-add-child/<int:person_pk>/', views.PersonAddChildView.as_view(), name='person-add-child'),
 
-    path('person-update/<int:pk>/', PersonUpdateView.as_view(), name='person-update'),
-    path('person-detail/<int:pk>/', PersonDetailView.as_view(), name='person-detail'),
+    path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),
+    path('person-detail/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
 
-    path('relation-request-set-similar/', )
+    path(
+        'relation-request-set-similar/',
+        views.RelationRequestSetSimilarView.as_view(),
+        name='relation-request-set-similar'
+    ),
 
-    path('find-myself/', FindMyselfView.as_view(), name='find-myself'),
+    path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),
 ]
