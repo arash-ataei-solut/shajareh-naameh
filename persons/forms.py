@@ -2,11 +2,11 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from common.fields import SearchableSelect
 from common.htmx.forms import PlaceholderFormMixin
-from persons import enums, matchmakers
-from persons.enums import RelationChoices
-from persons.models import Person
+from persons import enums
+from persons.enums import RelationChoices, RelationRequestStatusChoices
+from persons.matchmakers import Matchmaker, RelationRequestMatchmaker
+from persons.models import Person, RelationMatchingRequest
 from places.forms import PlaceWidget
 
 
@@ -135,14 +135,23 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
         return child
 
 
-class RelationRequestSetSimilarForm(forms.Form):
-    similar_person = forms.ChoiceField(
-        label=_('شخص مشابه'),
-    )
+class RelationRequestSetSimilarForm(forms.ModelForm):
+    similar_related_person = forms.ChoiceField(widget=forms.RadioSelect())
 
-    def __init__(self, person: Person, relation: RelationChoices, *args, **kwargs):
-        self.fields['similar_person'].choices = matchmakers.similar_persons_choices(person, relation)
-        super().__init__()
+    class Meta:
+        model = RelationMatchingRequest
+        fields = ['similar_related_person']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        matchmaker = RelationRequestMatchmaker(self.instance)
+        self.fields['similar_related_person'].choices = matchmaker.related_person_match_choices()
+
+    def save(self, commit=True):
+        if self.instance.similar_related_person is None:
+            self.instance.status = RelationRequestStatusChoices.REJECTED_SIMILARITY
+        return super().save(commit)
+
 
 
 class FindMyselfForm(forms.Form):

@@ -9,7 +9,7 @@ class GenderChoices(IntegerChoices):
 
 class MatchingStatusChoices(IntegerChoices):
     NO_MATCH = 0, _('بدون انطباق')
-    MATCHING = 1, _('در حال تطابق')
+    IS_MATCHING = 1, _('در حال تطابق')
     MATCHED = 2, _('تطابق یافته')
 
 

@@ -29,7 +29,7 @@ class Person(models.Model):
         verbose_name=_('مادر'),
         null=True, blank=True
     )
-    spouse = models.ManyToManyField(
+    spouses = models.ManyToManyField(
         'self',
         verbose_name=_('همسر'), blank=True
     )
@@ -73,7 +73,7 @@ class Person(models.Model):
 
     @property
     def is_matching(self):
-        return bool(self.matching_status == MatchingStatusChoices.MATCHING)
+        return bool(self.matching_status == MatchingStatusChoices.IS_MATCHING)
 
 
 class RelationMatchingRequest(models.Model):

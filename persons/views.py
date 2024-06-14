@@ -10,10 +10,11 @@ from django.views.generic import CreateView, FormView, UpdateView, DetailView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons import forms, matchmakers
-from persons.enums import MatchingStatusChoices
+from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, RelationChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
+from persons.matchmakers import Matchmaker
 from persons.mixins import IsSubmitterMixin, IsPersonCreatedByOrIsOwner
-from persons.models import Person
+from persons.models import Person, RelationMatchingRequest
 
 
 class PersonAddView(LoginRequiredMixin, CreateView):
@@ -69,7 +70,7 @@ class PersonAddRelativeMixin:
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+        return self.success_url if self.success_url else reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
     def get_person(self):
         queryset = Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
@@ -93,10 +94,16 @@ class PersonAddFatherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVi
 
     def form_valid(self, form):
         father = form.save()
-        if matchmakers.person_can_be_matched(father):
-            father.matching_status = MatchingStatusChoices.MATCHING
+        matchmaker = Matchmaker(father)
+        if matchmaker.match_exists():
+            matching_request = RelationMatchingRequest.objects.create(
+                person=self.person,
+                related_person=father,
+                relation=RelationChoices.FATHER
+            )
+            father.matching_status = MatchingStatusChoices.IS_MATCHING
             father.save()
-            # TODO Return redirect to matching page
+            self.success_url = reverse('persons:relation-request-set-similar', kwargs={'pk': matching_request.pk})
         return self.success_response()
 
 
@@ -125,11 +132,13 @@ class PersonDetailView(LoginRequiredMixin, IsSubmitterMixin, DetailView):
         return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
 
-class RelationRequestSetSimilarView(HTMXFormViewMixin, LoginRequiredMixin, FormView):
+class RelationRequestSetSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):
     template_name = 'persons/relation_request_set_similar.html'
     htmx_template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
     form_class = forms.RelationRequestSetSimilarForm
 
+    def get_queryset(self):
+        return RelationMatchingRequest.objects.filter(status=RelationRequestStatusChoices.AWAITING_SIMILAR)
 
 
 class FindMyselfView(HTMXViewMixin, LoginRequiredMixin, FormView):

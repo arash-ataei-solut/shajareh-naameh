@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load shn_filters %}
+{% load i18n %}
 
-</body>
-</html>
+<div hx-boost="true" hx-target="this" hx-swap="outerHTML">
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:relation-request-set-similar' pk=object.pk %}" method="post"
+          novalidate>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="row row-cols-md-2 g-2">
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.similar_related_person|add_class:'form-control' }}
+                    <label for="{{ form.similar_related_person.id_for_label }}">{{ form.similar_related_person.label }}</label>
+                    {% for error in form.similar_related_person.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary mt-3" type="submit">
+                {% trans 'ذخیره' %}
+            </button>
+        </div>
+    </form>
+</div>

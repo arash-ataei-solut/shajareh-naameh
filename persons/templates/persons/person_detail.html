@@ -32,21 +32,17 @@
                                     <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
                                 </div>
                             </div>
-                            
-                            {% if object.father.is_matchhing %}
+                            {% if object.father.is_matching %}
                                 {% if object.father.relation_request_related.is_awaiting_similar %}
                                     <div class="text-center mt-3">
-                                        <a class="btn btn-info"
-                                           href="{% url 'persons:person-detail' pk=object.father.pk %}">
-                                            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                        <a class="btn btn-info" hx-boost="true" hx-target="this" hx-swap="outerHTML"
+                                           href="{% url 'persons:relation-request-set-similar' pk=object.father.relation_request_related.pk %}">
+                                            <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات پدر' %}
                                         </a>
                                     </div>
                                 {% elif object.father.relation_request_related.is_awaiting_confirmation %}
                                     <div class="text-center mt-3">
-                                        <a class="btn btn-info"
-                                           href="{% url 'persons:person-detail' pk=object.father.pk %}">
-                                            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
-                                        </a>
+                                        {% trans 'در انتظار تایید درخواست تطابق' %}
                                     </div>
                                 {% endif %} 
                             {% else %}
@@ -147,7 +143,7 @@
                         <h4>{% trans 'اطلاعات همسر' %}</h4>
                         <hr class="mt-0">
                         <div class="row row-cols-md-2 g-2">
-                            {% for spouse in object.spouse.all %}
+                            {% for spouse in object.spouses.all %}
                                 <div class="col">
                                     <div class="p-3 border rounded">
                                         <div class="row row-cols-md-2 gx-1 gy-2">
