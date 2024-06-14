@@ -31,7 +31,7 @@ class Matchmaker:
 
 class RelationRequestMatchmaker(Matchmaker):
     def __init__(self, matching_request: RelationMatchingRequest):
-        super().__init__(matching_request.person)
+        super().__init__(matching_request.related_person)
         self.matching_request = matching_request
 
     def related_person_match_choices(self) -> list[tuple[int, str]]:
@@ -39,7 +39,7 @@ class RelationRequestMatchmaker(Matchmaker):
         queryset = self.match_queryset().select_related(
             'father', 'mother'
         ).prefetch_related(
-            'spouses', 'reverse_spouses', 'father_children', 'mother_children'
+            'spouses', 'father_children', 'mother_children'
         )
         for person in queryset:
             choice_label = f'{person.first_name} {person.last_name}'
@@ -61,9 +61,6 @@ class RelationRequestMatchmaker(Matchmaker):
                 choice_label += f' - نام یکی از فرزندان: {child.first_name}'
             elif person.spouses.exclude(id=self.person.id).exists():
                 spouse = person.spouses.exclude(id=self.person.id).first()
-                choice_label += f' - نام یکی از همسرها: {spouse.first_name}'
-            elif person.reverse_spouses.exclude(id=self.person.id).exists():
-                spouse = person.reverse_spouses.exclude(id=self.person.id).first()
                 choice_label += f' - نام یکی از همسرها: {spouse.first_name}'
             choices_list.append((person.id, choice_label))
         return choices_list

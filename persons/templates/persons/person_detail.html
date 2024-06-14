@@ -17,7 +17,7 @@
         <div class="container">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded" id="fatherInfo">
                         <h4>{% trans 'اطلاعات پدر' %}</h4>
                         <hr class="mt-0">
                         {% if object.father %}
@@ -35,7 +35,7 @@
                             {% if object.father.is_matching %}
                                 {% if object.father.relation_request_related.is_awaiting_similar %}
                                     <div class="text-center mt-3">
-                                        <a class="btn btn-info" hx-boost="true" hx-target="this" hx-swap="outerHTML"
+                                        <a class="btn btn-info" hx-boost="true" hx-target="#fatherInfo" hx-swap="innerHTML"
                                            href="{% url 'persons:relation-request-set-similar' pk=object.father.relation_request_related.pk %}">
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات پدر' %}
                                         </a>

@@ -136,7 +136,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
 
 
 class RelationRequestSetSimilarForm(forms.ModelForm):
-    similar_related_person = forms.ChoiceField(widget=forms.RadioSelect())
+    similar_related_person = forms.ChoiceField(label=_('شخص وابسته مشابه'))
 
     class Meta:
         model = RelationMatchingRequest
