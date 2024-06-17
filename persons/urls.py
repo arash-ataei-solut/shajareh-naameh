@@ -20,9 +20,9 @@ urlpatterns = [
     path('person-detail/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
 
     path(
-        'relation-request-set-similar/<int:pk>/',
-        views.RelationRequestSetSimilarView.as_view(),
-        name='relation-request-set-similar'
+        'relation-request-select-similar/<int:pk>/',
+        views.RelationRequestSelectSimilarView.as_view(),
+        name='relation-request-select-similar'
     ),
 
     path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),

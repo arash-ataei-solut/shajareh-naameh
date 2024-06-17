@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <div hx-boost="true" hx-target="this" hx-swap="outerHTML">
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:relation-request-set-similar' pk=object.pk %}" method="post"
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:relation-request-select-similar' pk=object.pk %}" method="post"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}
@@ -12,42 +12,17 @@
             {% endfor %}
         </div>
         {% csrf_token %}
-        <div class="row row-cols-md-2 g-2">
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio"
-                           name="{{ form.similar_related_person.field.name }}"
-                           id="{{ form.similar_related_person.id_for_label }}_">
-                    <label class="form-check-label"
-                           for="{{ form.similar_related_person.id_for_label }}_">
-                        {% trans 'هیچکدام' %}
-                    </label>
-                </div>
-                {% for value, label in form.similar_related_person.field.choices %}
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio"
-                               name="{{ form.similar_related_person.field.name }}"
-                               id="{{ form.similar_related_person.id_for_label }}_{{ value }}" value="{{ value }}">
-                        <label class="form-check-label"
-                               for="{{ form.similar_related_person.id_for_label }}_{{ value }}">
-                            {{ label }}
-                        </label>
-                    </div>
-                {% endfor %}
-
-                <div class="form-floating">
-                    {{ form.similar_related_person|add_class:'form-control' }}
-                    <label for="{{ form.similar_related_person.id_for_label }}">{{ form.similar_related_person.label }}</label>
-                    {% for error in form.similar_related_person.errors %}
-                        <div class=" invalid-feedback d-block">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            </div>
+        <p>{% trans 'لطفا یکی از اشخاص را انتخاب و درخواست تطابق خود را ثبت نمایید.' %}</p>
+        <div class="form-floating">
+            {{ form.similar_related_person|add_class:'form-control' }}
+            <label for="{{ form.similar_related_person.id_for_label }}">{{ form.similar_related_person.label }}</label>
+            {% for error in form.similar_related_person.errors %}
+                <div class=" invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
         </div>
-
-        <div class="col-12">
+        <div class="col-12 d-flex justify-content-center">
             <button class="btn btn-primary mt-3" type="submit">
-                {% trans 'ذخیره' %}
+                {% trans 'ثبت درخواست تطابق' %}
             </button>
         </div>
     </form>

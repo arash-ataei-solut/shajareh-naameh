@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from common.htmx.forms import PlaceholderFormMixin
 from persons import enums
 from persons.enums import RelationChoices, RelationRequestStatusChoices
-from persons.matchmakers import Matchmaker, RelationRequestMatchmaker
+from persons.matchmakers import Matchmaker, RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest
 from places.forms import PlaceWidget
 
@@ -136,7 +136,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
 
 
 class RelationRequestSetSimilarForm(forms.ModelForm):
-    similar_related_person = forms.ChoiceField(label=_('شخص وابسته مشابه'))
+    similar_related_person = forms.ChoiceField(label=_('شخص مشابه'), required=False)
 
     class Meta:
         model = RelationMatchingRequest
@@ -144,12 +144,14 @@ class RelationRequestSetSimilarForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        matchmaker = RelationRequestMatchmaker(self.instance)
+        matchmaker = RelationMatchmaker(self.instance.related_person, self.instance.person, self.instance.relation)
         self.fields['similar_related_person'].choices = matchmaker.related_person_match_choices()
 
     def save(self, commit=True):
         if self.instance.similar_related_person is None:
             self.instance.status = RelationRequestStatusChoices.REJECTED_SIMILARITY
+        else:
+            self.instance.status = RelationRequestStatusChoices.AWAITING_CONFIRMATION
         return super().save(commit)
 
 

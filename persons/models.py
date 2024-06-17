@@ -1,11 +1,10 @@
-from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_jalali.db import models as j_models
 
 from users.models import ShnUser
 from . import managers
 from .enums import GenderChoices, MatchingStatusChoices, RelationChoices, RelationRequestStatusChoices
-from django_jalali.db import models as j_models
 
 
 class Person(models.Model):
@@ -93,12 +92,12 @@ class RelationMatchingRequest(models.Model):
         verbose_name=_('شخص وابسته مشابه'),
         null=True, blank=True,
     )
+    relation = models.CharField(max_length=10, choices=RelationChoices.choices, verbose_name=_('نسبت'))
     status = models.IntegerField(
         choices=RelationRequestStatusChoices.choices,
         default=RelationRequestStatusChoices.AWAITING_SIMILAR,
         verbose_name=_('وضعیت')
     )
-    relation = models.CharField(max_length=10, choices=RelationChoices.choices, verbose_name=_('نسبت'))
 
     class Meta:
         verbose_name = _('درخواست تطابق وابستگان')

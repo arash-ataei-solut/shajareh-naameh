@@ -1,6 +1,7 @@
 from django.db.models import QuerySet
+from django.utils.translation import gettext as _
 
-from persons.enums import GenderChoices, RelationChoices
+from persons.enums import GenderChoices, RelationChoices, MatchingStatusChoices
 from persons.models import Person, RelationMatchingRequest
 
 
@@ -29,13 +30,14 @@ class Matchmaker:
         return self.match_queryset().exists()
 
 
-class RelationRequestMatchmaker(Matchmaker):
-    def __init__(self, matching_request: RelationMatchingRequest):
-        super().__init__(matching_request.related_person)
-        self.matching_request = matching_request
+class RelationMatchmaker(Matchmaker):
+    def __init__(self, related_person, main_person, relation):
+        super().__init__(related_person)
+        self.main_person = main_person
+        self.relation = relation
 
     def related_person_match_choices(self) -> list[tuple[int, str]]:
-        choices_list = []
+        choices_list = [(None, _('هیچکدام'))]
         queryset = self.match_queryset().select_related(
             'father', 'mother'
         ).prefetch_related(
@@ -44,10 +46,10 @@ class RelationRequestMatchmaker(Matchmaker):
         for person in queryset:
             choice_label = f'{person.first_name} {person.last_name}'
             main_person_is_father = bool(
-                self.matching_request.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.MALE
+                self.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.MALE
             )
             main_person_is_mother = bool(
-                self.matching_request.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.FEMALE
+                self.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.FEMALE
             )
             if person.father and not main_person_is_father:
                 choice_label += f' - نام پدر: {person.father.first_name}'
@@ -64,4 +66,15 @@ class RelationRequestMatchmaker(Matchmaker):
                 choice_label += f' - نام یکی از همسرها: {spouse.first_name}'
             choices_list.append((person.id, choice_label))
         return choices_list
+
+    def create_matching_request(self) -> RelationMatchingRequest:
+        matching_request = RelationMatchingRequest.objects.create(
+            person=self.main_person,
+            related_person=self.person,
+            relation=self.relation
+        )
+        self.person.matching_status = MatchingStatusChoices.IS_MATCHING
+        self.person.save()
+        return matching_request
+
 
