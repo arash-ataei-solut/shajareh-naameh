@@ -12,7 +12,7 @@
             {% endfor %}
         </div>
         {% csrf_token %}
-        <p>{% trans 'لطفا یکی از اشخاص را انتخاب و درخواست تطابق خود را ثبت نمایید.' %}</p>
+        <p>{% trans 'اطلاعات وارد شده در سامانه موجود است. لطفا اگر شخص مورد نظرتان در لیست زیر موجود است آن را انتخاب و درخواست تطابق خود را ثبت نمایید.' %}</p>
         <div class="form-floating">
             {{ form.similar_related_person|add_class:'form-control' }}
             <label for="{{ form.similar_related_person.id_for_label }}">{{ form.similar_related_person.label }}</label>
@@ -22,7 +22,7 @@
         </div>
         <div class="col-12 d-flex justify-content-center">
             <button class="btn btn-primary mt-3" type="submit">
-                {% trans 'ثبت درخواست تطابق' %}
+                {% trans 'ثبت' %}
             </button>
         </div>
     </form>

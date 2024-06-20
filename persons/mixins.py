@@ -4,13 +4,6 @@ from django.utils.translation import gettext as _
 from persons.models import Person
 
 
-class IsSubmitterMixin(AccessMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_submitter:
-            return super(IsSubmitterMixin, self).dispatch(request, *args, **kwargs)
-        return self.handle_no_permission()
-
-
 class IsPersonCreatedByOrIsOwner(LoginRequiredMixin):
     raise_exception = True
     permission_denied_message = _('شما دسترسی لازم، برای تغییر اطلاعات این شخص، را ندارید.')

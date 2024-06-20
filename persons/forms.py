@@ -155,7 +155,6 @@ class RelationRequestSetSimilarForm(forms.ModelForm):
         return super().save(commit)
 
 
-
 class FindMyselfForm(forms.Form):
     first_name = forms.CharField(label=_('نام'))
     last_name = forms.CharField(label=_('نام خانوادگی'))

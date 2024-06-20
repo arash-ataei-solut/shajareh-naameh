@@ -2,18 +2,17 @@ import copy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, UpdateView, DetailView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
-from persons import forms, matchmakers
+from persons import forms
 from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, RelationChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
-from persons.matchmakers import Matchmaker, RelationMatchmaker
-from persons.mixins import IsSubmitterMixin, IsPersonCreatedByOrIsOwner
+from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest
 
 
@@ -31,7 +30,6 @@ class PersonAddView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('persons:person-detail', kwargs={'pk': self.object.pk})
-
 
 
 class PersonAddMyselfView(PersonAddView):
@@ -95,7 +93,8 @@ class PersonAddRelativeMixin:
         matchmaker = RelationMatchmaker(related_person, self.person, self.relation)
         if matchmaker.match_exists():
             matching_request = matchmaker.create_matching_request()
-            self.success_url = reverse('persons:relation-request-select-similar', kwargs={'pk': matching_request.pk})
+            success_url = reverse('persons:relation-request-select-similar', kwargs={'pk': matching_request.pk})
+            return HttpResponseRedirect(success_url)
         return self.success_response()
 
 
@@ -127,11 +126,15 @@ class PersonAddChildView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVie
     relation = RelationChoices.CHILD
 
 
-class PersonDetailView(LoginRequiredMixin, IsSubmitterMixin, DetailView):
+class PersonDetailView(LoginRequiredMixin, DetailView):
     template_name = 'persons/person_detail.html'
 
     def get_queryset(self):
-        return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        return Person.objects.filter(
+            Q(matching_status=MatchingStatusChoices.NO_MATCH) &
+            (Q(user=self.request.user) | Q(created_by=self.request.user))
+
+        )
 
 
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):

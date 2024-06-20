@@ -36,6 +36,9 @@ class RelationMatchmaker(Matchmaker):
         self.main_person = main_person
         self.relation = relation
 
+    def match_queryset(self) -> QuerySet:
+        return super().match_queryset().exclude(id=self.main_person.id)
+
     def related_person_match_choices(self) -> list[tuple[int, str]]:
         choices_list = [(None, _('هیچکدام'))]
         queryset = self.match_queryset().select_related(

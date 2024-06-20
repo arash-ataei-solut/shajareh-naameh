@@ -43,8 +43,8 @@
                                             </a>
                                         </div>
                                     {% elif object.father.relation_request_related.is_awaiting_confirmation %}
-                                        <div class="text-center mt-3">
-                                            {% trans 'در انتظار تایید درخواست تطابق' %}
+                                        <div class="text-center border border-success p-2 rounded mt-3">
+                                            <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
                                         </div>
                                     {% endif %}
                                 {% else %}
@@ -71,33 +71,51 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات مادر' %}</h4>
                         <hr class="mt-0">
-                        {% if object.mother %}
-                            <div class="row g-2">
-                                <div class="col-md-6">
-                                    <span>{% trans 'نام' %}: </span>{{ object.mother.first_name }}
+                        <div id="motherInfo">
+                            {% if object.mother %}
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <span>{% trans 'نام' %}: </span>{{ object.mother.first_name }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>{% trans 'نام خانوادگی' %}: </span>{{ object.mother.last_name }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <span>{% trans 'نام خانوادگی' %}: </span>{{ object.mother.last_name }}
+                                {% if object.mother.is_matching %}
+                                    {% if object.mother.relation_request_related.is_awaiting_similar %}
+                                        <div class="text-center mt-3">
+                                            <a class="btn btn-info" hx-boost="true" hx-target="#motherInfo"
+                                               hx-swap="innerHTML"
+                                               href="{% url 'persons:relation-request-select-similar' pk=object.mother.relation_request_related.pk %}">
+                                                <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات مادر' %}
+                                            </a>
+                                        </div>
+                                    {% elif object.mother.relation_request_related.is_awaiting_confirmation %}
+                                        <div class="text-center border border-success p-2 rounded mt-3">
+                                            <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="text-center mt-3">
+                                        <a class="btn btn-info"
+                                           href="{% url 'persons:person-detail' pk=object.mother.pk %}">
+                                            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-center">
+                                    <a class="btn btn-primary" hx-boost="true"
+                                       href="{% url 'persons:person-add-mother' person_pk=object.pk %}" hx-target="#motherInfo"
+                                       hx-swap="outerHTML">
+                                        <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
+                                    </a>
                                 </div>
-                                <div class="col-md-6">
-                                    <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
-                                </div>
-                            </div>
-
-                            <div class="text-center mt-3">
-                                <a class="btn btn-info" href="{% url 'persons:person-detail' pk=object.mother.pk %}">
-                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="text-center">
-                                <a class="btn btn-primary" hx-boost="true"
-                                   href="{% url 'persons:person-add-mother' person_pk=person.pk %}" hx-target="this"
-                                   hx-swap="outerHTML">
-                                    <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
-                                </a>
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">

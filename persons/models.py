@@ -64,7 +64,7 @@ class Person(models.Model):
         verbose_name_plural = _('اشخاص')
 
     def __str__(self):
-        return self.full_name
+        return f'{self.full_name} - {self.get_gender_display()} - {self.birth_year}'
 
     @property
     def full_name(self):
@@ -81,12 +81,12 @@ class RelationMatchingRequest(models.Model):
         related_name='relation_requests', related_query_name='relation_request',
         verbose_name=_('شخص')
     )
-    related_person = models.OneToOneField(
+    related_person = models.ForeignKey(
         'persons.Person', on_delete=models.CASCADE,
         related_name='relation_request_related',
         verbose_name=_('شخص وابسته')
     )
-    similar_related_person = models.OneToOneField(
+    similar_related_person = models.ForeignKey(
         'persons.Person', on_delete=models.CASCADE,
         related_name='relation_request_similar_related',
         verbose_name=_('شخص وابسته مشابه'),
@@ -102,6 +102,7 @@ class RelationMatchingRequest(models.Model):
     class Meta:
         verbose_name = _('درخواست تطابق وابستگان')
         verbose_name_plural = _('درخواست‌های تطابق وابستگان')
+        unique_together = ('related_person', 'similar_related_person')
 
     @property
     def is_awaiting_similar(self):
