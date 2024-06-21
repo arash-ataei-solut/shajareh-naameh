@@ -12,9 +12,9 @@ class PersonAdmin(admin.ModelAdmin):
 
 @admin.register(RelationMatchingRequest)
 class RelationMatchingRequestAdmin(admin.ModelAdmin):
-    list_display = ('person', 'related_person', 'similar_related_person', 'relation')
+    list_display = ('person', 'related_person', 'similar_related_person', 'relation', 'status')
     list_select_related = ('person', 'related_person', 'similar_related_person')
-    list_filter = ('relation',)
+    list_filter = ('relation', 'status')
     search_fields = (
         'person__first_name',
         'person__last_name',

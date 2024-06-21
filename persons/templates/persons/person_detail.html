@@ -149,7 +149,7 @@
                                     <span>{% trans 'تاریخ مرگ' %}: </span><span dir="ltr">{{ object.death_date|default_if_none:'-' }}</span>
                                 </div>
                             </div>
-                            <div class="text-center mt-3">
+                            <div class="d-flex justify-content-center mt-3">
                                 <a class="btn btn-primary" hx-boost="true"
                                    href="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personalInfo"
                                    hx-swap="outerHTML">

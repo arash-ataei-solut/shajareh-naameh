@@ -17,6 +17,7 @@ def person_can_be_matched(person: Person) -> bool:
 class Matchmaker:
     def __init__(self, person: Person):
         self.person = person
+        self.queryset = self.match_queryset()
 
     def match_queryset(self) -> QuerySet:
         return Person.objects.filter(
@@ -27,21 +28,21 @@ class Matchmaker:
         ).exclude(id=self.person.id)
 
     def match_exists(self) -> bool:
-        return self.match_queryset().exists()
+        return self.queryset.exists()
 
 
 class RelationMatchmaker(Matchmaker):
     def __init__(self, related_person, main_person, relation):
-        super().__init__(related_person)
         self.main_person = main_person
         self.relation = relation
+        super().__init__(related_person)
 
     def match_queryset(self) -> QuerySet:
         return super().match_queryset().exclude(id=self.main_person.id)
 
     def related_person_match_choices(self) -> list[tuple[int, str]]:
         choices_list = [(None, _('هیچکدام'))]
-        queryset = self.match_queryset().select_related(
+        queryset = self.queryset.select_related(
             'father', 'mother'
         ).prefetch_related(
             'spouses', 'father_children', 'mother_children'

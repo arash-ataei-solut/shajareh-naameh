@@ -81,7 +81,7 @@ class RelationMatchingRequest(models.Model):
         related_name='relation_requests', related_query_name='relation_request',
         verbose_name=_('شخص')
     )
-    related_person = models.ForeignKey(
+    related_person = models.OneToOneField(
         'persons.Person', on_delete=models.CASCADE,
         related_name='relation_request_related',
         verbose_name=_('شخص وابسته')
@@ -102,7 +102,6 @@ class RelationMatchingRequest(models.Model):
     class Meta:
         verbose_name = _('درخواست تطابق وابستگان')
         verbose_name_plural = _('درخواست‌های تطابق وابستگان')
-        unique_together = ('related_person', 'similar_related_person')
 
     @property
     def is_awaiting_similar(self):
