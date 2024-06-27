@@ -1,8 +1,8 @@
 {% load i18n %}
 <div>
 
-    <h2>{% trans 'جستجو خود در شجره‌نامه' %}</h2>
-    <p>{% trans 'لطفا اطلاعات خواسته شده را برای جستجو در شجره‌نامه وارد نمایید.' %}</p>
+    <h2>{% trans 'جستجو خود در درخت‌خانوادگی' %}</h2>
+    <p>{% trans 'لطفا اطلاعات خواسته شده را برای جستجو در درخت‌خانوادگی وارد نمایید.' %}</p>
     <form action="{% url 'persons:find-myself' %}" method="post">
         <div>
             {% for non_field_error in form.non_field_errors %}

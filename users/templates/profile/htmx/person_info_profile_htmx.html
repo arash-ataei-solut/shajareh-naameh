@@ -50,10 +50,10 @@
         <h1>
             <i class="fa-solid fa-triangle-exclamation"></i>
         </h1>
-        <p>{% trans 'اطلاعات شما در شجره‌نامه یافت نشد.' %}</p>
-        <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در شجره‌نامه پیدا کنید.' %}</p>
+        <p>{% trans 'اطلاعات شما در درخت‌خانوادگی یافت نشد.' %}</p>
+        <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در درخت‌خانوادگی پیدا کنید.' %}</p>
         <a class="btn btn-primary" href="{% url 'persons:find-myself' %}" hx-boost="false">
-            <i class="fa-solid fa-magnifying-glass"></i> {% trans 'جستجو در شجره‌نامه' %}
+            <i class="fa-solid fa-magnifying-glass"></i> {% trans 'جستجو در درخت‌خانوادگی' %}
         </a>
     </div>
 {% endif %}

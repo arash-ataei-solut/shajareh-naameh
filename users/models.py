@@ -28,14 +28,14 @@ class ShnUser(AbstractBaseUser, PermissionsMixin):
     image = models.ImageField(verbose_name=_('عکس پروفایل'), default='user.png')
 
     is_submitter = models.BooleanField(
-        verbose_name=_('کاربر ثبت کننده شجره‌نامه'), default=False,
-        help_text=_('مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به شجره‌نامه اضافه کند یا خیر.')
+        verbose_name=_('کاربر ثبت کننده درخت‌خانوادگی'), default=False,
+        help_text=_('مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به درخت‌خانوادگی اضافه کند یا خیر.')
     )
     is_approver = models.BooleanField(
-        verbose_name=_('کاربر تایید کننده شجره‌نامه'), default=False,
+        verbose_name=_('کاربر تایید کننده درخت‌خانوادگی'), default=False,
         help_text=_(
-            'مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به شجره‌نامه اضافه کند و یا '
-            'اشخاص اضافه شده به شجره‌نامه توسط کاربران ثبت‌کننده را تایید کند یا خیر.'
+            'مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به درخت‌خانوادگی اضافه کند و یا '
+            'اشخاص اضافه شده به درخت‌خانوادگی توسط کاربران ثبت‌کننده را تایید کند یا خیر.'
         )
     )
 
