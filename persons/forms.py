@@ -110,7 +110,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         spouse = super().save(commit)
-        self.person.spouse.add(spouse)
+        self.person.spouses.add(spouse)
         return spouse
 
 

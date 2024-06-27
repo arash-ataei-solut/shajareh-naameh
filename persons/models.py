@@ -1,10 +1,11 @@
-from django.db import models
+from django.db import models, connection
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as j_models
 
 from users.models import ShnUser
 from . import managers
 from .enums import GenderChoices, MatchingStatusChoices, RelationChoices, RelationRequestStatusChoices
+from .exceptions import LoopInTreeException
 
 
 class Person(models.Model):
@@ -80,9 +81,12 @@ class Person(models.Model):
         return bool(self.matching_status == MatchingStatusChoices.IS_MATCHING)
 
     def get_ancestors(self, main_person: 'Person' = None):
+        print(len(connection.queries))
         main_person = main_person or self
         ancestors = {}
-        if self.father and self.father.id not in self.ancestors_id_list:
+        if self.father:
+            if self.father.id in self.ancestors_id_list:
+                raise LoopInTreeException()
             ancestors['father'] = {
                 'id': self.father.id,
                 'full_name': self.father.full_name,
@@ -90,19 +94,51 @@ class Person(models.Model):
             }
             main_person.ancestors_id_list.append(self.father.id)
         if self.mother:
+            if self.mother.id in self.ancestors_id_list:
+                raise LoopInTreeException()
             ancestors['mother'] = {
                 'id': self.mother.id,
                 'full_name': self.mother.full_name,
-                'ancestors': self.mother.get_ancestors()
+                'ancestors': self.mother.get_ancestors(main_person=main_person)
             }
+            main_person.ancestors_id_list.append(self.father.id)
+        print(len(connection.queries))
         return ancestors
 
-    def get_descendant(self):
+    def get_descendant(self, main_person: 'Person' = None):
+        print(len(connection.queries))
+        main_person = main_person or self
         descendant = []
         if hasattr(self, 'father_children'):
             children = self.father_children.all().only('id', 'first_name', 'last_name')
+            print(children.query)
+            print(len(connection.queries), '22')
             for child in children:
-                descendent
+                print(len(connection.queries), 'ff')
+                descendant.append(
+                    {
+                        'id': child.id,
+                        'full_name': child.full_name,
+                        'descendant': child.get_descendant(main_person=main_person)
+                    }
+                )
+                main_person.descendant_id_list.append(child.id)
+                print(len(connection.queries), 'ffff')
+        if hasattr(self, 'mother_children'):
+            children = self.mother_children.all().only('id', 'first_name', 'last_name')
+            for child in children:
+                print(len(connection.queries), 'mmmm')
+                descendant.append(
+                    {
+                        'id': child.id,
+                        'full_name': child.full_name,
+                        'descendant': child.get_descendant(main_person=main_person)
+                    }
+                )
+                main_person.descendant_id_list.append(child.id)
+        print(len(connection.queries))
+
+        return descendant
 
 
 

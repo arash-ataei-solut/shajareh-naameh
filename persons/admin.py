@@ -3,6 +3,7 @@ from django.contrib import admin
 from persons.models import Person, RelationMatchingRequest
 
 
+@admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'gender', 'birth_year', 'matching_status')
     search_fields = ('first_name', 'last_name')
@@ -23,6 +24,3 @@ class RelationMatchingRequestAdmin(admin.ModelAdmin):
         'similar_related_person__first_name',
         'similar_related_person__last_name',
     )
-
-
-admin.site.register(Person, PersonAdmin)

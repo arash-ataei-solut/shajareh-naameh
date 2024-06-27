@@ -103,6 +103,7 @@ class PersonAddFatherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVi
     htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
     relation = RelationChoices.FATHER
+    # TODO Handle loop
 
 
 class PersonAddMotherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
@@ -139,8 +140,6 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
 
 class PersonTreeView(PersonDetailView):
     template_name = 'persons/person_tree.html'
-
-    def get_ancestors(self):
 
 
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):
