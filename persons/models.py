@@ -63,6 +63,11 @@ class Person(models.Model):
         verbose_name = _('شخص')
         verbose_name_plural = _('اشخاص')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ancestors_id_list = []
+        self.descendant_id_list = []
+
     def __str__(self):
         return f'{self.full_name} - {self.get_gender_display()} - {self.birth_year}'
 
@@ -73,6 +78,32 @@ class Person(models.Model):
     @property
     def is_matching(self):
         return bool(self.matching_status == MatchingStatusChoices.IS_MATCHING)
+
+    def get_ancestors(self, main_person: 'Person' = None):
+        main_person = main_person or self
+        ancestors = {}
+        if self.father and self.father.id not in self.ancestors_id_list:
+            ancestors['father'] = {
+                'id': self.father.id,
+                'full_name': self.father.full_name,
+                'ancestors': self.father.get_ancestors(main_person=main_person)
+            }
+            main_person.ancestors_id_list.append(self.father.id)
+        if self.mother:
+            ancestors['mother'] = {
+                'id': self.mother.id,
+                'full_name': self.mother.full_name,
+                'ancestors': self.mother.get_ancestors()
+            }
+        return ancestors
+
+    def get_descendant(self):
+        descendant = []
+        if hasattr(self, 'father_children'):
+            children = self.father_children.all().only('id', 'first_name', 'last_name')
+            for child in children:
+                descendent
+
 
 
 class RelationMatchingRequest(models.Model):

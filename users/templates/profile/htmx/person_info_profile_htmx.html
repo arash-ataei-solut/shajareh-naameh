@@ -38,8 +38,11 @@
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">
-        <a class="btn btn-primary" href="{% url 'persons:person-detail' pk=person.pk %}" hx-boost="false">
+        <a class="btn btn-primary me-2" href="{% url 'persons:person-detail' pk=person.pk %}" hx-boost="false">
             <i class="fa-solid fa-info-circle"></i> {% trans 'جرئیات و ویرایش' %}
+        </a>
+        <a class="btn btn-primary" href="{% url 'persons:person-tree' pk=person.pk %}" hx-boost="false">
+            <i class="fa-solid fa-tree"></i> {% trans 'شجره' %}
         </a>
     </div>
 {% else %}

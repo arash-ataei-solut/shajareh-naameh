@@ -137,6 +137,12 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
         )
 
 
+class PersonTreeView(PersonDetailView):
+    template_name = 'persons/person_tree.html'
+
+    def get_ancestors(self):
+
+
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):
     template_name = 'persons/relation_request_set_similar.html'
     htmx_template_name = 'persons/htmx/relation_request_set_similar_htmx.html'

@@ -19,6 +19,8 @@ urlpatterns = [
     path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),
     path('person-detail/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
 
+    path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
+
     path(
         'relation-request-select-similar/<int:pk>/',
         views.RelationRequestSelectSimilarView.as_view(),

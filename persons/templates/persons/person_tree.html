@@ -1,0 +1,13 @@
+{% extends 'bg_base.html' %}
+
+{% block bg_content %}
+    <section class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="container py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                {% block form_content %}
+                    <div>
+                        {{ person.full_name }}
+                    </div>
+                {% endblock %}
+            </div>
+    </section>
+{% endblock %}
