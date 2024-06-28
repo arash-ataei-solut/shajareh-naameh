@@ -5,7 +5,10 @@
             <div class="container py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                 {% block form_content %}
                     <div>
-                        {{ person.full_name }}
+                        {% include 'persons/person_tree_ancestors.html' with ancestors=object.get_ancestors %}
+                    </div>
+                    <div>
+                        {% include 'persons/person_tree_descendant.html' with descendant=object.get_descendant %}
                     </div>
                 {% endblock %}
             </div>

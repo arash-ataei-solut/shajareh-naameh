@@ -101,7 +101,7 @@ class Person(models.Model):
                 'full_name': self.mother.full_name,
                 'ancestors': self.mother.get_ancestors(main_person=main_person)
             }
-            main_person.ancestors_id_list.append(self.father.id)
+            main_person.ancestors_id_list.append(self.mother.id)
         return ancestors
 
     def get_descendant(self, main_person: 'Person' = None):
@@ -111,6 +111,8 @@ class Person(models.Model):
             Q(father_id=self.id) | Q(mother_id=self.id)
         ).only('id', 'first_name', 'last_name', 'gender')
         for child in children:
+            if child.id in main_person.descendant_id_list:
+                raise LoopInTreeException()
             descendant.append(
                 {
                     'id': child.id,
