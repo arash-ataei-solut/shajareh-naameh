@@ -1,4 +1,5 @@
 from django.db import models, connection
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as j_models
 
@@ -81,7 +82,6 @@ class Person(models.Model):
         return bool(self.matching_status == MatchingStatusChoices.IS_MATCHING)
 
     def get_ancestors(self, main_person: 'Person' = None):
-        print(len(connection.queries))
         main_person = main_person or self
         ancestors = {}
         if self.father:
@@ -102,44 +102,25 @@ class Person(models.Model):
                 'ancestors': self.mother.get_ancestors(main_person=main_person)
             }
             main_person.ancestors_id_list.append(self.father.id)
-        print(len(connection.queries))
         return ancestors
 
     def get_descendant(self, main_person: 'Person' = None):
-        print(len(connection.queries))
         main_person = main_person or self
         descendant = []
-        if hasattr(self, 'father_children'):
-            children = self.father_children.all().only('id', 'first_name', 'last_name')
-            print(children.query)
-            print(len(connection.queries), '22')
-            for child in children:
-                print(len(connection.queries), 'ff')
-                descendant.append(
-                    {
-                        'id': child.id,
-                        'full_name': child.full_name,
-                        'descendant': child.get_descendant(main_person=main_person)
-                    }
-                )
-                main_person.descendant_id_list.append(child.id)
-                print(len(connection.queries), 'ffff')
-        if hasattr(self, 'mother_children'):
-            children = self.mother_children.all().only('id', 'first_name', 'last_name')
-            for child in children:
-                print(len(connection.queries), 'mmmm')
-                descendant.append(
-                    {
-                        'id': child.id,
-                        'full_name': child.full_name,
-                        'descendant': child.get_descendant(main_person=main_person)
-                    }
-                )
-                main_person.descendant_id_list.append(child.id)
-        print(len(connection.queries))
-
+        children = Person.objects.filter(
+            Q(father_id=self.id) | Q(mother_id=self.id)
+        ).only('id', 'first_name', 'last_name', 'gender')
+        for child in children:
+            descendant.append(
+                {
+                    'id': child.id,
+                    'full_name': child.full_name,
+                    'gender': child.get_gender_display(),
+                    'descendant': child.get_descendant(main_person=main_person)
+                }
+            )
+            main_person.descendant_id_list.append(child.id)
         return descendant
-
 
 
 class RelationMatchingRequest(models.Model):
