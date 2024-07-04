@@ -1,31 +1,37 @@
 {% load i18n %}
 
-<div class="">
-    <div class="row gy-1 gx-3">
-        <div class="col-6">
+<div class="d-flex justify-content-center">
+
+    <div class="d-inline-block me-4">
+        <div class="">
             {% if ancestors.father %}
-                <div class="border rounded p-2 d-flex justify-content-center">
-                    <span>{% trans 'پدر' %}: </span>{{ ancestors.father.full_name }}
+                <div class="d-flex justify-content-center border rounded bg-white bx-flip-vertical">
+                    <div class="p-2">
+                        <span>{% trans 'پدر' %}: </span>{{ ancestors.father.full_name }}
+                    </div>
                 </div>
             {% endif %}
         </div>
-        <div class="col-6">
-            {% if ancestors.mother %}
-                <div class="border rounded p-2 d-flex justify-content-center">
-                    <span>{% trans 'مادر' %}: </span>{{ ancestors.mother.full_name }}
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row gy-1 gx-3">
-        <div class="col-6">
+        <div>
             {% if ancestors.father %}
                 {% if ancestors.father.ancestors.items %}
                     {% include 'persons/person_tree_ancestors.html' with ancestors=ancestors.father.ancestors %}
                 {% endif %}
             {% endif %}
         </div>
-        <div class="col-6">
+    </div>
+
+    <div class="d-inline-block">
+        <div class="">
+            {% if ancestors.mother %}
+                <div class="d-flex justify-content-center border rounded bg-white bx-flip-vertical">
+                    <div class="p-2 ">
+                        <span>{% trans 'مادر' %}: </span>{{ ancestors.mother.full_name }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="">
             {% if ancestors.mother %}
                 {% if ancestors.mother.ancestors.items %}
                     {% include 'persons/person_tree_ancestors.html' with ancestors=ancestors.mother.ancestors %}

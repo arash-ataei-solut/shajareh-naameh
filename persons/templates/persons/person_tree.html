@@ -2,9 +2,9 @@
 
 {% block bg_content %}
     <section class="d-flex justify-content-center align-items-center min-vh-100">
-            <div class="container py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+            <div class="container py-5 px-3 px-sm-5 shadow bg-light-blur rounded overflow-auto">
                 {% block form_content %}
-                    <div>
+                    <div class="bx-flip-vertical text-nowrap">
                         {% include 'persons/person_tree_ancestors.html' with ancestors=object.get_ancestors %}
                     </div>
                     <div>
