@@ -38,6 +38,10 @@ html {
     right: 0;
 }
 
+#treeBox {
+    height: 75vh;
+}
+
 @media (min-width: 576px) {
     .one-col-form-width {
         width: 500px;

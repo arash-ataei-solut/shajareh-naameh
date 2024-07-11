@@ -2,15 +2,24 @@
 
 {% block bg_content %}
     <section class="d-flex justify-content-center align-items-center min-vh-100">
-            <div class="container py-5 px-3 px-sm-5 shadow bg-light-blur rounded overflow-auto">
-                {% block form_content %}
+        <div class="container shadow bg-light-blur rounded overflow-scroll" id="treeBox">
+            {% block form_content %}
+                <div class="position-absolute py-5 px-3 px-sm-5">
                     <div class="bx-flip-vertical text-nowrap">
                         {% include 'persons/person_tree_ancestors.html' with ancestors=object.get_ancestors %}
                     </div>
-                    <div>
+                    <div class="text-nowrap">
+                        <div class="d-flex justify-content-center border border-black rounded rounded-4 bg-white">
+                            <div class="p-2">
+                                {{ object.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-nowrap">
                         {% include 'persons/person_tree_descendant.html' with descendant=object.get_descendant %}
                     </div>
-                {% endblock %}
-            </div>
+                </div>
+            {% endblock %}
+        </div>
     </section>
 {% endblock %}

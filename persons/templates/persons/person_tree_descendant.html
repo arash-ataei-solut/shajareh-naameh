@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="d-flex justify-content-center">
+    {% for child in descendant %}
+        <div class="d-inline-block {% if not forloop.last %}me-4{% endif %}">
+            <div class="d-flex justify-content-center border border-black rounded rounded-4 bg-white">
+                <div class="p-2">
+                    {{ child.full_name }}
+                </div>
+            </div>
+            <div>
+                {% if child.descendant %}
+                    {% include 'persons/person_tree_descendant.html' with descendant=child.descendant %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
