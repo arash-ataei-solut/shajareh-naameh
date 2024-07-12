@@ -38,8 +38,25 @@ html {
     right: 0;
 }
 
-#treeBox {
+#treeContainer {
     height: 75vh;
+}
+
+#treeBox {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.tree-person {
+    background-color: #1bd0e3;
+}
+
+.tree-descendant {
+    background-color: #0a6466;
+}
+
+.tree-ancestors {
+    background-color: #0a6433;
 }
 
 @media (min-width: 576px) {

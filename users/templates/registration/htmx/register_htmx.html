@@ -3,7 +3,7 @@
 {% load static %}
 
 
-<div class="text-center py-5 px-3 px-sm-5">
+<div class="text-center py-5 px-3 px-sm-5" hx-boost="true" hx-target="this" hx-swap="outerHTML">
     <h2 class="fw-bold mb-3">{% trans 'ثبت‌نام' %}</h2>
     <p class="mb-3">{% trans 'لطفا اطلاعات کاربری خود را وارد نمایید.' %}</p>
     <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'users:register' %}" method="post"

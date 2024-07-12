@@ -4,7 +4,7 @@
 
     <div class="d-inline-block me-4">
         {% if ancestors.father %}
-            <div class="d-flex justify-content-center border border-black rounded rounded-4 bg-white bx-flip-vertical">
+            <div class="d-flex justify-content-center border border-light rounded rounded-3 text-light tree-ancestors">
                 <div class="p-2">
                     <span>{% trans 'پدر' %}: </span>{{ ancestors.father.full_name }}
                 </div>
@@ -21,7 +21,7 @@
 
     <div class="d-inline-block">
         {% if ancestors.mother %}
-            <div class="d-flex justify-content-center border border-black rounded rounded-4 bg-white bx-flip-vertical">
+            <div class="d-flex justify-content-center border border-light rounded rounded-3 text-light tree-ancestors">
                 <div class="p-2 ">
                     <span>{% trans 'مادر' %}: </span>{{ ancestors.mother.full_name }}
                 </div>

@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-center">
     {% for child in descendant %}
         <div class="d-inline-block {% if not forloop.last %}me-4{% endif %}">
-            <div class="d-flex justify-content-center border border-black rounded rounded-4 bg-white">
+            <div class="d-flex justify-content-center border border-light rounded rounded-3 text-light bx-flip-vertical tree-descendant">
                 <div class="p-2">
                     {{ child.full_name }}
                 </div>
