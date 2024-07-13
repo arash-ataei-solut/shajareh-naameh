@@ -20,7 +20,7 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات پدر' %}</h4>
                         <hr class="mt-0">
-                        <div id="fatherInfo">
+                        <div id="father-info">
                             {% if object.father %}
                                 <div class="row g-2">
                                     <div class="col-md-6">
@@ -36,7 +36,7 @@
                                 {% if object.father.is_matching %}
                                     {% if object.father.relation_request_related.is_awaiting_similar %}
                                         <div class="text-center mt-3">
-                                            <a class="btn btn-info" hx-boost="true" hx-target="#fatherInfo"
+                                            <a class="btn btn-info" hx-boost="true" hx-target="#father-info"
                                                hx-swap="innerHTML"
                                                href="{% url 'persons:relation-request-select-similar' pk=object.father.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات پدر' %}
@@ -58,7 +58,7 @@
                             {% else %}
                                 <div class="text-center">
                                     <a class="btn btn-primary" hx-boost="true"
-                                       href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="#fatherInfo"
+                                       href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="#father-info"
                                        hx-swap="outerHTML">
                                         <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات پدر' %}
                                     </a>
@@ -71,7 +71,7 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات مادر' %}</h4>
                         <hr class="mt-0">
-                        <div id="motherInfo">
+                        <div id="mother-info">
                             {% if object.mother %}
                                 <div class="row g-2">
                                     <div class="col-md-6">
@@ -87,7 +87,7 @@
                                 {% if object.mother.is_matching %}
                                     {% if object.mother.relation_request_related.is_awaiting_similar %}
                                         <div class="text-center mt-3">
-                                            <a class="btn btn-info" hx-boost="true" hx-target="#motherInfo"
+                                            <a class="btn btn-info" hx-boost="true" hx-target="#mother-info"
                                                hx-swap="innerHTML"
                                                href="{% url 'persons:relation-request-select-similar' pk=object.mother.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات مادر' %}
@@ -109,7 +109,7 @@
                             {% else %}
                                 <div class="text-center">
                                     <a class="btn btn-primary" hx-boost="true"
-                                       href="{% url 'persons:person-add-mother' person_pk=object.pk %}" hx-target="#motherInfo"
+                                       href="{% url 'persons:person-add-mother' person_pk=object.pk %}" hx-target="#mother-info"
                                        hx-swap="outerHTML">
                                         <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
                                     </a>
@@ -122,7 +122,7 @@
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات شخص' %}</h4>
                         <hr class="mt-0">
-                        <div id="personalInfo">
+                        <div id="personal-info">
                             <div class="row row-cols-lg-4 row-cols-md-2 g-2">
                                 <div class="col">
                                     <span>{% trans 'نام' %}: </span>{{ object.first_name }}
@@ -151,7 +151,7 @@
                             </div>
                             <div class="d-flex justify-content-center mt-3">
                                 <a class="btn btn-primary" hx-boost="true"
-                                   href="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personalInfo"
+                                   href="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personal-info"
                                    hx-swap="outerHTML">
                                     <i class="fa-solid fa-edit"></i> {% trans 'ویرایش اطلاعات' %}
                                 </a>

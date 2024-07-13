@@ -2,7 +2,7 @@
 
 
 <div class="dropdown">
-    <button class="btn text-warning" id="notificationDropdown" role="button"
+    <button class="btn text-warning" id="notification-dropdown" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
         {% if object_list_count > 0 %}
             <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
@@ -13,9 +13,9 @@
         <i class="fa-solid fa-bell{% if object_list_count > 0 %} fa-shake{% endif %}"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-lg-start dropdown-menu-end dropdown-menu-shn overflow-auto"
-        aria-labelledby="notificationDropdown"
+        aria-labelledby="notification-dropdown"
         hx-get="{% url 'users:users-hx:unread-notifications-htmx' %}"
-        hx-trigger="show.bs.dropdown from:#notificationDropdown"
+        hx-trigger="show.bs.dropdown from:#notification-dropdown"
     >
     </ul>
 </div>

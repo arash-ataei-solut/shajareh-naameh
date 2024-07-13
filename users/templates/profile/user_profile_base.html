@@ -21,9 +21,9 @@
                             </div>
                         </div>
                     </div>
-                    <div id="profileNavList" class="list-group list-group-flush p-3 mb-2 bg-light-blur shadow rounded"
+                    <div id="profile-nav-list" class="list-group list-group-flush p-3 mb-2 bg-light-blur shadow rounded"
                          hx-boost="true"
-                         hx-target="#profileContent">
+                         hx-target="#profile-content">
                         {% include 'profile/htmx/profile_nav_list_htmx.html' %}
                     </div>
                     <div class="list-group list-group-flush p-3 bg-light-blur shadow rounded">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div id="profileContent" class="p-lg-5 p-sm-4 p-3 shadow bg-light-blur rounded" hx-boost="true"
+                    <div id="profile-content" class="p-lg-5 p-sm-4 p-3 shadow bg-light-blur rounded" hx-boost="true"
                          hx-target="this">
                         {% block profile_content %}
 

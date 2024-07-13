@@ -2,14 +2,14 @@
 {% load i18n %}
 {% load static %}
 
-<div hx-swap-oob="beforebegin" id="HTMXSwapOOBCSS">
+<div hx-swap-oob="beforebegin" id="htmx-swap-oob-css">
     {{ form.media.css }}
     <!-- Select2 bootstrap5 theme -->
     <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}" />
     <link rel="stylesheet" href="{% static 'select2/shn.css' %}" />
 </div>
 
-<div hx-swap-oob="beforebegin" id="HTMXSwapOOBJS">
+<div hx-swap-oob="beforebegin" id="htmx-swap-oob-js">
     {{ form.media.js }}
 </div>
 

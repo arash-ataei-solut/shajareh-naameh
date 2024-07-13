@@ -38,11 +38,11 @@ html {
     right: 0;
 }
 
-#treeContainer {
+#tree-container {
     height: 75vh;
 }
 
-#treeBox {
+#tree-box {
     min-width: 100%;
     min-height: 100%;
 }

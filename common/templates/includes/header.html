@@ -1,13 +1,13 @@
 {% load i18n %}
 
 
-<div class="modal fade" id="loginModal">
+<div class="modal fade" id="login-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="loginModalBody">
+            <div class="modal-body" id="login-modal-body">
                 <div class="text-center">
                     <div class="spinner-border text-primary"></div>
                 </div>
@@ -29,12 +29,12 @@
 
                 </div>
             {% endif %}
-            <button class="navbar-toggler ms-auto ms-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler ms-auto ms-lg-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content"
+                    aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbar-supported-content">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
                     <a class="nav-link border-end" aria-current="page" href="{% if request.path != '/' %}/{% endif %}#hero">
@@ -42,11 +42,11 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle border-end" href="#" id="servicesDropdown" role="button"
+                    <a class="nav-link dropdown-toggle border-end" href="#" id="services-dropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-compass"></i> <span>{% trans 'خدمات' %}</span>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="services-dropdown">
                         <li>
                             <a class="dropdown-item" href="#">
                                 <i class="fa-solid fa-tree"></i> <span>{% trans "شجره" %}</span>
@@ -82,11 +82,11 @@
             </ul>
             {% if request.user.is_authenticated %}
                 <div class="dropdown">
-                    <button class="btn btn-outline-warning dropdown-toggle" id="profileDropdown" role="button"
+                    <button class="btn btn-outline-warning dropdown-toggle" id="profile-dropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-user"></i> <span>{{ request.user.mobile }}</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profileDropdown">
+                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profile-dropdown">
                         <li class="dropdown-item">
                             <a href="{% url 'users:personal-info-profile' %}">
                                 <i class="fa-solid fa-address-card"></i> <span>{% trans 'پروفایل' %}</span>
@@ -108,7 +108,7 @@
                     </ul>
                 </div>
             {% else %}
-                <a class="btn btn-outline-warning" href="{% url 'users:login' %}"  hx-boost="true" hx-target="#loginModalBody" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <a class="btn btn-outline-warning" href="{% url 'users:login' %}"  hx-boost="true" hx-target="#login-modal-body" data-bs-toggle="modal" data-bs-target="#login-modal">
                     <i class="fa-solid fa-right-to-bracket"></i> <span>{% trans 'ورود/ثبت‌نام' %}</span>
                 </a>
             {% endif %}

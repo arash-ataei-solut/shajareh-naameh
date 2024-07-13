@@ -2,9 +2,9 @@
 
 {% block bg_content %}
     <section class="d-flex justify-content-center align-items-center min-vh-100">
-        <div class="container shadow bg-light-blur rounded overflow-scroll" id="treeContainer">
+        <div class="container shadow bg-light-blur rounded overflow-scroll" id="tree-container">
             {% block form_content %}
-                <div class="position-absolute py-5 px-3 px-sm-5 d-flex justify-content-center align-items-center" id="treeBox">
+                <div class="position-absolute py-5 px-3 px-sm-5 d-flex justify-content-center align-items-center" id="tree-box">
                     <div>
                         <div class="bx-flip-vertical text-nowrap">
                             {% include 'persons/person_tree_descendant.html' with descendant=object.get_descendant %}
