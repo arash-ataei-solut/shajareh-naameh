@@ -1,0 +1,16 @@
+<div class="position-absolute py-5 px-3 px-sm-5 d-flex justify-content-center align-items-center" id="tree-box">
+    <div>
+        <div class="bx-flip-vertical text-nowrap">
+            {% include 'persons/person_tree_descendant.html' with descendant=object.get_descendant %}
+        </div>
+        <div class="text-nowrap">
+            <div class="d-flex justify-content-center px-4 py-3 border border-light shadow text-dark rounded rounded-3 tree-person">
+                <span class="me-3"><i class="fa fa-ellipsis-vertical"></i></span>
+                <strong>{{ object.full_name }}</strong>
+            </div>
+        </div>
+        <div class="text-nowrap">
+            {% include 'persons/person_tree_ancestors.html' with ancestors=object.get_ancestors %}
+        </div>
+    </div>
+</div>

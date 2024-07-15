@@ -138,8 +138,9 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
         )
 
 
-class PersonTreeView(PersonDetailView):
+class PersonTreeView(HTMXViewMixin, PersonDetailView):
     template_name = 'persons/person_tree.html'
+    htmx_template_name = 'persons/htmx/person-tree-htmx.html'
 
 
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):

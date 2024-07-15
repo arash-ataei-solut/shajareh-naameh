@@ -4,9 +4,21 @@
 
     <div class="d-inline-block me-4">
         {% if ancestors.father %}
-            <div class="d-flex justify-content-center border border-light rounded rounded-3 text-light tree-ancestors">
-                <div class="p-2">
-                    <span>{% trans 'پدر' %}: </span>{{ ancestors.father.full_name }}
+            <div class="d-flex justify-content-center px-4 py-2 border border-light rounded rounded-3 text-light tree-ancestors">
+                <div class="btn-group me-3">
+                    <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.father.id %}" hx-boost="true" hx-target="#tree-container">
+                        <i class="fa fa-tree"></i>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="me-2">{% trans 'پدر' %}:</span>
+                    <strong>{{ ancestors.father.full_name }}</strong>
                 </div>
             </div>
         {% endif %}
@@ -21,9 +33,21 @@
 
     <div class="d-inline-block">
         {% if ancestors.mother %}
-            <div class="d-flex justify-content-center border border-light rounded rounded-3 text-light tree-ancestors">
-                <div class="p-2 ">
-                    <span>{% trans 'مادر' %}: </span>{{ ancestors.mother.full_name }}
+            <div class="d-flex justify-content-center px-4 py-2 border border-light rounded rounded-3 text-light tree-ancestors">
+                <div class="btn-group me-3">
+                    <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.mother.id %}" hx-boost="true" hx-target="#tree-container">
+                        <i class="fa fa-tree"></i>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="me-2">{% trans 'مادر' %}:</span>
+                    <strong>{{ ancestors.mother.full_name }}</strong>
                 </div>
             </div>
         {% endif %}
