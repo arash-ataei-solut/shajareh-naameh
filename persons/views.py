@@ -129,6 +129,7 @@ class PersonAddChildView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVie
 
 class PersonDetailView(LoginRequiredMixin, DetailView):
     template_name = 'persons/person_detail.html'
+    model = Person
 
     def get_queryset(self):
         return Person.objects.filter(
@@ -141,6 +142,15 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
 class PersonTreeView(HTMXViewMixin, PersonDetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person-tree-htmx.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                'can_see_tree': self.object.can_see_tree(self.request.user)
+            }
+        )
+        return context
 
 
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):

@@ -59,6 +59,12 @@ class Person(models.Model):
         verbose_name=_('وضعیت تطابق')
     )
 
+    can_see_tree_users = models.ManyToManyField(
+        'users.ShnUser',
+        related_name='can_see_persons_tree',
+        verbose_name=_('کاربرانی که می‌توانند درخت‌خانوادگی این شخص را ببینند.')
+    )
+
     objects = managers.PersonManager()
 
     class Meta:
@@ -123,6 +129,9 @@ class Person(models.Model):
             )
             main_person.descendant_id_list.append(child.id)
         return descendant
+
+    def can_see_tree(self, user: ShnUser) -> bool:
+        return bool(self.can_see_tree_users.filter(id=user.id).exists() or self.created_by_id == user.id)
 
 
 class RelationMatchingRequest(models.Model):
