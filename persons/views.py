@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, FormView, UpdateView, DetailView
+from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons import forms
@@ -139,8 +139,8 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
 
 
 class SeeTreePermissionRequestCreateView(HTMXFormViewMixin, LoginRequiredMixin, CreateView):
-    template_name = 'persons/person_see_tree_permission_create_request.html'
-    htmx_template_name = 'persons/htmx/person_see_tree_permission_request.html'
+    template_name = 'persons/see_tree_permission_request_create.html'
+    htmx_template_name = 'persons/htmx/person_see_tree_permission_request_htmx.html'
     form_class = forms.SeeTreePermissionRequestCreateForm
 
     def get(self, request, *args, **kwargs):
@@ -153,6 +153,11 @@ class SeeTreePermissionRequestCreateView(HTMXFormViewMixin, LoginRequiredMixin, 
 
     def get_person(self):
         return get_object_or_404(Person, id=self.kwargs['person_pk'])
+
+    def get_success_url(self):
+        url = reverse('persons:see-tree-permission-request-success')
+        previous_person_pk = self.request.GET.get('previous_person_pk') or ''
+        return f'{url}?previous_person_pk={previous_person_pk}'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -172,6 +177,20 @@ class SeeTreePermissionRequestCreateView(HTMXFormViewMixin, LoginRequiredMixin, 
         context.update(
             {
                 'person': self.person,
+                'previous_person_pk': self.request.GET.get('previous_person_pk')
+            }
+        )
+        return context
+
+
+class SeeTreePermissionRequestSuccessView(TemplateView):
+    template_name = 'persons/see_tree_permission_request_success.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                'previous_person_pk': self.request.GET.get('previous_person_pk')
             }
         )
         return context
@@ -188,16 +207,24 @@ class PersonTreeView(HTMXViewMixin, LoginRequiredMixin, DetailView):
         response = super().get(request, *args, **kwargs)
         if self.object.can_see_tree(request.user):
             return response
-        else:
-            return self.http_redirect(
-                reverse('persons:see-tree-permission-request-create', kwargs={'person_pk': self.object.pk})
-            )
+
+        if self.object.has_awaiting_see_tree_request(request.user):
+            url = reverse('persons:see-tree-permission-request-success')
+            previous_person_pk = self.request.GET.get('previous_person_pk') or ''
+            return self.http_redirect(f'{url}?previous_person_pk={previous_person_pk}')
+
+        url = reverse(
+            'persons:see-tree-permission-request-create',
+            kwargs={'person_pk': self.object.pk},
+        )
+        previous_person_pk = self.request.GET.get('previous_person_pk') or ''
+        return self.http_redirect(f'{url}?previous_person_pk={previous_person_pk}')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                'can_see_tree': self.object.can_see_tree(self.request.user)
+                'has_awaiting_see_tree_permission_request': self.object.can_see_tree(self.request.user)
             }
         )
         return context

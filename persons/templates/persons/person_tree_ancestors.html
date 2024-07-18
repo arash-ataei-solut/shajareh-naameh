@@ -12,7 +12,7 @@
                         <a class="dropdown-item" href="#">Another action</a>
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
-                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.father.id %}" hx-boost="true" hx-target="#tree-container">
+                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.father.id %}?previous_person_pk={{ object.pk }}" hx-boost="true" hx-target="#tree-container">
                         <i class="fa fa-tree"></i>
                     </a>
                 </div>
@@ -41,7 +41,7 @@
                         <a class="dropdown-item" href="#">Another action</a>
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
-                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.mother.id %}" hx-boost="true" hx-target="#tree-container">
+                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.mother.id %}?previous_person_pk={{ object.pk }}" hx-boost="true" hx-target="#tree-container">
                         <i class="fa fa-tree"></i>
                     </a>
                 </div>

@@ -8,6 +8,28 @@ from . import managers, enums
 from .exceptions import LoopInTreeException
 
 
+class SeeTreePermissionRequest(models.Model):
+    person = models.ForeignKey(
+        'persons.Person', on_delete=models.CASCADE,
+        verbose_name=_('شخص'),
+        help_text=_('شخصی که کاربر میخواهد دسترسی مشاهده درخت‌خانوادگی او را داشته باشد.')
+    )
+    applicant = models.ForeignKey(
+        'users.ShnUser', on_delete=models.CASCADE,
+        verbose_name=_('کاربر متقاضی')
+    )
+    status = models.IntegerField(
+        choices=enums.SeeTreePermissionRequestStatusChoices.choices,
+        default=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE,
+        verbose_name=_('وضعیت'),
+    )
+    created_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
+
+    class Meta:
+        verbose_name = _('درخواست دریافت دسترسی مشاهده درخت‌خانوادگی')
+        verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')
+
+
 class Person(models.Model):
     user = models.OneToOneField(
         'users.ShnUser', on_delete=models.SET_NULL,
@@ -130,7 +152,14 @@ class Person(models.Model):
         return descendant
 
     def can_see_tree(self, user: ShnUser) -> bool:
-        return bool(self.can_see_tree_users.filter(id=user.id).exists() or self.created_by_id == user.id)
+        return self.can_see_tree_users.filter(id=user.id).exists()
+
+    def has_awaiting_see_tree_request(self, user: ShnUser) -> bool:
+        return SeeTreePermissionRequest.objects.filter(
+            person_id=self.id,
+            applicant_id=user.id,
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE
+        )
 
 
 class RelationMatchingRequest(models.Model):
@@ -168,25 +197,3 @@ class RelationMatchingRequest(models.Model):
     @property
     def is_awaiting_confirmation(self):
         return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_CONFIRMATION)
-
-
-class SeeTreePermissionRequest(models.Model):
-    person = models.ForeignKey(
-        Person, on_delete=models.CASCADE,
-        verbose_name=_('شخص'),
-        help_text=_('شخصی که کاربر میخواهد دسترسی مشاهده درخت‌خانوادگی او را داشته باشد.')
-    )
-    applicant = models.ForeignKey(
-        'users.ShnUser', on_delete=models.CASCADE,
-        verbose_name=_('کاربر متقاضی')
-    )
-    status = models.IntegerField(
-        choices=enums.SeeTreePermissionRequestStatusChoices.choices,
-        default=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE,
-        verbose_name=_('وضعیت'),
-    )
-    created_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
-
-    class Meta:
-        verbose_name = _('درخواست دریافت دسترسی مشاهده درخت‌خانوادگی')
-        verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')

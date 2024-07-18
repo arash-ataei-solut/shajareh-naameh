@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<div hx-boost="true" hx-target="this" hx-swap="outerHTML">
+    <form class="{% if form.errors %} was-validated{% endif %}"
+          action="{% url 'persons:see-tree-permission-request-create' person_pk=person.pk %}?previous_person_pk={{ previous_person_pk }}" method="post" novalidate>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-primary me-3" type="submit">
+                {% trans 'ثبت درخواست دسترسی' %}
+            </button>
+            {% if previous_person_pk %}
+                <a class="btn btn-secondary" href="{% url 'persons:person-tree' pk=previous_person_pk %}" hx-boost="false">
+                    {% trans 'بازگشت' %}
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>

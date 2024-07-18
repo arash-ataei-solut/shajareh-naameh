@@ -32,6 +32,11 @@ urlpatterns = [
         views.SeeTreePermissionRequestCreateView.as_view(),
         name='see-tree-permission-request-create'
     ),
+    path(
+        'see-tree-permission-request-success/',
+        views.SeeTreePermissionRequestSuccessView.as_view(),
+        name='see-tree-permission-request-success'
+    ),
 
     path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),
 ]
