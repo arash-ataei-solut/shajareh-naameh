@@ -6,7 +6,7 @@ from common.htmx.forms import PlaceholderFormMixin
 from persons import enums
 from persons.enums import RelationChoices, RelationRequestStatusChoices, MatchingStatusChoices
 from persons.matchmakers import Matchmaker, RelationMatchmaker
-from persons.models import Person, RelationMatchingRequest
+from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.forms import PlaceWidget
 
 
@@ -156,6 +156,28 @@ class RelationRequestSetSimilarForm(forms.ModelForm):
         else:
             self.instance.status = RelationRequestStatusChoices.AWAITING_CONFIRMATION
         return super().save(commit)
+
+
+class SeeTreePermissionRequestCreateForm(forms.ModelForm):
+    class Meta:
+        model = SeeTreePermissionRequest
+        fields = ['person', 'applicant']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        person = cleaned_data['person']
+        applicant = cleaned_data['applicant']
+        request_exists = SeeTreePermissionRequest.objects.filter(
+            person_id=person.id,
+            applicant_id=applicant.id,
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE
+        ).exists()
+        if request_exists:
+            raise ValidationError(
+                'شما یک درخواست برای دریافت دسترسی مشاهده درخت‌خانوادگی این شخص ثبت کرده‌اید. '
+                'لطغا منتظر تایید آن بمانید.'
+            )
+        return cleaned_data
 
 
 class FindMyselfForm(forms.Form):

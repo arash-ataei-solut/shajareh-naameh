@@ -7,6 +7,11 @@ from django_htmx.http import HttpResponseClientRedirect
 class HTMXViewMixin:
     htmx_template_name = None
 
+    def http_redirect(self, url):
+        if self.request.htmx:
+            return HttpResponseClientRedirect(url)
+        return HttpResponseRedirect(url)
+
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
         if request.htmx:
@@ -16,9 +21,7 @@ class HTMXViewMixin:
 
 class HTMXFormViewMixin(HTMXViewMixin):
     def success_response(self):
-        if self.request.htmx:
-            return HttpResponseClientRedirect(self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
+        return self.http_redirect(self.get_success_url())
 
     def form_valid(self, form):
         super().form_valid(form)

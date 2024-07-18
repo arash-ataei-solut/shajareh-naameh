@@ -26,3 +26,8 @@ class RelationRequestStatusChoices(IntegerChoices):
     AWAITING_CONFIRMATION = 2, _('در انتظار تایید تطابق')
     MATCHING_IS_DONE = 3, _('تطابق انجام شده‌است')
     REJECTED_SIMILARITY = 4, _('تشابه رد شد')
+
+
+class SeeTreePermissionRequestStatusChoices(IntegerChoices):
+    AWAITING_APPROVE = 1, _('در انتظار تایید')
+    APPROVED = 2, _('تایید شده')

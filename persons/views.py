@@ -135,13 +135,63 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
         return Person.objects.filter(
             Q(matching_status=MatchingStatusChoices.NO_MATCH) &
             (Q(user=self.request.user) | Q(created_by=self.request.user))
-
         )
 
 
-class PersonTreeView(HTMXViewMixin, PersonDetailView):
+class SeeTreePermissionRequestCreateView(HTMXFormViewMixin, LoginRequiredMixin, CreateView):
+    template_name = 'persons/person_see_tree_permission_create_request.html'
+    htmx_template_name = 'persons/htmx/person_see_tree_permission_request.html'
+    form_class = forms.SeeTreePermissionRequestCreateForm
+
+    def get(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().post(request, *args, **kwargs)
+
+    def get_person(self):
+        return get_object_or_404(Person, id=self.kwargs['person_pk'])
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.method == 'POST':
+            data = copy.copy(kwargs['data'])
+            data.update(
+                {
+                    'person': self.person,
+                    'applicant': self.request.user,
+                }
+            )
+            kwargs.update({'data': data})
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                'person': self.person,
+            }
+        )
+        return context
+
+
+class PersonTreeView(HTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person-tree-htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if self.object.can_see_tree(request.user):
+            return response
+        else:
+            return self.http_redirect(
+                reverse('persons:see-tree-permission-request-create', kwargs={'person_pk': self.object.pk})
+            )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

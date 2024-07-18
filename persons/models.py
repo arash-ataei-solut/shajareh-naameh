@@ -1,11 +1,10 @@
-from django.db import models, connection
+from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as j_models
 
 from users.models import ShnUser
-from . import managers
-from .enums import GenderChoices, MatchingStatusChoices, RelationChoices, RelationRequestStatusChoices
+from . import managers, enums
 from .exceptions import LoopInTreeException
 
 
@@ -17,7 +16,7 @@ class Person(models.Model):
     )
     first_name = models.CharField(max_length=150, verbose_name=_('اسم'))
     last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'))
-    gender = models.IntegerField(verbose_name=_('جنسیت'), choices=GenderChoices.choices)
+    gender = models.IntegerField(verbose_name=_('جنسیت'), choices=enums.GenderChoices.choices)
     father = models.ForeignKey(
         'self', on_delete=models.PROTECT,
         related_name='father_children',
@@ -54,8 +53,8 @@ class Person(models.Model):
     updated_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان آخرین ویرایش'))
 
     matching_status = models.IntegerField(
-        choices=MatchingStatusChoices.choices,
-        default=MatchingStatusChoices.NO_MATCH,
+        choices=enums.MatchingStatusChoices.choices,
+        default=enums.MatchingStatusChoices.NO_MATCH,
         verbose_name=_('وضعیت تطابق')
     )
 
@@ -85,7 +84,7 @@ class Person(models.Model):
 
     @property
     def is_matching(self):
-        return bool(self.matching_status == MatchingStatusChoices.IS_MATCHING)
+        return bool(self.matching_status == enums.MatchingStatusChoices.IS_MATCHING)
 
     def get_ancestors(self, main_person: 'Person' = None):
         main_person = main_person or self
@@ -151,10 +150,10 @@ class RelationMatchingRequest(models.Model):
         verbose_name=_('شخص وابسته مشابه'),
         null=True, blank=True,
     )
-    relation = models.CharField(max_length=10, choices=RelationChoices.choices, verbose_name=_('نسبت'))
+    relation = models.CharField(max_length=10, choices=enums.RelationChoices.choices, verbose_name=_('نسبت'))
     status = models.IntegerField(
-        choices=RelationRequestStatusChoices.choices,
-        default=RelationRequestStatusChoices.AWAITING_SIMILAR,
+        choices=enums.RelationRequestStatusChoices.choices,
+        default=enums.RelationRequestStatusChoices.AWAITING_SIMILAR,
         verbose_name=_('وضعیت')
     )
 
@@ -164,8 +163,30 @@ class RelationMatchingRequest(models.Model):
 
     @property
     def is_awaiting_similar(self):
-        return bool(self.status == RelationRequestStatusChoices.AWAITING_SIMILAR)
+        return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_SIMILAR)
 
     @property
     def is_awaiting_confirmation(self):
-        return bool(self.status == RelationRequestStatusChoices.AWAITING_CONFIRMATION)
+        return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_CONFIRMATION)
+
+
+class SeeTreePermissionRequest(models.Model):
+    person = models.ForeignKey(
+        Person, on_delete=models.CASCADE,
+        verbose_name=_('شخص'),
+        help_text=_('شخصی که کاربر میخواهد دسترسی مشاهده درخت‌خانوادگی او را داشته باشد.')
+    )
+    applicant = models.ForeignKey(
+        'users.ShnUser', on_delete=models.CASCADE,
+        verbose_name=_('کاربر متقاضی')
+    )
+    status = models.IntegerField(
+        choices=enums.SeeTreePermissionRequestStatusChoices.choices,
+        default=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE,
+        verbose_name=_('وضعیت'),
+    )
+    created_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
+
+    class Meta:
+        verbose_name = _('درخواست دریافت دسترسی مشاهده درخت‌خانوادگی')
+        verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')

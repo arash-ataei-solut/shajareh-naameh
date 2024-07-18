@@ -1,0 +1,15 @@
+{% extends 'form_base.html' %}
+{% load i18n %}
+
+
+{% block form_content %}
+    <h4>{% trans 'عدم دسترسی!' %}</h4>
+    <hr class="mt-0">
+    <p>
+        {% trans 'شما دسترسی مشاهده درخت‌خانوادگی این شخص را ندارید.' %}{% trans 'نام و نام خانوادگی شخص:' %} {{ person.full_name }}
+    </p>
+    <p>
+        {% trans 'جهت مشاهده درخت‌خانوادگی این شخص لازم است درخواست دسترسی ثبت کنید.' %}
+    </p>
+    {% include 'persons/htmx/person_see_tree_permission_request_create_htmx.html' %}
+{% endblock %}

@@ -27,5 +27,11 @@ urlpatterns = [
         name='relation-request-select-similar'
     ),
 
+    path(
+        'see-tree-permission-request-create/<int:person_pk>/',
+        views.SeeTreePermissionRequestCreateView.as_view(),
+        name='see-tree-permission-request-create'
+    ),
+
     path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),
 ]
