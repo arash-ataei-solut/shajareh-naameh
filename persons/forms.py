@@ -65,9 +65,11 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.MALE
-        father = super().save(commit)
+        father: Person = super().save(commit)
         self.person.father = father
         self.person.save()
+        if self.person.mother:
+            father.spouses.add(self.person.mother)
         return father
 
 
@@ -91,9 +93,11 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.FEMALE
-        mother = super().save(commit)
+        mother: Person = super().save(commit)
         self.person.mother = mother
         self.person.save()
+        if self.person.father:
+            mother.spouses.add(self.person.father)
         return mother
 
 
@@ -109,7 +113,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        spouse = super().save(commit)
+        spouse: Person = super().save(commit)
         self.person.spouses.add(spouse)
         return spouse
 
@@ -126,7 +130,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        child = super().save(commit)
+        child: Person = super().save(commit)
         if self.person.gender == enums.GenderChoices.MALE:
             child.father = self.person
         elif self.person.gender == enums.GenderChoices.FEMALE:

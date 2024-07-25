@@ -40,13 +40,13 @@ class Person(models.Model):
     last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'))
     gender = models.IntegerField(verbose_name=_('جنسیت'), choices=enums.GenderChoices.choices)
     father = models.ForeignKey(
-        'self', on_delete=models.PROTECT,
+        'self', on_delete=models.SET_NULL,
         related_name='father_children',
         verbose_name=_('پدر'),
         null=True, blank=True
     )
     mother = models.ForeignKey(
-        'self', on_delete=models.PROTECT,
+        'self', on_delete=models.SET_NULL,
         related_name='mother_children',
         verbose_name=_('مادر'),
         null=True, blank=True

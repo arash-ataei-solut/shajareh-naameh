@@ -5,13 +5,15 @@
         <div class="d-inline-block {% if not forloop.last %}me-4{% endif %}">
             <div class="d-flex justify-content-center px-4 py-2 border border-light rounded rounded-3 text-light bx-flip-vertical tree-descendant">
                 <div class="btn-group me-3">
-                    <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button"
+                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            hx-get="{% url 'persons:person-actions-in-tree' pk=child.id %}"
+                            hx-target="next .dropdown-menu" hx-swap="innerHTML" hx-trigger="click"></button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
                     </div>
-                    <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=child.id %}?previous_person_pk={{ object.pk }}" hx-boost="true" hx-target="#tree-container">
+                    <a class="btn btn-outline-light"
+                       href="{% url 'persons:person-tree' pk=child.id %}?previous_person_pk={{ object.pk }}"
+                       hx-boost="true" hx-target="#tree-container">
                         <i class="fa fa-tree"></i>
                     </a>
                 </div>

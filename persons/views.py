@@ -6,9 +6,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView
+from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
 
-from common.mixins import HTMXViewMixin, HTMXFormViewMixin
+from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin
 from persons import forms
 from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, RelationChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
@@ -127,6 +127,42 @@ class PersonAddChildView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddVie
     relation = RelationChoices.CHILD
 
 
+class PersonDeleteRelativeConfirmationView(HTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/person_delete_relative_confirmation.html'
+    htmx_template_name = 'persons/htmx/person_delete_relative_confirmation_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+
+class PersonDeleteRelativeView(OnlyHTMXViewMixin, LoginRequiredMixin, DeleteView):
+    template_name = 'persons/person_delete_relative.html'
+    htmx_template_name = 'persons/htmx/person_delete_relative_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+
+class PersonDeleteAncestorsView(PersonDeleteRelativeView):
+    def form_valid(self, form):
+        if self.object.father or self.object.mother:
+            url = reverse('persons:person-delete-ancestors-failure', kwargs={'ancestor_pk': self.object.pk})
+            return HttpResponseRedirect(url)
+        return super().form_valid(form)
+
+
+
+class PersonDeleteAncestorsFailureView(HTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/person_delete_ancestors_failed.html'
+    htmx_template_name = 'persons/htmx/person_delete_ancestors_failed_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+
+
+
+
 class PersonDetailView(LoginRequiredMixin, DetailView):
     template_name = 'persons/person_detail.html'
     model = Person
@@ -199,9 +235,7 @@ class SeeTreePermissionRequestSuccessView(TemplateView):
 class PersonTreeView(HTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person-tree-htmx.html'
-
-    def get_queryset(self):
-        return Person.objects.all()
+    queryset = Person.objects.all()
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -228,6 +262,11 @@ class PersonTreeView(HTMXViewMixin, LoginRequiredMixin, DetailView):
             }
         )
         return context
+
+
+class PersonActionsInTreeView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_actions_in_tree_htmx.html'
+    queryset = Person.objects.all()
 
 
 class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):

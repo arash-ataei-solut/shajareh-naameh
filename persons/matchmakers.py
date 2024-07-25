@@ -65,6 +65,7 @@ class RelationMatchmaker(Matchmaker):
             elif person.mother_children.exclude(id=self.person.id).exists():
                 child = person.mother_children.exclude(id=self.person.id).first()
                 choice_label += f' - نام یکی از فرزندان: {child.first_name}'
+            # TODO Handle husband
             elif person.spouses.exclude(id=self.person.id).exists():
                 spouse = person.spouses.exclude(id=self.person.id).first()
                 choice_label += f' - نام یکی از همسرها: {spouse.first_name}'
