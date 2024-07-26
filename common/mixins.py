@@ -27,7 +27,9 @@ class HTMXViewMixin:
 
 
 class HTMXFormViewMixin(HTMXViewMixin):
+    def success_response(self):
+        return self.http_redirect(self.get_success_url())
 
     def form_valid(self, form):
         super().form_valid(form)
-        return self.http_redirect(self.get_success_url())
+        return self.success_response()

@@ -1,11 +1,13 @@
 import copy
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
+from django.utils.translation import gettext as _
 from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin
@@ -135,7 +137,7 @@ class PersonDeleteRelativeConfirmationView(HTMXViewMixin, LoginRequiredMixin, De
         return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteRelativeView(OnlyHTMXViewMixin, LoginRequiredMixin, DeleteView):
+class PersonDeleteRelativeView(HTMXFormViewMixin, LoginRequiredMixin, DeleteView):
     template_name = 'persons/person_delete_relative.html'
     htmx_template_name = 'persons/htmx/person_delete_relative_htmx.html'
 
@@ -143,24 +145,41 @@ class PersonDeleteRelativeView(OnlyHTMXViewMixin, LoginRequiredMixin, DeleteView
         return Person.objects.filter(created_by=self.request.user)
 
 
+class PersonDeleteAncestorsConfirmationView(PersonDeleteRelativeConfirmationView):
+    template_name = 'persons/person_delete_ancestors_confirmation.html'
+    htmx_template_name = 'persons/htmx/person_delete_ancestors_confirmation_htmx.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'person_pk': self.kwargs['person_pk']})
+        return context
+
+
 class PersonDeleteAncestorsView(PersonDeleteRelativeView):
+
+    def get_success_url(self):
+        return reverse('persons:person-detail', kwargs={'pk': self.kwargs['person_pk']})
+
     def form_valid(self, form):
         if self.object.father or self.object.mother:
-            url = reverse('persons:person-delete-ancestors-failure', kwargs={'ancestor_pk': self.object.pk})
+            url = reverse('persons:person-delete-ancestors-failure', kwargs={'pk': self.object.pk})
             return HttpResponseRedirect(url)
-        return super().form_valid(form)
-
+        success_url = self.get_success_url()
+        ancestor_full_name = self.object.full_name
+        self.object.delete()
+        messages.success(
+            self.request,
+            _(f'شخص مورد نظر با نام "{ancestor_full_name}" با موفقیت حذف شد.')
+        )
+        return self.success_response()
 
 
 class PersonDeleteAncestorsFailureView(HTMXViewMixin, LoginRequiredMixin, DetailView):
-    template_name = 'persons/person_delete_ancestors_failed.html'
-    htmx_template_name = 'persons/htmx/person_delete_ancestors_failed_htmx.html'
+    template_name = 'persons/person_delete_ancestors_failure.html'
+    htmx_template_name = 'persons/htmx/person_delete_ancestors_failure_htmx.html'
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
-
-
-
 
 
 class PersonDetailView(LoginRequiredMixin, DetailView):

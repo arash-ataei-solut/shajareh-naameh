@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block bg_content %}
+
     <section class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="container">
             <div class="row g-3">
@@ -48,19 +49,23 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="text-center mt-3">
-                                        <a class="btn btn-info"
+                                    <div class="d-flex justify-content-center mt-3" id="father-info-actions">
+                                        <a class="btn btn-info me-2"
                                            href="{% url 'persons:person-detail' pk=object.father.pk %}">
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+                                        </a>
+                                        <a class="btn btn-danger" href="{% url 'persons:person-delete-ancestors-confirmation' person_pk=object.pk pk=object.father.pk %}"
+                                           hx-boost="true" hx-target="#father-info-actions" hx-swap="innerHTML">
+                                            <i class="fa fa-minus-circle me-1"></i>{% trans 'خذف' %}
                                         </a>
                                     </div>
                                 {% endif %}
                             {% else %}
                                 <div class="text-center">
-                                    <a class="btn btn-primary" hx-boost="true"
-                                       href="{% url 'persons:person-add-father' person_pk=object.pk %}" hx-target="#father-info"
-                                       hx-swap="outerHTML">
-                                        <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات پدر' %}
+                                    <a class="btn btn-primary"
+                                       href="{% url 'persons:person-add-father' person_pk=object.pk %}"
+                                       hx-boost="true" hx-target="#father-info" hx-swap="outerHTML">
+                                        <i class="fa-solid fa-plus-circle me-1"></i>{% trans 'ثبت اطلاعات پدر' %}
                                     </a>
                                 </div>
                             {% endif %}
@@ -109,7 +114,8 @@
                             {% else %}
                                 <div class="text-center">
                                     <a class="btn btn-primary" hx-boost="true"
-                                       href="{% url 'persons:person-add-mother' person_pk=object.pk %}" hx-target="#mother-info"
+                                       href="{% url 'persons:person-add-mother' person_pk=object.pk %}"
+                                       hx-target="#mother-info"
                                        hx-swap="outerHTML">
                                         <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
                                     </a>
@@ -137,7 +143,8 @@
                                     <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'تاریخ تولد' %}: </span><span dir="ltr">{{ object.birth_date|default_if_none:'-' }}</span>
+                                    <span>{% trans 'تاریخ تولد' %}: </span><span
+                                        dir="ltr">{{ object.birth_date|default_if_none:'-' }}</span>
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'محل تولد' %}: </span>{{ object.birth_place|default_if_none:'-' }}
@@ -146,7 +153,8 @@
                                     <span>{% trans 'سال مرگ' %}: </span>{{ object.death_year|default_if_none:'-' }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'تاریخ مرگ' %}: </span><span dir="ltr">{{ object.death_date|default_if_none:'-' }}</span>
+                                    <span>{% trans 'تاریخ مرگ' %}: </span><span
+                                        dir="ltr">{{ object.death_date|default_if_none:'-' }}</span>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
@@ -165,7 +173,7 @@
                         <h4>{% trans 'اطلاعات همسر' %}</h4>
                         <hr class="mt-0">
                         <div class="row row-cols-md-2 g-2">
-{# TODO Handle husband #}
+                            {# TODO Handle husband #}
                             {% for spouse in object.spouses.all %}
                                 <div class="col">
                                     <div class="p-3 border rounded">

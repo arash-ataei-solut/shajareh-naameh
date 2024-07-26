@@ -34,7 +34,7 @@
         <link href="{% static 'fontawesome-free-6.4.0-web/css/all.min.css' %}" rel="stylesheet">
 
         <!-- JalaliDatePicker -->
-        <link type="text/css" rel="stylesheet" href="{% static 'JalaliDatePicker/jalalidatepicker.min.css' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'JalaliDatePicker/jalalidatepicker.min.css' %}"/>
 
         <!-- HTMX swap oob -->
         <link id="htmx-swap-oob-css"/>
@@ -47,6 +47,19 @@
 </head>
 
 <body dir="rtl">
+
+<div class="position-fixed w-100" id="main-messages-alert">
+    <div class="d-flex justify-content-center mt-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
 
 {% block content %}
 {% endblock %}

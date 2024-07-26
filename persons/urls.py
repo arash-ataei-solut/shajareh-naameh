@@ -16,12 +16,17 @@ urlpatterns = [
 
     # Person delete relatives
     path(
-        'person-delete-ancestors/<int:ancestor_pk>/',
+        'person-delete-ancestors-confirmation/<int:person_pk>/<int:pk>/',
+        views.PersonDeleteAncestorsConfirmationView.as_view(),
+        name='person-delete-ancestors-confirmation'
+    ),
+    path(
+        'person-delete-ancestors/<int:person_pk>/<int:pk>/',
         views.PersonDeleteAncestorsView.as_view(),
         name='person-delete-ancestors'
     ),
     path(
-        'person-delete-ancestors-failure/<int:ancestor_pk>/',
+        'person-delete-ancestors-failure/<int:pk>/',
         views.PersonDeleteAncestorsFailureView.as_view(),
         name='person-delete-ancestors-failure'
     ),
