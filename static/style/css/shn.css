@@ -2,7 +2,7 @@ html {
     scroll-padding-top: 85px;
 }
 
-#main-messages-alert {
+.main-messages-alert {
     z-index: 9999;
 }
 
