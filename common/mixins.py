@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django_htmx.http import HttpResponseClientRedirect
+from django_htmx.http import HttpResponseClientRedirect, HttpResponseClientRefresh
 
 
 class OnlyHTMXViewMixin:
@@ -9,6 +9,9 @@ class OnlyHTMXViewMixin:
         if request.htmx:
             return super().dispatch(request, *args, **kwargs)
         return Http404()
+
+    def http_redirect(self, url):
+        return HttpResponseClientRedirect(url)
 
 
 class HTMXViewMixin:
@@ -29,6 +32,15 @@ class HTMXViewMixin:
 class HTMXFormViewMixin(HTMXViewMixin):
     def success_response(self):
         return self.http_redirect(self.get_success_url())
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        return self.success_response()
+
+
+class OnlyHTMXFormViewMixin(OnlyHTMXViewMixin):
+    def success_response(self):
+        return HttpResponseClientRefresh()
 
     def form_valid(self, form):
         super().form_valid(form)

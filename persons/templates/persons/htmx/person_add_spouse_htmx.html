@@ -1,8 +1,10 @@
 {% load shn_filters %}
 {% load i18n %}
 
-<div hx-boost="true" hx-target="this" hx-swap="outerHTML">
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add-spouse' person_pk=person.pk %}" method="post"
+<div id="person-add-spouse">
+    <form class="{% if form.errors %} was-validated{% endif %}"
+          hx-post="{% url 'persons:person-add-spouse' person_pk=person.pk %}" hx-target="#person-add-spouse"
+          hx-swap="outerHTML"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}

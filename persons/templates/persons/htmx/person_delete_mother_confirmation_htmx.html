@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div id="delete-mother-confirmation">
+    <div class="alert alert-warning text-center">
+        <h1>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </h1>
+        <p>{% trans 'آیا از حذف این شخص مطمئن هستید؟' %}</p>
+        <form hx-post="{% url 'persons:person-delete-mother' pk=object.pk %}" hx-target="#delete-mother-confirmation"
+              hx-swap="outerHTML">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-danger" type="submit">
+                    {% trans 'خذف' %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

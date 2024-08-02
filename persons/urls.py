@@ -16,19 +16,34 @@ urlpatterns = [
 
     # Person delete relatives
     path(
-        'person-delete-ancestors-confirmation/<int:person_pk>/<int:pk>/',
-        views.PersonDeleteAncestorsConfirmationView.as_view(),
-        name='person-delete-ancestors-confirmation'
+        'person-delete-father-confirmation/<int:pk>/',
+        views.PersonDeleteFatherConfirmationView.as_view(),
+        name='person-delete-father-confirmation'
     ),
     path(
-        'person-delete-ancestors/<int:person_pk>/<int:pk>/',
-        views.PersonDeleteAncestorsView.as_view(),
-        name='person-delete-ancestors'
+        'person-delete-father/<int:pk>/',
+        views.PersonDeleteFatherView.as_view(),
+        name='person-delete-father'
     ),
     path(
-        'person-delete-ancestors-failure/<int:pk>/',
-        views.PersonDeleteAncestorsFailureView.as_view(),
-        name='person-delete-ancestors-failure'
+        'person-delete-father-failure/<int:pk>/',
+        views.PersonDeleteFatherFailureView.as_view(),
+        name='person-delete-father-failure'
+    ),
+    path(
+        'person-delete-mother-confirmation/<int:pk>/',
+        views.PersonDeleteMotherConfirmationView.as_view(),
+        name='person-delete-mother-confirmation'
+    ),
+    path(
+        'person-delete-mother/<int:pk>/',
+        views.PersonDeleteMotherView.as_view(),
+        name='person-delete-mother'
+    ),
+    path(
+        'person-delete-mother-failure/<int:pk>/',
+        views.PersonDeleteMotherFailureView.as_view(),
+        name='person-delete-mother-failure'
     ),
 
     path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),

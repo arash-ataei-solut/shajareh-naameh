@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
 
-from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin
+from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin
 from persons import forms
 from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, RelationChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
@@ -100,86 +100,82 @@ class PersonAddRelativeMixin:
         return self.success_response()
 
 
-class PersonAddFatherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
-    template_name = 'persons/person_add_father.html'
-    htmx_template_name = 'persons/htmx/person_add_father_htmx.html'
+class PersonAddFatherView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
     relation = RelationChoices.FATHER
     # TODO Handle loop
 
 
-class PersonAddMotherView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
-    template_name = 'persons/person_add_mother.html'
-    htmx_template_name = 'persons/htmx/person_add_mother_htmx.html'
+class PersonAddMotherView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/htmx/person_add_mother_htmx.html'
     form_class = forms.PersonAddMotherForm
     relation = RelationChoices.MOTHER
 
 
-class PersonAddSpouseView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
-    template_name = 'persons/person_add_spouse.html'
-    htmx_template_name = 'persons/htmx/person_add_spouse_htmx.html'
+class PersonAddSpouseView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/htmx/person_add_spouse_htmx.html'
     form_class = forms.PersonAddSpouseForm
     relation = RelationChoices.SPOUSE
 
 
-class PersonAddChildView(PersonAddRelativeMixin, HTMXFormViewMixin, PersonAddView):
-    template_name = 'persons/person_add_child.html'
-    htmx_template_name = 'persons/htmx/person_add_child_htmx.html'
+class PersonAddChildView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAddView):
+    template_name = 'persons/htmx/person_add_child_htmx.html'
     form_class = forms.PersonAddChildForm
     relation = RelationChoices.CHILD
 
 
-class PersonDeleteRelativeConfirmationView(HTMXViewMixin, LoginRequiredMixin, DetailView):
-    template_name = 'persons/person_delete_relative_confirmation.html'
-    htmx_template_name = 'persons/htmx/person_delete_relative_confirmation_htmx.html'
+class PersonDeleteAncestorConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteRelativeView(HTMXFormViewMixin, LoginRequiredMixin, DeleteView):
-    template_name = 'persons/person_delete_relative.html'
-    htmx_template_name = 'persons/htmx/person_delete_relative_htmx.html'
-
+class PersonDeleteAncestorView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
-
-
-class PersonDeleteAncestorsConfirmationView(PersonDeleteRelativeConfirmationView):
-    template_name = 'persons/person_delete_ancestors_confirmation.html'
-    htmx_template_name = 'persons/htmx/person_delete_ancestors_confirmation_htmx.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({'person_pk': self.kwargs['person_pk']})
-        return context
-
-
-class PersonDeleteAncestorsView(PersonDeleteRelativeView):
-
-    def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.kwargs['person_pk']})
 
     def form_valid(self, form):
         if self.object.father or self.object.mother:
-            url = reverse('persons:person-delete-ancestors-failure', kwargs={'pk': self.object.pk})
+            url = reverse('persons:person-delete-father-failure', kwargs={'pk': self.object.pk})
             return HttpResponseRedirect(url)
-        success_url = self.get_success_url()
-        ancestor_full_name = self.object.full_name
+        full_name = self.object.full_name
         self.object.delete()
         messages.success(
             self.request,
-            _(f'شخص مورد نظر با نام "{ancestor_full_name}" با موفقیت حذف شد.')
+            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
         )
         return self.success_response()
 
 
-class PersonDeleteAncestorsFailureView(HTMXViewMixin, LoginRequiredMixin, DetailView):
-    template_name = 'persons/person_delete_ancestors_failure.html'
-    htmx_template_name = 'persons/htmx/person_delete_ancestors_failure_htmx.html'
+class PersonDeleteAncestorFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
+
+
+class PersonDeleteFatherConfirmationView(PersonDeleteAncestorConfirmationView):
+    template_name = 'persons/htmx/person_delete_father_confirmation_htmx.html'
+    
+    
+class PersonDeleteFatherView(PersonDeleteAncestorView):
+    pass
+
+
+class PersonDeleteFatherFailureView(PersonDeleteAncestorFailureView):
+    template_name = 'persons/htmx/person_delete_father_failure_htmx.html'
+
+
+class PersonDeleteMotherConfirmationView(PersonDeleteAncestorConfirmationView):
+    template_name = 'persons/htmx/person_delete_mother_confirmation_htmx.html'
+
+
+class PersonDeleteMotherView(PersonDeleteAncestorView):
+    pass
+
+
+class PersonDeleteMotherFailureView(PersonDeleteAncestorFailureView):
+    template_name = 'persons/htmx/person_delete_father_failure_htmx.html'
 
 
 class PersonDetailView(LoginRequiredMixin, DetailView):
@@ -253,7 +249,7 @@ class SeeTreePermissionRequestSuccessView(TemplateView):
 
 class PersonTreeView(HTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/person_tree.html'
-    htmx_template_name = 'persons/htmx/person-tree-htmx.html'
+    htmx_template_name = 'persons/htmx/person_tree_htmx.html'
     queryset = Person.objects.all()
 
     def get(self, request, *args, **kwargs):
