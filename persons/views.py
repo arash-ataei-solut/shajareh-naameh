@@ -16,6 +16,7 @@ from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, R
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest
+from places.models import ResidencePlace
 
 
 class PersonAddView(LoginRequiredMixin, CreateView):
@@ -47,17 +48,79 @@ class PersonAddMyselfView(PersonAddView):
         return kwargs
 
 
-class PersonUpdateView(HTMXFormViewMixin, UpdateView):
-    template_name = 'persons/person_update.html'
-    htmx_template_name = 'persons/htmx/person_update_htmx.html'
+class PersonUpdateView(OnlyHTMXFormViewMixin, UpdateView):
+    template_name = 'persons/htmx/person_update_htmx.html'
     form_class = PersonUpdateForm
-    success_url = reverse_lazy('persons:person-detail')
 
     def get_queryset(self):
         return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
+
+class PersonAddResidencePlaceView(OnlyHTMXFormViewMixin, LoginRequiredMixin, CreateView):
+    template_name = 'persons/htmx/person_add_residence_place_htmx.html'
+    form_class = forms.PersonAddResidenceForm
+
+    def get(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().post(request, *args, **kwargs)
+
     def get_success_url(self):
-        return reverse('persons:person-detail', kwargs={'pk': self.object.pk})
+        if self.success_url:
+            return self.success_url
+        return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
+
+    def get_person(self):
+        queryset = Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        return get_object_or_404(queryset, id=self.kwargs['person_pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'person': self.person})
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'person': self.person})
+        return kwargs
+
+
+class PersonUpdateResidencePlaceView(OnlyHTMXFormViewMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'persons/htmx/person_update_residence_place_htmx.html'
+    form_class = forms.PersonUpdateResidencePlaceForm
+
+    def get_queryset(self):
+        return ResidencePlace.objects.filter(
+            Q(person__user=self.request.user) | Q(person__created_by=self.request.user)
+        )
+
+
+class PersonDeleteResidencePlaceConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_residence_place_confirmation_htmx.html'
+
+    def get_queryset(self):
+        return ResidencePlace.objects.filter(
+            Q(person__user=self.request.user) | Q(person__created_by=self.request.user)
+        )
+
+
+class PersonDeleteResidencePlaceView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        return ResidencePlace.objects.filter(
+            Q(person__user=self.request.user) | Q(person__created_by=self.request.user)
+        )
+
+    def form_valid(self, form):
+        place = str(self.object.place)
+        self.object.delete()
+        messages.success(
+            self.request,
+            _(f'محل سکونت مورد نظر با نام محله/روستا "{place}" با موفقیت حذف شد.')
+        )
+        return self.success_response()
 
 
 class PersonAddRelativeMixin:
@@ -126,6 +189,7 @@ class PersonAddChildView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAd
 
 
 class PersonDeleteAncestorConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_ancestor_confirmation_htmx.html'
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
@@ -135,10 +199,19 @@ class PersonDeleteAncestorView(OnlyHTMXFormViewMixin, LoginRequiredMixin, Delete
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
 
+    def get_failure_url(self):
+        return reverse('persons:person-delete-ancestor-failure', kwargs={'pk': self.object.pk})
+
     def form_valid(self, form):
-        if self.object.father or self.object.mother:
-            url = reverse('persons:person-delete-father-failure', kwargs={'pk': self.object.pk})
-            return HttpResponseRedirect(url)
+        failure_conditions: list[bool] = [
+            self.object.father is not None,
+            self.object.mother is not None,
+            self.object.father_children.count() > 1,
+            self.object.mother_children.count() > 1,
+        ]
+
+        if any(failure_conditions):
+            return HttpResponseRedirect(self.get_failure_url())
         full_name = self.object.full_name
         self.object.delete()
         messages.success(
@@ -149,33 +222,76 @@ class PersonDeleteAncestorView(OnlyHTMXFormViewMixin, LoginRequiredMixin, Delete
 
 
 class PersonDeleteAncestorFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_ancestor_failure_htmx.html'
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteFatherConfirmationView(PersonDeleteAncestorConfirmationView):
-    template_name = 'persons/htmx/person_delete_father_confirmation_htmx.html'
-    
-    
-class PersonDeleteFatherView(PersonDeleteAncestorView):
-    pass
+class PersonDeleteDescendantConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_descendant_confirmation_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteFatherFailureView(PersonDeleteAncestorFailureView):
-    template_name = 'persons/htmx/person_delete_father_failure_htmx.html'
+class PersonDeleteDescendantView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+    def get_failure_url(self):
+        return reverse('persons:person-delete-descendant-failure', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        if self.object.father_children.exists() or self.object.mother_children.exists():
+            return HttpResponseRedirect(self.get_failure_url())
+        full_name = self.object.full_name
+        self.object.delete()
+        messages.success(
+            self.request,
+            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+        )
+        return self.success_response()
 
 
-class PersonDeleteMotherConfirmationView(PersonDeleteAncestorConfirmationView):
-    template_name = 'persons/htmx/person_delete_mother_confirmation_htmx.html'
+class PersonDeleteDescendantFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_descendant_failure_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteMotherView(PersonDeleteAncestorView):
-    pass
+class PersonDeleteSpouseConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_spouse_confirmation_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
 
 
-class PersonDeleteMotherFailureView(PersonDeleteAncestorFailureView):
-    template_name = 'persons/htmx/person_delete_father_failure_htmx.html'
+class PersonDeleteSpouseView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+    def get_failure_url(self):
+        return reverse('persons:person-delete-spouse-failure', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        if self.object.father_children.exists() or self.object.mother_children.exists():
+            return HttpResponseRedirect(self.get_failure_url())
+        full_name = self.object.full_name
+        self.object.delete()
+        messages.success(
+            self.request,
+            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+        )
+        return self.success_response()
+
+
+class PersonDeleteSpouseFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_spouse_failure_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
 
 
 class PersonDetailView(LoginRequiredMixin, DetailView):

@@ -227,7 +227,7 @@ msgid "ذخیره"
 msgstr ""
 
 #: places/enums.py:6
-msgid "محله"
+msgid "محله/روستا"
 msgstr ""
 
 #: places/enums.py:7
@@ -263,11 +263,11 @@ msgid "نوع"
 msgstr ""
 
 #: places/models.py:48 places/models.py:56
-msgid "مکان"
+msgid "محله/روستا"
 msgstr ""
 
 #: places/models.py:49
-msgid "مکان‌ها"
+msgid "محله‌ها/روستاها"
 msgstr ""
 
 #: places/models.py:57

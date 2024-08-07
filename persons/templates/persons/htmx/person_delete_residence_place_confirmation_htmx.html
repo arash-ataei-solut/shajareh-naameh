@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<div id="delete-residence-place-confirmation">
+    <div class="alert alert-warning text-center">
+        <h1>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </h1>
+        <p>{% trans 'آیا از حذف این محل سکونت مطمئن هستید؟' %}</p>
+        <form hx-post="{% url 'persons:person-delete-residence-place' pk=object.pk %}" hx-target="#delete-residence-place-confirmation"
+              hx-swap="outerHTML">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-danger me-2" type="submit">
+                    {% trans 'بله' %}
+                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                    {% trans 'خیر' %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

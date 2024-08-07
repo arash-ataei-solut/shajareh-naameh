@@ -4,10 +4,10 @@
         <h1>
             <i class="fa-solid fa-triangle-exclamation"></i>
         </h1>
-        <p>{% trans 'این شخص دارای اجداد است و امکان حذف او وجود ندارد.' %}</p>
+        <p>{% trans 'این شخص دارای اجداد یا اولاد است و امکان حذف او وجود ندارد.' %}</p>
         <p>{% trans 'جهت حذف این شخص ابتدا لازم است اجداد او حذف شوند.' %}</p>
         <a class="btn btn-info me-2" href="{% url 'persons:person-detail' pk=object.pk %}">
-            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
+            <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات شخص' %}
         </a>
     </div>
 </div>

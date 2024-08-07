@@ -6,8 +6,8 @@
     {{ block.super }}
     {{ form.media.css }}
     <!-- Select2 bootstrap5 theme -->
-    <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'select2/shn.css' %}" />
+    <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'select2/shn.css' %}"/>
 {% endblock %}
 
 {% block scripts %}
@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block form_content %}
-    <h2 class="fw-bold mb-3">{% trans 'ویرایش اطلاعات شخص' %}</h2>
+    <h4>{% trans 'اطلاعات شخص' %}</h4>
+    <hr class="mt-0">
     {% include 'persons/htmx/person_update_htmx.html' %}
 {% endblock %}

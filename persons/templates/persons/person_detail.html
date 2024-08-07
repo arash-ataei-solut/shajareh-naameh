@@ -14,6 +14,21 @@
 
 {% block bg_content %}
 
+    <div class="modal fade" id="delete-relative-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="delete-relative-modal-body">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="container">
             <div class="row g-3">
@@ -55,17 +70,18 @@
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
                                         </a>
                                         <button class="btn btn-danger" type="button"
-                                                hx-get="{% url 'persons:person-delete-father-confirmation' pk=object.father.pk %}"
-                                                hx-target="#father-info-actions" hx-swap="innerHTML">
-                                            <i class="fa fa-minus-circle me-1"></i>{% trans 'خذف' %}
+                                                hx-get="{% url 'persons:person-delete-ancestor-confirmation' pk=object.father.pk %}"
+                                                hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                            <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
                                         </button>
                                     </div>
                                 {% endif %}
                             {% else %}
                                 <div class="text-center">
                                     <button class="btn btn-primary" type="button"
-                                       hx-get="{% url 'persons:person-add-father' person_pk=object.pk %}"
-                                       hx-target="#father-info" hx-swap="outerHTML">
+                                            hx-get="{% url 'persons:person-add-father' person_pk=object.pk %}"
+                                            hx-target="#father-info" hx-swap="outerHTML">
                                         <i class="fa-solid fa-plus-circle me-1"></i>{% trans 'ثبت اطلاعات پدر' %}
                                     </button>
                                 </div>
@@ -111,18 +127,19 @@
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
                                         </a>
                                         <button class="btn btn-danger" type="button"
-                                                hx-get="{% url 'persons:person-delete-mother-confirmation' pk=object.mother.pk %}"
-                                                hx-target="#mother-info-actions" hx-swap="innerHTML">
-                                            <i class="fa fa-minus-circle me-1"></i>{% trans 'خذف' %}
+                                                hx-get="{% url 'persons:person-delete-ancestor-confirmation' pk=object.mother.pk %}"
+                                                hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                            <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
                                         </button>
                                     </div>
                                 {% endif %}
                             {% else %}
                                 <div class="text-center">
                                     <button class="btn btn-primary" type="button"
-                                       hx-get="{% url 'persons:person-add-mother' person_pk=object.pk %}"
-                                       hx-target="#mother-info"
-                                       hx-swap="outerHTML">
+                                            hx-get="{% url 'persons:person-add-mother' person_pk=object.pk %}"
+                                            hx-target="#mother-info"
+                                            hx-swap="outerHTML">
                                         <i class="fa-solid fa-plus-circle"></i> {% trans 'ثبت اطلاعات مادر' %}
                                     </button>
                                 </div>
@@ -164,14 +181,66 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
-                                <a class="btn btn-primary" hx-boost="true"
-                                   href="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personal-info"
+                                <button class="btn btn-primary" type="button"
+                                   hx-get="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personal-info"
                                    hx-swap="outerHTML">
                                     <i class="fa-solid fa-edit"></i> {% trans 'ویرایش اطلاعات' %}
-                                </a>
+                                </button>
                             </div>
                         </div>
 
+                    </div>
+                </div><div class="col-12">
+                    <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
+                        <h4>{% trans 'اطلاعات محل سکونت' %}</h4>
+                        <hr class="mt-0">
+                        <div class="row row-cols-md-2 g-2">
+                            {# TODO Handle husband #}
+                            {% for place in object.residenceplace_set.all %}
+                                <div class="col">
+                                    <div class="p-3 border rounded place-info">
+                                        <div class="row row-cols-md-2 gx-1 gy-2">
+                                            <div class="col">
+                                                <span>{% trans 'محله/روستا' %}: </span>{{ place.place }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'از سال' %}: </span>{{ place.from_year }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'تا سال' %}: </span>{{ place.to_year }}
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <button class="btn btn-info" type="button"
+                                                    hx-get="{% url 'persons:person-update-residence-place' pk=place.pk %}"
+                                                    hx-target="closest .place-info" hx-swap="innerHTML">
+                                                <i class="fa-solid fa-info-circle"></i> {% trans 'ویرایش محل سکونت' %}
+                                            </button>
+                                            <button class="btn btn-danger" type="button"
+                                                    hx-get="{% url 'persons:person-delete-residence-place-confirmation' pk=place.pk %}"
+                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="col">
+                                <div class="py-3 px-2 border rounded add-place">
+                                    <div class="text-center">
+                                        <button class="btn btn-primary" type="button"
+                                                hx-get="{% url 'persons:person-add-residence-place' person_pk=person.pk %}"
+                                                hx-target="closest .add-place"
+                                                hx-swap="innerHTML">
+                                            <i class="fa-solid fa-plus-circle"></i> {% trans 'افزودن اطلاعات محل سکونت' %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">
@@ -203,6 +272,12 @@
                                                href="{% url 'persons:person-detail' pk=spouse.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات همسر' %}
                                             </a>
+                                            <button class="btn btn-danger" type="button"
+                                                    hx-get="{% url 'persons:person-delete-spouse-confirmation' pk=spouse.pk %}"
+                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -212,9 +287,9 @@
                                 <div class="py-3 px-2 border rounded">
                                     <div class="text-center">
                                         <button class="btn btn-primary" type="button"
-                                           hx-get="{% url 'persons:person-add-spouse' person_pk=person.pk %}"
-                                           hx-target="this"
-                                           hx-swap="outerHTML">
+                                                hx-get="{% url 'persons:person-add-spouse' person_pk=person.pk %}"
+                                                hx-target="this"
+                                                hx-swap="outerHTML">
                                             <i class="fa-solid fa-plus-circle"></i> {% trans 'افزودن اطلاعات همسر' %}
                                         </button>
                                     </div>
@@ -251,6 +326,12 @@
                                                href="{% url 'persons:person-detail' pk=child.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
                                             </a>
+                                            <button class="btn btn-danger" type="button"
+                                                    hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
+                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -278,6 +359,12 @@
                                                href="{% url 'persons:person-detail' pk=child.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
                                             </a>
+                                            <button class="btn btn-danger" type="button"
+                                                    hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
+                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -287,9 +374,9 @@
                                 <div class="py-3 px-2 border rounded">
                                     <div class="text-center">
                                         <button class="btn btn-primary" type="button"
-                                           hx-get="{% url 'persons:person-add-child' person_pk=person.pk %}"
-                                           hx-target="this"
-                                           hx-swap="outerHTML">
+                                                hx-get="{% url 'persons:person-add-child' person_pk=person.pk %}"
+                                                hx-target="this"
+                                                hx-swap="outerHTML">
                                             <i class="fa-solid fa-plus-circle"></i> {% trans 'افزودن اطلاعات فرزند' %}
                                         </button>
                                     </div>

@@ -34,7 +34,7 @@ class HTMXFormViewMixin(HTMXViewMixin):
         return self.http_redirect(self.get_success_url())
 
     def form_valid(self, form):
-        super().form_valid(form)
+        self.object = form.save()
         return self.success_response()
 
 
@@ -43,5 +43,5 @@ class OnlyHTMXFormViewMixin(OnlyHTMXViewMixin):
         return HttpResponseClientRefresh()
 
     def form_valid(self, form):
-        super().form_valid(form)
+        self.object = form.save()
         return self.success_response()

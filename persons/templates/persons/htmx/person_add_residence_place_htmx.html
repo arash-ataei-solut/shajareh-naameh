@@ -1,0 +1,65 @@
+{% load static %}
+{% load shn_filters %}
+{% load i18n %}
+
+<div hx-swap-oob="beforebegin" id="htmx-swap-oob-css">
+    {{ form.media.css }}
+    <!-- Select2 bootstrap5 theme -->
+    <link rel="stylesheet" href="{% static 'select2/select2-bootstrap-5-theme.rtl.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'select2/shn.css' %}" />
+</div>
+
+<div hx-swap-oob="beforebegin" id="htmx-swap-oob-js">
+    {{ form.media.js }}
+</div>
+
+<div id="person-add-residence-place">
+    <form class="{% if form.errors %} was-validated{% endif %}"
+          hx-post="{% url 'persons:person-add-residence-place' person_pk=person.pk %}" hx-target="#person-add-residence-place"
+          hx-swap="outerHTML"
+          novalidate>
+        <div>
+            {% for non_field_error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ non_field_error }}
+                </div>
+            {% endfor %}
+        </div>
+        {% csrf_token %}
+        <div class="row row-cols-md-2 g-2">
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.place|add_class:'form-control' }}
+                    <label for="{{ form.place.id_for_label }}">{{ form.place.label }}</label>
+                    {% for error in form.place.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.from_year|add_class:'form-control' }}
+                    <label for="{{ form.from_year.id_for_label }}">{{ form.from_year.label }}</label>
+                    {% for error in form.from_year.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ form.to_year|add_class:'form-control' }}
+                    <label for="{{ form.to_year.id_for_label }}">{{ form.to_year.label }}</label>
+                    {% for error in form.to_year.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-primary" type="submit">
+                {% trans 'ذخیره' %}
+            </button>
+        </div>
+    </form>
+</div>

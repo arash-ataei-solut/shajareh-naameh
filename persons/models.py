@@ -60,9 +60,6 @@ class Person(models.Model):
     birth_place = models.ForeignKey(
         'places.Place', on_delete=models.PROTECT, verbose_name=_('محل تولد'), null=True, blank=True
     )
-    residence_place = models.ManyToManyField(
-        'places.ResidencePlace', verbose_name=_('محل سکونت'), blank=True
-    )
     death_year = models.SmallIntegerField(verbose_name=_('سال وفات'), null=True, blank=True)
     death_date = j_models.jDateField(verbose_name=_('تاریخ وفات'), null=True, blank=True)
 
@@ -153,6 +150,9 @@ class Person(models.Model):
 
     def can_see_tree(self, user: ShnUser) -> bool:
         return self.can_see_tree_users.filter(id=user.id).exists()
+
+    def can_update(self, user: ShnUser) -> bool:
+        return self.created_by == user or self.user == user
 
     def has_awaiting_see_tree_request(self, user: ShnUser) -> bool:
         return SeeTreePermissionRequest.objects.filter(

@@ -14,36 +14,73 @@ urlpatterns = [
     path('person-add-spouse/<int:person_pk>/', views.PersonAddSpouseView.as_view(), name='person-add-spouse'),
     path('person-add-child/<int:person_pk>/', views.PersonAddChildView.as_view(), name='person-add-child'),
 
-    # Person delete relatives
+    # Residence place
     path(
-        'person-delete-father-confirmation/<int:pk>/',
-        views.PersonDeleteFatherConfirmationView.as_view(),
-        name='person-delete-father-confirmation'
+        'person-add-residence-place/<int:person_pk>/',
+        views.PersonAddResidencePlaceView.as_view(),
+        name='person-add-residence-place'
     ),
     path(
-        'person-delete-father/<int:pk>/',
-        views.PersonDeleteFatherView.as_view(),
-        name='person-delete-father'
+        'person-update-residence-place/<int:pk>/',
+        views.PersonUpdateResidencePlaceView.as_view(),
+        name='person-update-residence-place'
     ),
     path(
-        'person-delete-father-failure/<int:pk>/',
-        views.PersonDeleteFatherFailureView.as_view(),
-        name='person-delete-father-failure'
+        'person-delete-residence-place-confirmation/<int:pk>/',
+        views.PersonDeleteResidencePlaceConfirmationView.as_view(),
+        name='person-delete-residence-place-confirmation'
     ),
     path(
-        'person-delete-mother-confirmation/<int:pk>/',
-        views.PersonDeleteMotherConfirmationView.as_view(),
-        name='person-delete-mother-confirmation'
+        'person-delete-residence-place/<int:pk>/',
+        views.PersonDeleteResidencePlaceView.as_view(),
+        name='person-delete-residence-place'
+    ),
+
+    # Person delete relative
+    path(
+        'person-delete-ancestor-confirmation/<int:pk>/',
+        views.PersonDeleteAncestorConfirmationView.as_view(),
+        name='person-delete-ancestor-confirmation'
     ),
     path(
-        'person-delete-mother/<int:pk>/',
-        views.PersonDeleteMotherView.as_view(),
-        name='person-delete-mother'
+        'person-delete-ancestor/<int:pk>/',
+        views.PersonDeleteAncestorView.as_view(),
+        name='person-delete-ancestor'
     ),
     path(
-        'person-delete-mother-failure/<int:pk>/',
-        views.PersonDeleteMotherFailureView.as_view(),
-        name='person-delete-mother-failure'
+        'person-delete-ancestor-failure/<int:pk>/',
+        views.PersonDeleteAncestorFailureView.as_view(),
+        name='person-delete-ancestor-failure'
+    ),
+    path(
+        'person-delete-descendant-confirmation/<int:pk>/',
+        views.PersonDeleteDescendantConfirmationView.as_view(),
+        name='person-delete-descendant-confirmation'
+    ),
+    path(
+        'person-delete-descendant/<int:pk>/',
+        views.PersonDeleteDescendantView.as_view(),
+        name='person-delete-descendant'
+    ),
+    path(
+        'person-delete-descendant-failure/<int:pk>/',
+        views.PersonDeleteDescendantFailureView.as_view(),
+        name='person-delete-descendant-failure'
+    ),
+    path(
+        'person-delete-spouse-confirmation/<int:pk>/',
+        views.PersonDeleteSpouseConfirmationView.as_view(),
+        name='person-delete-spouse-confirmation'
+    ),
+    path(
+        'person-delete-spouse/<int:pk>/',
+        views.PersonDeleteSpouseView.as_view(),
+        name='person-delete-spouse'
+    ),
+    path(
+        'person-delete-spouse-failure/<int:pk>/',
+        views.PersonDeleteSpouseFailureView.as_view(),
+        name='person-delete-spouse-failure'
     ),
 
     path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),

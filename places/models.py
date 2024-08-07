@@ -45,15 +45,16 @@ class Place(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('نام'))
 
     class Meta:
-        verbose_name = _('مکان')
-        verbose_name_plural = _('مکان‌ها')
+        verbose_name = _('محله/روستا')
+        verbose_name_plural = _('محله‌ها/روستاها')
 
     def __str__(self):
         return f'{self.city.province.country.name} - {self.city.province.name} - {self.name}'
 
 
 class ResidencePlace(models.Model):
-    place = models.ForeignKey('places.Place', on_delete=models.PROTECT, verbose_name=_('مکان'))
+    person = models.ForeignKey('persons.Person', on_delete=models.CASCADE, verbose_name=_('شخص'))
+    place = models.ForeignKey('places.Place', on_delete=models.PROTECT, verbose_name=_('محله/روستا'))
     from_year = models.SmallIntegerField(verbose_name=_('از سال'))
     to_year = models.SmallIntegerField(verbose_name=_('تا سال'))
 

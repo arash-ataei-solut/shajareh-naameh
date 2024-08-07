@@ -8,6 +8,7 @@ from persons.enums import RelationChoices, RelationRequestStatusChoices, Matchin
 from persons.matchmakers import Matchmaker, RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.forms import PlaceWidget
+from places.models import ResidencePlace
 
 
 class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
@@ -45,6 +46,33 @@ class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
         }
 
 
+class PersonAddResidenceForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = ResidencePlace
+        fields = ['place', 'from_year', 'to_year']
+        widgets = {
+            'place': PlaceWidget,
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.person: Person = kwargs.pop('person')
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        self.instance.person = self.person
+        place: ResidencePlace = super().save(commit)
+        return place
+
+
+class PersonUpdateResidencePlaceForm(PlaceholderFormMixin, forms.ModelForm):
+    class Meta:
+        model = ResidencePlace
+        fields = ['place', 'from_year', 'to_year']
+        widgets = {
+            'place': PlaceWidget,
+        }
+
+
 class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
@@ -53,7 +81,7 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.person = kwargs.pop('person')
+        self.person: Person = kwargs.pop('person')
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -81,7 +109,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.person = kwargs.pop('person')
+        self.person: Person = kwargs.pop('person')
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -109,7 +137,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.person = kwargs.pop('person')
+        self.person: Person = kwargs.pop('person')
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
@@ -126,7 +154,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.person = kwargs.pop('person')
+        self.person: Person = kwargs.pop('person')
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
