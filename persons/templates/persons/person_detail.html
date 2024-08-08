@@ -121,8 +121,8 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="text-center mt-3" id="mother-info-actions">
-                                        <a class="btn btn-info"
+                                    <div class="d-flex justify-content-center mt-3" id="mother-info-actions">
+                                        <a class="btn btn-info me-2"
                                            href="{% url 'persons:person-detail' pk=object.mother.pk %}">
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
                                         </a>
@@ -181,10 +181,16 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
-                                <button class="btn btn-primary" type="button"
+                                <button class="btn btn-primary me-2" type="button"
                                    hx-get="{% url 'persons:person-update' pk=object.pk %}" hx-target="#personal-info"
                                    hx-swap="outerHTML">
                                     <i class="fa-solid fa-edit"></i> {% trans 'ویرایش اطلاعات' %}
+                                </button>
+                                <button class="btn btn-danger" type="button"
+                                        hx-get="{% url 'persons:person-delete-confirmation' pk=object.pk %}"
+                                        hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                        data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                    <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
                                 </button>
                             </div>
                         </div>
@@ -211,8 +217,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="text-center mt-3">
-                                            <button class="btn btn-info" type="button"
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <button class="btn btn-info me-2" type="button"
                                                     hx-get="{% url 'persons:person-update-residence-place' pk=place.pk %}"
                                                     hx-target="closest .place-info" hx-swap="innerHTML">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'ویرایش محل سکونت' %}
@@ -267,8 +273,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="text-center mt-3">
-                                            <a class="btn btn-info"
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <a class="btn btn-info me-2"
                                                href="{% url 'persons:person-detail' pk=spouse.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات همسر' %}
                                             </a>
@@ -321,8 +327,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="text-center mt-3">
-                                            <a class="btn btn-info"
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <a class="btn btn-info me-2"
                                                href="{% url 'persons:person-detail' pk=child.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
                                             </a>
@@ -354,8 +360,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="text-center mt-3">
-                                            <a class="btn btn-info"
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <a class="btn btn-info me-2"
                                                href="{% url 'persons:person-detail' pk=child.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
                                             </a>

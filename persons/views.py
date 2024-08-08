@@ -204,14 +204,14 @@ class PersonDeleteAncestorView(OnlyHTMXFormViewMixin, LoginRequiredMixin, Delete
 
     def form_valid(self, form):
         failure_conditions: list[bool] = [
-            self.object.father is not None,
-            self.object.mother is not None,
-            self.object.father_children.count() > 1,
-            self.object.mother_children.count() > 1,
+            self.object.father_id is not None,
+            self.object.mother_id is not None,
+            self.object.father_children.count() + self.object.mother_children.count() > 1,
         ]
 
         if any(failure_conditions):
             return HttpResponseRedirect(self.get_failure_url())
+
         full_name = self.object.full_name
         self.object.delete()
         messages.success(
@@ -243,7 +243,12 @@ class PersonDeleteDescendantView(OnlyHTMXFormViewMixin, LoginRequiredMixin, Dele
         return reverse('persons:person-delete-descendant-failure', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        if self.object.father_children.exists() or self.object.mother_children.exists():
+        failure_conditions: list[bool] = [
+            self.object.father_id is not None and self.object.mother_id is not None,
+            self.object.father_children.count() > 0,
+            self.object.mother_children.count() > 0,
+        ]
+        if any(failure_conditions):
             return HttpResponseRedirect(self.get_failure_url())
         full_name = self.object.full_name
         self.object.delete()
@@ -276,7 +281,13 @@ class PersonDeleteSpouseView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteVi
         return reverse('persons:person-delete-spouse-failure', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        if self.object.father_children.exists() or self.object.mother_children.exists():
+        failure_conditions: list[bool] = [
+            self.object.father_id is not None,
+            self.object.mother_id is not None,
+            self.object.father_children.count() > 0,
+            self.object.mother_children.count() > 0,
+        ]
+        if any(failure_conditions):
             return HttpResponseRedirect(self.get_failure_url())
         full_name = self.object.full_name
         self.object.delete()
@@ -289,6 +300,45 @@ class PersonDeleteSpouseView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteVi
 
 class PersonDeleteSpouseFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/htmx/person_delete_spouse_failure_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+
+class PersonDeleteConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_confirmation_htmx.html'
+
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+
+class PersonDeleteView(OnlyHTMXFormViewMixin, LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        return Person.objects.filter(created_by=self.request.user)
+
+    def get_failure_url(self):
+        return reverse('persons:person-delete-failure', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        failure_conditions: list[bool] = [
+            self.object.father_id is not None,
+            self.object.mother_id is not None,
+            self.object.father_children.count() > 0,
+            self.object.mother_children.count() > 0,
+        ]
+        if any(failure_conditions):
+            return HttpResponseRedirect(self.get_failure_url())
+        full_name = self.object.full_name
+        self.object.delete()
+        messages.success(
+            self.request,
+            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+        )
+        return self.success_response()
+
+
+class PersonDeleteFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
+    template_name = 'persons/htmx/person_delete_failure_htmx.html'
 
     def get_queryset(self):
         return Person.objects.filter(created_by=self.request.user)

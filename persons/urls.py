@@ -82,6 +82,23 @@ urlpatterns = [
         views.PersonDeleteSpouseFailureView.as_view(),
         name='person-delete-spouse-failure'
     ),
+    
+    # Person delete
+    path(
+        'person-delete-confirmation/<int:pk>/',
+        views.PersonDeleteConfirmationView.as_view(),
+        name='person-delete-confirmation'
+    ),
+    path(
+        'person-delete/<int:pk>/',
+        views.PersonDeleteView.as_view(),
+        name='person-delete'
+    ),
+    path(
+        'person-delete-failure/<int:pk>/',
+        views.PersonDeleteFailureView.as_view(),
+        name='person-delete-failure'
+    ),
 
     path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),
     path('person-detail/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
