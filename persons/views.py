@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
 
@@ -188,6 +188,8 @@ class PersonAddChildView(PersonAddRelativeMixin, OnlyHTMXFormViewMixin, PersonAd
     relation = RelationChoices.CHILD
 
 
+# Person delete relatives
+
 class PersonDeleteAncestorConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/htmx/person_delete_ancestor_confirmation_htmx.html'
 
@@ -305,6 +307,8 @@ class PersonDeleteSpouseFailureView(OnlyHTMXViewMixin, LoginRequiredMixin, Detai
         return Person.objects.filter(created_by=self.request.user)
 
 
+# Person delete
+
 class PersonDeleteConfirmationView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView):
     template_name = 'persons/htmx/person_delete_confirmation_htmx.html'
 
@@ -354,6 +358,8 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
             (Q(user=self.request.user) | Q(created_by=self.request.user))
         )
 
+
+# Person tree
 
 class SeeTreePermissionRequestCreateView(HTMXFormViewMixin, LoginRequiredMixin, CreateView):
     template_name = 'persons/see_tree_permission_request_create.html'
@@ -450,9 +456,10 @@ class PersonActionsInTreeView(OnlyHTMXViewMixin, LoginRequiredMixin, DetailView)
     queryset = Person.objects.all()
 
 
-class RelationRequestSelectSimilarView(HTMXFormViewMixin, LoginRequiredMixin, UpdateView):
-    template_name = 'persons/relation_request_set_similar.html'
-    htmx_template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
+# Relation request
+
+class RelationRequestSelectSimilarView(OnlyHTMXFormViewMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
     form_class = forms.RelationRequestSetSimilarForm
 
     def get_queryset(self):

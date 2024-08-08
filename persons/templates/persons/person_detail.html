@@ -52,11 +52,11 @@
                                 {% if object.father.is_matching %}
                                     {% if object.father.relation_request_related.is_awaiting_similar %}
                                         <div class="text-center mt-3">
-                                            <a class="btn btn-info" hx-boost="true" hx-target="#father-info"
+                                            <button class="btn btn-info" type="button" hx-target="#father-info"
                                                hx-swap="innerHTML"
-                                               href="{% url 'persons:relation-request-select-similar' pk=object.father.relation_request_related.pk %}">
+                                               hx-get="{% url 'persons:relation-request-select-similar' pk=object.father.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات پدر' %}
-                                            </a>
+                                            </button>
                                         </div>
                                     {% elif object.father.relation_request_related.is_awaiting_confirmation %}
                                         <div class="text-center border border-success p-2 rounded mt-3">
@@ -109,11 +109,11 @@
                                 {% if object.mother.is_matching %}
                                     {% if object.mother.relation_request_related.is_awaiting_similar %}
                                         <div class="text-center mt-3">
-                                            <a class="btn btn-info" hx-boost="true" hx-target="#mother-info"
+                                            <button class="btn btn-info" type="button" hx-target="#mother-info"
                                                hx-swap="innerHTML"
-                                               href="{% url 'persons:relation-request-select-similar' pk=object.mother.relation_request_related.pk %}">
+                                               hx-get="{% url 'persons:relation-request-select-similar' pk=object.mother.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات مادر' %}
-                                            </a>
+                                            </button>
                                         </div>
                                     {% elif object.mother.relation_request_related.is_awaiting_confirmation %}
                                         <div class="text-center border border-success p-2 rounded mt-3">
