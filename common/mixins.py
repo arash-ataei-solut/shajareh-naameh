@@ -10,14 +10,14 @@ class OnlyHTMXViewMixin:
             return super().dispatch(request, *args, **kwargs)
         return Http404()
 
-    def http_redirect(self, url):
+    def htmx_http_redirect(self, url):
         return HttpResponseClientRedirect(url)
 
 
 class HTMXViewMixin:
     htmx_template_name = None
 
-    def http_redirect(self, url):
+    def htmx_http_redirect(self, url):
         if self.request.htmx:
             return HttpResponseClientRedirect(url)
         return HttpResponseRedirect(url)
@@ -30,18 +30,22 @@ class HTMXViewMixin:
 
 
 class HTMXFormViewMixin(HTMXViewMixin):
-    def success_response(self):
-        return self.http_redirect(self.get_success_url())
+    def form_valid(self, form):
+        return self.htmx_http_redirect(self.get_success_url())
 
+
+class HTMXModelFormViewMixin(HTMXFormViewMixin):
     def form_valid(self, form):
         self.object = form.save()
-        return self.success_response()
+        return super().form_valid(form)
 
 
 class OnlyHTMXFormViewMixin(OnlyHTMXViewMixin):
-    def success_response(self):
+    def form_valid(self, form):
         return HttpResponseClientRefresh()
 
+
+class OnlyHTMXModelFormViewMixin(OnlyHTMXFormViewMixin):
     def form_valid(self, form):
         self.object = form.save()
-        return self.success_response()
+        return super().form_valid(form)

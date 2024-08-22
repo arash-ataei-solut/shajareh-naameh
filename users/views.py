@@ -32,11 +32,10 @@ class ShnLoginView(HTMXFormViewMixin, LoginView):
         user = form.get_user()
         if not user.has_valid_otp(usage=enums.OTPUsageChoices.REGISTER):
             self.request.session[OTP_USER_SESSION] = str(user.id)
-            self.success_url = reverse('users:send-otp-login')
-            return self.success_response()
+            return HttpResponseRedirect(reverse('users:send-otp-login'))
 
         auth_login(self.request, form.get_user())
-        return self.success_response()
+        return super().form_valid(form)
 
 
 class RegisterView(HTMXViewMixin, CreateView):
