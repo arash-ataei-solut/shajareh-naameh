@@ -33,5 +33,10 @@ urlpatterns = [
         'change-password-done-profile/',
         users_views.ChangePasswordDoneView.as_view(),
         name='change-password-done-profile'
+    ),
+    path(
+        'relation-matching-request-list/',
+        users_views.RelationMatchingRequestListView.as_view(),
+        name='relation-matching-request-list'
     )
 ]

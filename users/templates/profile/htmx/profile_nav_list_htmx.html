@@ -16,3 +16,8 @@
    href="{{ change_profile_url }}">
     <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
 </a>
+{% url 'users:relation-matching-request-list' as relation_matching_request_list_url %}
+<a class="list-group-item list-group-item-action{% if request.path == relation_matching_request_list_url %} active{% endif %}"
+   href="{{ relation_matching_request_list_url }}">
+    <i class="fa-solid fa-code-merge"></i> {% trans 'درخواست‌های تطابق' %}
+</a>

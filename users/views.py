@@ -12,6 +12,7 @@ from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
+from persons.models import RelationMatchingRequest
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
@@ -25,7 +26,7 @@ class ShnLoginView(HTMXFormViewMixin, LoginView):
     form_class = LoginForm
     template_name = 'registration/login.html'
     htmx_template_name = 'registration/htmx/login_htmx.html'
-    redirect_authenticated_user = True
+    redirect_authenticated_user = False
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
@@ -109,7 +110,7 @@ class ConfirmOTOViewMixin:
         return get_object_or_404(ShnUser, pk=registered_user_id)
 
     def get_form_kwargs(self):
-        kwargs = super(ConfirmOTOViewMixin, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(
             {
                 'user': self.get_user_from_session(),
@@ -121,10 +122,10 @@ class ConfirmOTOViewMixin:
     def form_valid(self, form):
         form.confirm()
         self.request.session.pop(OTP_USER_SESSION)
-        return self.success_response()
+        return super().form_valid(form)
 
 
-class ConfirmRegisterOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmRegisterOTPView(ConfirmOTOViewMixin, HTMXFormViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
     template_name = 'registration/confirm_register.html'
     htmx_template_name = 'registration/htmx/confirm_register_htmx.html'
@@ -136,7 +137,7 @@ class SendLoginOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-login')
 
 
-class ConfirmLoginOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmLoginOTPView(ConfirmOTOViewMixin, HTMXFormViewMixin, FormView):
     usage = enums.OTPUsageChoices.REGISTER
     template_name = 'registration/confirm_login.html'
     htmx_template_name = 'registration/htmx/confirm_login_htmx.html'
@@ -166,7 +167,7 @@ class SendResetPasswordOTPView(SendOTPView):
     confirm_otp_url = reverse_lazy('users:confirm-reset-password-otp')
 
 
-class ConfirmResetPasswordOTPView(HTMXFormViewMixin, ConfirmOTOViewMixin, FormView):
+class ConfirmResetPasswordOTPView(ConfirmOTOViewMixin, HTMXFormViewMixin, FormView):
     usage = enums.OTPUsageChoices.RESET_PASSWORD
     template_name = 'registration/confirm_reset_password_otp.html'
     htmx_template_name = 'registration/htmx/confirm_reset_password_otp_htmx.html'
@@ -203,7 +204,7 @@ class ConfirmResetPasswordView(HTMXViewMixin, FormView):
         return super(ConfirmResetPasswordView, self).form_valid(form)
 
 
-class PersonalInfoProfileView(HTMXViewMixin, LoginRequiredMixin, TemplateView):
+class PersonalInfoProfileView(LoginRequiredMixin, HTMXViewMixin, TemplateView):
     model = ShnUser
     template_name = 'profile/personal_info_profile.html'
     htmx_template_name = 'profile/htmx/person_info_profile_htmx.html'
@@ -214,7 +215,7 @@ class PersonalInfoProfileView(HTMXViewMixin, LoginRequiredMixin, TemplateView):
         return context
 
 
-class NotificationsListProfileView(HTMXViewMixin, LoginRequiredMixin, ListView):
+class NotificationsListProfileView(LoginRequiredMixin, HTMXViewMixin, ListView):
     model = Notification
     template_name = 'profile/notifications_list_profile.html'
     htmx_template_name = 'profile/htmx/notifications_list_profile_htmx.html'
@@ -232,3 +233,11 @@ class ChangePasswordView(HTMXViewMixin, PasswordChangeView):
 class ChangePasswordDoneView(HTMXViewMixin, PasswordChangeDoneView):
     template_name = 'profile/change_password_done_profile.html'
     htmx_template_name = 'profile/htmx/change_password_done_profile_htmx.html'
+
+
+class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
+    template_name = 'profile/relation_matching_request_list.html'
+    htmx_template_name = 'profile/htmx/relation_matching_request_list_htmx.html'
+
+    def get_queryset(self):
+        return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)

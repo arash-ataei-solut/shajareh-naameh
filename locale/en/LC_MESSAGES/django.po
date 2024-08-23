@@ -93,7 +93,7 @@ msgid "خدمات"
 msgstr ""
 
 #: common/templates/includes/header.html:53 common/templates/index.html:44
-msgid "شجره"
+msgid "درخت‌خانوادگی"
 msgstr ""
 
 #: common/templates/includes/header.html:58 common/templates/index.html:59
@@ -101,7 +101,7 @@ msgid "لیست اشخاص"
 msgstr ""
 
 #: common/templates/includes/header.html:63 common/templates/index.html:75
-msgid "ایجاد شجره جدید"
+msgid "ایجاد درخت‌خانوادگی جدید"
 msgstr ""
 
 #: common/templates/includes/header.html:70 common/templates/index.html:91

@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 
 from persons.enums import GenderChoices, RelationChoices, MatchingStatusChoices
 from persons.models import Person, RelationMatchingRequest
+from users.models import ShnUser
 
 
 def person_can_be_matched(person: Person) -> bool:
@@ -72,11 +73,12 @@ class RelationMatchmaker(Matchmaker):
             choices_list.append((person.id, choice_label))
         return choices_list
 
-    def create_matching_request(self) -> RelationMatchingRequest:
+    def create_matching_request(self, created_by: ShnUser) -> RelationMatchingRequest:
         matching_request = RelationMatchingRequest.objects.create(
             person=self.main_person,
             related_person=self.person,
-            relation=self.relation
+            relation=self.relation,
+            created_by=created_by,
         )
         self.person.matching_status = MatchingStatusChoices.IS_MATCHING
         self.person.save()

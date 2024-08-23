@@ -11,7 +11,7 @@
 <h4>{% trans 'اطلاعات شخصی' %}</h4>
 <hr class="mt-0">
 {% if person %}
-    <div class="row row-cols-lg-3 row-cols-md-2 g-2">
+    <div class="row row-cols-xxl-4 row-cols-md-2 row-cols-1 g-2">
         <div class="col">
             <span>{% trans 'نام' %}: </span>{{ person.first_name }}
         </div>
@@ -42,7 +42,7 @@
             <i class="fa-solid fa-info-circle"></i> {% trans 'جرئیات و ویرایش' %}
         </a>
         <a class="btn btn-primary" href="{% url 'persons:person-tree' pk=person.pk %}" hx-boost="false">
-            <i class="fa-solid fa-tree"></i> {% trans 'شجره' %}
+            <i class="fa-solid fa-tree me-2"></i>{% trans 'درخت‌خانوادگی' %}
         </a>
     </div>
 {% else %}

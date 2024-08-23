@@ -1,0 +1,41 @@
+{% load jformat %}
+{% load i18n %}
+
+
+{% if request.htmx %}
+    <div id="profile-nav-list" hx-swap-oob="innerHTML">
+        {% include 'profile/htmx/profile_nav_list_htmx.html' %}
+    </div>
+{% endif %}
+
+
+<h4>
+    <span>{% trans 'لیست اعلان‌ها' %} </span>
+</h4>
+<hr class="mt-0">
+<div class="list-group" hx-boost="false">
+    {% for object in object_list %}
+        <div href="{% url 'users:personal-info-profile' %}" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ object.title }}</h5>
+                <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
+            </div>
+            <div class="mb-2">
+                <span class="me-2">{% trans 'آیا' %}</span>
+                <b class="me-2">{{ object.similar_related_person.full_name }}</b>
+                <b class="me-2">{{ object.get_relation_display }}</b>
+                <b class="me-2">{{ object.person.full_name }}</b>
+                <span>{% trans 'است؟' %}</span>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-info" href="{% url 'persons:person-tree' pk=object.similar_related_person.pk %}" target="_blank">
+                    <i class="fa fa-tree me-2"></i>{% trans 'درخت‌خانوادگی' %} <b>{{ object.similar_related_person.full_name }}</b>
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="list-group-item text-center">
+            {% trans 'اعلانی برای شما وجود ندارد.' %}
+        </div>
+    {% endfor %}
+</div>

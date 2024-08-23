@@ -4,8 +4,8 @@ from django.utils.translation import gettext as _
 
 from common.htmx.forms import PlaceholderFormMixin
 from persons import enums
-from persons.enums import RelationChoices, RelationRequestStatusChoices, MatchingStatusChoices
-from persons.matchmakers import Matchmaker, RelationMatchmaker
+from persons.enums import RelationRequestStatusChoices, MatchingStatusChoices
+from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.forms import PlaceWidget
 from places.models import ResidencePlace
@@ -19,6 +19,11 @@ class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
+
+    def save(self, commit=True):
+        instance: Person = super().save(commit)
+        instance.can_see_tree_users.add(self.created_by)
+        return instance
 
 
 class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):

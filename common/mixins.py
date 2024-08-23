@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -22,10 +23,19 @@ class HTMXViewMixin:
             return HttpResponseClientRedirect(url)
         return HttpResponseRedirect(url)
 
+    def get_template_names(self):
+        if self.request.htmx:
+            if self.htmx_template_name is None:
+                raise ImproperlyConfigured(
+                    "TemplateResponseMixin requires either a definition of "
+                    "'htmx_template_name' or an implementation of 'get_template_names()'"
+                )
+            return [self.htmx_template_name]
+        else:
+            return super().get_template_names()
+
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
-        if request.htmx:
-            self.template_name = self.htmx_template_name
         return super().dispatch(request, *args, **kwargs)
 
 

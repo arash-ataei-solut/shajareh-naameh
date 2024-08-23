@@ -186,6 +186,15 @@ class RelationMatchingRequest(models.Model):
         verbose_name=_('وضعیت')
     )
 
+    created_by = models.ForeignKey(
+        'users.ShnUser', on_delete=models.CASCADE,
+        related_name='created_relation_matching_requests',
+        related_query_name='created_relation_matching_request',
+        verbose_name=_('ثبت شده توسط')
+    )
+    created_at = j_models.jDateTimeField(auto_now_add=True, verbose_name=_('زمان ایجاد'))
+    updated_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان آخرین ویرایش'))
+
     class Meta:
         verbose_name = _('درخواست تطابق وابستگان')
         verbose_name_plural = _('درخواست‌های تطابق وابستگان')
