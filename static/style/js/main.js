@@ -266,14 +266,18 @@
      */
     new PureCounter();
 
-})()
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 // JalaliDatePicker
-jalaliDatepicker.startWatch();
-jalaliDatepicker.updateOptions({separatorChars: {date: '-'}});
+    jalaliDatepicker.startWatch();
+    jalaliDatepicker.updateOptions({separatorChars: {date: '-'}});
 
 // Select2
-$('.select2-selection__rendered').addClass('form-aaaaaaaaaaaaaaaaaaaaaaaaa')
-$( '#id_birth_place' ).select2( {
-    theme: 'bootstrap-5'
-} );
+    $('.select2-selection__rendered').addClass('form-aaaaaaaaaaaaaaaaaaaaaaaaa')
+    $('#id_birth_place').select2({
+        theme: 'bootstrap-5'
+    });
+
+})()

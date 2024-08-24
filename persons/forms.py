@@ -195,6 +195,20 @@ class RelationRequestSetSimilarForm(forms.ModelForm):
         return super().save(commit)
 
 
+class RelationRequestConfirmationForm(forms.Form):
+    is_confirmed = forms.BooleanField(label=_('آیا تایید است؟'))
+
+    def __init__(self, relation_request: RelationMatchingRequest, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.relation_request = relation_request
+
+    def do_confirmation(self):
+        if self.cleaned_data['is_confirmed'] is True:
+            self.relation_request.do_the_match()
+        else:
+            self.relation_request.reject_the_match()
+
+
 class SeeTreePermissionRequestCreateForm(forms.ModelForm):
     class Meta:
         model = SeeTreePermissionRequest

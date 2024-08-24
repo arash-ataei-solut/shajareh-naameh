@@ -206,3 +206,24 @@ class RelationMatchingRequest(models.Model):
     @property
     def is_awaiting_confirmation(self):
         return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_CONFIRMATION)
+
+    def do_the_match(self):
+        self.status = enums.RelationRequestStatusChoices.MATCHING_IS_DONE
+        self.related_person.matching_status = enums.MatchingStatusChoices.MATCHED
+        if self.relation == enums.RelationChoices.FATHER:
+            self.person.father = self.similar_related_person
+        elif self.relation == enums.RelationChoices.MOTHER:
+            self.person.mother = self.similar_related_person
+        self.person.save()
+        if self.relation == enums.RelationChoices.CHILD:
+            if self.person.gender == enums.GenderChoices.MALE:
+                self.similar_related_person.father = self.person
+            elif self.person.gender == enums.GenderChoices.FEMALE:
+                self.similar_related_person.mother = self.person
+            self.similar_related_person.save()
+        if self.relation == enums.RelationChoices.SPOUSE:
+            self.person.spouses.add(self.similar_related_person)
+
+    def reject_the_match(self):
+        self.status = enums.RelationRequestStatusChoices.REJECTED_SIMILARITY
+        self.related_person.matching_status = enums.MatchingStatusChoices.NO_MATCH

@@ -470,6 +470,12 @@ class RelationRequestSelectSimilarView(LoginRequiredMixin, OnlyHTMXModelFormView
         return reverse('persons:person-detail', kwargs={'pk': self.object.person.pk})
 
 
+class RelationRequestConfirmationView(LoginRequiredMixin, OnlyHTMXFormViewMixin, FormView):
+    template_name = 'persons/htmx/relation_request_confirmation_htmx.html'
+    form_class = forms.RelationRequestConfirmationForm
+
+
+
 class FindMyselfView(LoginRequiredMixin, HTMXViewMixin, FormView):
     form_class = FindMyselfForm
     template_name = 'persons/find_myself.html'
