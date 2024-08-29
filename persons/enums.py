@@ -20,7 +20,7 @@ class RelationChoices(TextChoices):
     CHILD = 'CHILD', _('فرزند')
 
 
-class RelationRequestStatusChoices(IntegerChoices):
+class RelationMatchingRequestStatusChoices(IntegerChoices):
     AWAITING_SIMILAR = 0, _('در انتظار تعیین مشابه')
     SIMILAR_IS_SET = 1, _('مشابه تعیین شده‌است')
     AWAITING_CONFIRMATION = 2, _('در انتظار تایید تطابق')

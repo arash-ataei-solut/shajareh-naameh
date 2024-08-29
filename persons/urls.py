@@ -105,10 +105,16 @@ urlpatterns = [
 
     path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
 
+    # Relation matching request
     path(
-        'relation-request-select-similar/<int:pk>/',
-        views.RelationRequestSelectSimilarView.as_view(),
-        name='relation-request-select-similar'
+        'relation-matching-request-select-similar/<int:pk>/',
+        views.RelationMatchingRequestSelectSimilarView.as_view(),
+        name='relation-matching-request-select-similar'
+    ),
+    path(
+        'relation-matching-request-confirmation/<int:pk>/',
+        views.RelationMatchingRequestConfirmationView.as_view(),
+        name='relation-matching-request-confirmation'
     ),
 
     path(

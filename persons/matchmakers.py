@@ -7,7 +7,7 @@ from users.models import ShnUser
 
 
 def person_can_be_matched(person: Person) -> bool:
-    return Person.objects.filter(
+    return Person.objects.exclude_matched_persons().filter(
         first_name__icontains=person.first_name,
         last_name__icontains=person.last_name,
         birth_year=person.birth_year,
@@ -21,7 +21,7 @@ class Matchmaker:
         self.queryset = self.match_queryset()
 
     def match_queryset(self) -> QuerySet:
-        return Person.objects.filter(
+        return Person.objects.exclude_matched_persons().filter(
             first_name__icontains=self.person.first_name,
             last_name__icontains=self.person.last_name,
             birth_year=self.person.birth_year,
@@ -33,13 +33,26 @@ class Matchmaker:
 
 
 class RelationMatchmaker(Matchmaker):
-    def __init__(self, related_person, main_person, relation):
+    def __init__(self, related_person: Person, main_person: Person, relation: RelationChoices):
         self.main_person = main_person
         self.relation = relation
         super().__init__(related_person)
 
     def match_queryset(self) -> QuerySet:
-        return super().match_queryset().exclude(id=self.main_person.id)
+        queryset = super().match_queryset().exclude(
+            id=self.main_person.id
+        ).exclude(
+            id__in=self.main_person.ancestors_id_list_generator()
+        ).exclude(
+            id__in=self.main_person.descendant_id_list_generator()
+        )
+
+        if self.relation == RelationChoices.CHILD:
+            if self.main_person.gender == GenderChoices.MALE:
+                queryset = queryset.filter(father__isnull=True)
+            elif self.main_person.gender == GenderChoices.FEMALE:
+                queryset = queryset.filter(mother__isnull=True)
+        return queryset
 
     def related_person_match_choices(self) -> list[tuple[int, str]]:
         choices_list = [(None, _('هیچکدام'))]

@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.manager import BaseManager
+
+from persons import enums
 
 
 class PersonQueryset(models.QuerySet):
@@ -8,10 +11,10 @@ class PersonQueryset(models.QuerySet):
             father__first_name__icontains=father_name, mother__first_name__icontains=mother_name
         )
 
+    def exclude_matched_persons(self):
+        return self.exclude(matching_status=enums.MatchingStatusChoices.MATCHED)
 
-class PersonManager(models.Manager):
-    def get_queryset(self):
-        return PersonQueryset(self.model, using=self._db)
 
+class PersonManager(BaseManager.from_queryset(PersonQueryset)):
     def find_myself(self, first_name: str, last_name: str, father_name: str, mother_name: str) -> models.QuerySet:
         return self.get_queryset().find_myself(first_name, last_name, father_name, mother_name)

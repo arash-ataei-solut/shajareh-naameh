@@ -13,7 +13,7 @@ from django.views.generic import CreateView, FormView, UpdateView, DetailView, T
 from common.mixins import HTMXViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin, \
     HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin
 from persons import forms
-from persons.enums import MatchingStatusChoices, RelationRequestStatusChoices, RelationChoices
+from persons.enums import MatchingStatusChoices, RelationMatchingRequestStatusChoices, RelationChoices
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest
@@ -54,7 +54,7 @@ class PersonUpdateView(OnlyHTMXModelFormViewMixin, UpdateView):
     form_class = PersonUpdateForm
 
     def get_queryset(self):
-        return Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        return Person.objects.exclude_matched_persons().filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
 
 class PersonAddResidencePlaceView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, CreateView):
@@ -75,7 +75,7 @@ class PersonAddResidencePlaceView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin
         return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
     def get_person(self):
-        queryset = Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        queryset = Person.objects.exclude_matched_persons().filter(Q(user=self.request.user) | Q(created_by=self.request.user))
         return get_object_or_404(queryset, id=self.kwargs['person_pk'])
 
     def get_context_data(self, **kwargs):
@@ -141,7 +141,7 @@ class PersonAddRelativeMixin(OnlyHTMXFormViewMixin):
         return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
     def get_person(self):
-        queryset = Person.objects.filter(Q(user=self.request.user) | Q(created_by=self.request.user))
+        queryset = Person.objects.exclude_matched_persons().filter(Q(user=self.request.user) | Q(created_by=self.request.user))
         return get_object_or_404(queryset, id=self.kwargs['person_pk'])
 
     def get_context_data(self, **kwargs):
@@ -159,7 +159,7 @@ class PersonAddRelativeMixin(OnlyHTMXFormViewMixin):
         matchmaker = RelationMatchmaker(related_person, self.person, self.relation)
         if matchmaker.match_exists():
             matching_request = matchmaker.create_matching_request(self.request.user)
-            success_url = reverse('persons:relation-request-select-similar', kwargs={'pk': matching_request.pk})
+            success_url = reverse('persons:relation-matching-request-select-similar', kwargs={'pk': matching_request.pk})
             return HttpResponseRedirect(success_url)
         return super().form_valid(form)
 
@@ -195,12 +195,12 @@ class PersonDeleteAncestorConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin
     template_name = 'persons/htmx/person_delete_ancestor_confirmation_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteAncestorView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
     def get_failure_url(self):
         return reverse('persons:person-delete-ancestor-failure', kwargs={'pk': self.object.pk})
@@ -228,19 +228,19 @@ class PersonDeleteAncestorFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, Det
     template_name = 'persons/htmx/person_delete_ancestor_failure_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteDescendantConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
     template_name = 'persons/htmx/person_delete_descendant_confirmation_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteDescendantView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
     def get_failure_url(self):
         return reverse('persons:person-delete-descendant-failure', kwargs={'pk': self.object.pk})
@@ -266,19 +266,19 @@ class PersonDeleteDescendantFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, D
     template_name = 'persons/htmx/person_delete_descendant_failure_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteSpouseConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
     template_name = 'persons/htmx/person_delete_spouse_confirmation_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteSpouseView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
     def get_failure_url(self):
         return reverse('persons:person-delete-spouse-failure', kwargs={'pk': self.object.pk})
@@ -305,7 +305,7 @@ class PersonDeleteSpouseFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, Detai
     template_name = 'persons/htmx/person_delete_spouse_failure_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 # Person delete
@@ -314,12 +314,12 @@ class PersonDeleteConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, Detail
     template_name = 'persons/htmx/person_delete_confirmation_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDeleteView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
     def get_failure_url(self):
         return reverse('persons:person-delete-failure', kwargs={'pk': self.object.pk})
@@ -346,7 +346,7 @@ class PersonDeleteFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView)
     template_name = 'persons/htmx/person_delete_failure_htmx.html'
 
     def get_queryset(self):
-        return Person.objects.filter(created_by=self.request.user)
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
 class PersonDetailView(LoginRequiredMixin, DetailView):
@@ -354,7 +354,7 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
     model = Person
 
     def get_queryset(self):
-        return Person.objects.filter(
+        return Person.objects.exclude_matched_persons().filter(
             Q(matching_status=MatchingStatusChoices.NO_MATCH) &
             (Q(user=self.request.user) | Q(created_by=self.request.user))
         )
@@ -423,7 +423,7 @@ class SeeTreePermissionRequestSuccessView(TemplateView):
 class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person_tree_htmx.html'
-    queryset = Person.objects.all()
+    queryset = Person.objects.exclude_matched_persons()
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -454,25 +454,28 @@ class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
 
 class PersonActionsInTreeView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
     template_name = 'persons/htmx/person_actions_in_tree_htmx.html'
-    queryset = Person.objects.all()
+    queryset = Person.objects.exclude_matched_persons()
 
 
 # Relation request
 
-class RelationRequestSelectSimilarView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
+class RelationMatchingRequestSelectSimilarView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
     template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
-    form_class = forms.RelationRequestSetSimilarForm
+    form_class = forms.RelationMatchingRequestSetSimilarForm
 
     def get_queryset(self):
-        return RelationMatchingRequest.objects.filter(status=RelationRequestStatusChoices.AWAITING_SIMILAR)
+        return RelationMatchingRequest.objects.filter(status=RelationMatchingRequestStatusChoices.AWAITING_SIMILAR)
 
     def get_success_url(self):
         return reverse('persons:person-detail', kwargs={'pk': self.object.person.pk})
 
 
-class RelationRequestConfirmationView(LoginRequiredMixin, OnlyHTMXFormViewMixin, FormView):
-    template_name = 'persons/htmx/relation_request_confirmation_htmx.html'
-    form_class = forms.RelationRequestConfirmationForm
+class RelationMatchingRequestConfirmationView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
+    template_name = 'persons/htmx/relation_matching_request_confirmation_htmx.html'
+    form_class = forms.RelationMatchingRequestConfirmationForm
+
+    def get_queryset(self):
+        return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)
 
 
 

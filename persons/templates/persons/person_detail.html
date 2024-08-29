@@ -54,7 +54,7 @@
                                         <div class="text-center mt-3">
                                             <button class="btn btn-info" type="button" hx-target="#father-info"
                                                     hx-swap="innerHTML"
-                                                    hx-get="{% url 'persons:relation-request-select-similar' pk=object.father.relation_request_related.pk %}">
+                                                    hx-get="{% url 'persons:relation-matching-request-select-similar' pk=object.father.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات پدر' %}
                                             </button>
                                         </div>
@@ -111,7 +111,7 @@
                                         <div class="text-center mt-3">
                                             <button class="btn btn-info" type="button" hx-target="#mother-info"
                                                     hx-swap="innerHTML"
-                                                    hx-get="{% url 'persons:relation-request-select-similar' pk=object.mother.relation_request_related.pk %}">
+                                                    hx-get="{% url 'persons:relation-matching-request-select-similar' pk=object.mother.relation_request_related.pk %}">
                                                 <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات مادر' %}
                                             </button>
                                         </div>

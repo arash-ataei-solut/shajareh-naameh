@@ -105,6 +105,27 @@ class Person(models.Model):
     def is_matching(self):
         return bool(self.matching_status == enums.MatchingStatusChoices.IS_MATCHING)
 
+    def ancestors_id_list_generator(self, main_person: 'Person' = None):
+        main_person = main_person or self
+        if self.father:
+            yield self.father.id
+            for ancestor_id in self.father.ancestors_id_list_generator(main_person=main_person):
+                yield ancestor_id
+        if self.mother:
+            yield self.mother.id
+            for ancestor_id in self.mother.ancestors_id_list_generator(main_person=main_person):
+                yield ancestor_id
+
+    def descendant_id_list_generator(self, main_person: 'Person' = None):
+        main_person = main_person or self
+        children = Person.objects.exclude_matched_persons().filter(
+            Q(father_id=self.id) | Q(mother_id=self.id)
+        ).only('id', 'first_name', 'last_name', 'gender')
+        for child in children:
+            yield child.id
+            for descendant_id in child.descendant_id_list_generator(main_person=main_person):
+                yield descendant_id
+
     def get_ancestors(self, main_person: 'Person' = None):
         main_person = main_person or self
         ancestors = {}
@@ -131,7 +152,7 @@ class Person(models.Model):
     def get_descendant(self, main_person: 'Person' = None):
         main_person = main_person or self
         descendant = []
-        children = Person.objects.filter(
+        children = Person.objects.exclude_matched_persons().filter(
             Q(father_id=self.id) | Q(mother_id=self.id)
         ).only('id', 'first_name', 'last_name', 'gender')
         for child in children:
@@ -181,8 +202,8 @@ class RelationMatchingRequest(models.Model):
     )
     relation = models.CharField(max_length=10, choices=enums.RelationChoices.choices, verbose_name=_('نسبت'))
     status = models.IntegerField(
-        choices=enums.RelationRequestStatusChoices.choices,
-        default=enums.RelationRequestStatusChoices.AWAITING_SIMILAR,
+        choices=enums.RelationMatchingRequestStatusChoices.choices,
+        default=enums.RelationMatchingRequestStatusChoices.AWAITING_SIMILAR,
         verbose_name=_('وضعیت')
     )
 
@@ -201,15 +222,13 @@ class RelationMatchingRequest(models.Model):
 
     @property
     def is_awaiting_similar(self):
-        return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_SIMILAR)
+        return bool(self.status == enums.RelationMatchingRequestStatusChoices.AWAITING_SIMILAR)
 
     @property
     def is_awaiting_confirmation(self):
-        return bool(self.status == enums.RelationRequestStatusChoices.AWAITING_CONFIRMATION)
+        return bool(self.status == enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION)
 
-    def do_the_match(self):
-        self.status = enums.RelationRequestStatusChoices.MATCHING_IS_DONE
-        self.related_person.matching_status = enums.MatchingStatusChoices.MATCHED
+    def do_the_matching(self):
         if self.relation == enums.RelationChoices.FATHER:
             self.person.father = self.similar_related_person
         elif self.relation == enums.RelationChoices.MOTHER:
@@ -224,6 +243,29 @@ class RelationMatchingRequest(models.Model):
         if self.relation == enums.RelationChoices.SPOUSE:
             self.person.spouses.add(self.similar_related_person)
 
-    def reject_the_match(self):
-        self.status = enums.RelationRequestStatusChoices.REJECTED_SIMILARITY
+        self.related_person.matching_status = enums.MatchingStatusChoices.MATCHED
+        self.status = enums.RelationMatchingRequestStatusChoices.MATCHING_IS_DONE
+        self.save()
+
+    def undo_the_matching(self):
+        if self.relation == enums.RelationChoices.FATHER:
+            self.person.father = self.related_person
+        elif self.relation == enums.RelationChoices.MOTHER:
+            self.person.mother = self.related_person
+        self.person.save()
+        if self.relation == enums.RelationChoices.CHILD:
+            if self.person.gender == enums.GenderChoices.MALE:
+                self.related_person.father = None
+            elif self.person.gender == enums.GenderChoices.FEMALE:
+                self.related_person.mother = None
+            self.related_person.save()
+        if self.relation == enums.RelationChoices.SPOUSE:
+            self.person.spouses.remove(self.similar_related_person)
+
+        self.related_person.matching_status = enums.MatchingStatusChoices.IS_MATCHING
+        self.status = enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION
+        self.save()
+
+    def reject_the_matching(self):
+        self.status = enums.RelationMatchingRequestStatusChoices.REJECTED_SIMILARITY
         self.related_person.matching_status = enums.MatchingStatusChoices.NO_MATCH

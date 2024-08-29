@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 
 from common.htmx.forms import PlaceholderFormMixin
 from persons import enums
-from persons.enums import RelationRequestStatusChoices, MatchingStatusChoices
+from persons.enums import RelationMatchingRequestStatusChoices, MatchingStatusChoices
 from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.forms import PlaceWidget
@@ -172,8 +172,10 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
         return child
 
 
-class RelationRequestSetSimilarForm(forms.ModelForm):
-    similar_related_person = forms.ModelChoiceField(queryset=Person.objects.all(), label=_('شخص مشابه'), required=False)
+class RelationMatchingRequestSetSimilarForm(forms.ModelForm):
+    similar_related_person = forms.ModelChoiceField(
+        queryset=Person.objects.exclude_matched_persons(), label=_('شخص مشابه'), required=False
+    )
 
     class Meta:
         model = RelationMatchingRequest
@@ -187,26 +189,28 @@ class RelationRequestSetSimilarForm(forms.ModelForm):
 
     def save(self, commit=True):
         if self.instance.similar_related_person is None:
-            self.instance.status = RelationRequestStatusChoices.REJECTED_SIMILARITY
+            self.instance.status = RelationMatchingRequestStatusChoices.REJECTED_SIMILARITY
             self.instance.related_person.matching_status = MatchingStatusChoices.NO_MATCH
             self.instance.related_person.save()
         else:
-            self.instance.status = RelationRequestStatusChoices.AWAITING_CONFIRMATION
+            self.instance.status = RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION
         return super().save(commit)
 
 
-class RelationRequestConfirmationForm(forms.Form):
+class RelationMatchingRequestConfirmationForm(forms.ModelForm):
     is_confirmed = forms.BooleanField(label=_('آیا تایید است؟'))
 
-    def __init__(self, relation_request: RelationMatchingRequest, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.relation_request = relation_request
+    class Meta:
+        model = RelationMatchingRequest
+        fields = ['is_confirmed']
 
-    def do_confirmation(self):
+    def save(self, commit=True):
         if self.cleaned_data['is_confirmed'] is True:
-            self.relation_request.do_the_match()
+            self.instance.do_the_matching()
         else:
-            self.relation_request.reject_the_match()
+            self.instance.reject_the_matching()
+
+        return self.instance
 
 
 class SeeTreePermissionRequestCreateForm(forms.ModelForm):

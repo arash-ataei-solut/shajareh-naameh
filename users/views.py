@@ -12,6 +12,7 @@ from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
+from persons.enums import RelationMatchingRequestStatusChoices
 from persons.models import RelationMatchingRequest
 from users import enums
 from users.exeptions import SendOTPError
@@ -241,3 +242,8 @@ class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListVie
 
     def get_queryset(self):
         return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'status_choices': RelationMatchingRequestStatusChoices})
+        return context

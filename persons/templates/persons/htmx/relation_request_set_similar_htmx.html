@@ -1,10 +1,10 @@
 {% load shn_filters %}
 {% load i18n %}
 
-<div id="relation-request-select-similar">
+<div id="relation-matching-request-select-similar">
     <form class="{% if form.errors %} was-validated{% endif %}"
-          hx-post="{% url 'persons:relation-request-select-similar' pk=object.pk %}"
-          hx-target="#relation-request-select-similar" hx-swap="outerHTML"
+          hx-post="{% url 'persons:relation-matching-request-select-similar' pk=object.pk %}"
+          hx-target="#relation-matching-request-select-similar" hx-swap="outerHTML"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}
