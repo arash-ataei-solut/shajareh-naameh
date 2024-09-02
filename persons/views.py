@@ -460,7 +460,7 @@ class PersonActionsInTreeView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView)
 # Relation request
 
 class RelationMatchingRequestSelectSimilarView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
-    template_name = 'persons/htmx/relation_request_set_similar_htmx.html'
+    template_name = 'persons/htmx/relation_matching_request_set_similar_htmx.html'
     form_class = forms.RelationMatchingRequestSetSimilarForm
 
     def get_queryset(self):

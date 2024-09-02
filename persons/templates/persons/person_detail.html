@@ -64,7 +64,7 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="d-flex justify-content-center mt-3" id="father-info-actions">
+                                    <div class="d-flex justify-content-center mt-3">
                                         <a class="btn btn-info me-2"
                                            href="{% url 'persons:person-detail' pk=object.father.pk %}">
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات پدر' %}
@@ -121,7 +121,7 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="d-flex justify-content-center mt-3" id="mother-info-actions">
+                                    <div class="d-flex justify-content-center mt-3">
                                         <a class="btn btn-info me-2"
                                            href="{% url 'persons:person-detail' pk=object.mother.pk %}">
                                             <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات مادر' %}
@@ -259,7 +259,7 @@
                             {# TODO Handle husband #}
                             {% for spouse in object.spouses.all %}
                                 <div class="col">
-                                    <div class="p-3 border rounded">
+                                    <div class="p-3 border rounded spouse-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ spouse.first_name }}
@@ -274,19 +274,34 @@
                                                 <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year }}
                                             </div>
                                         </div>
-
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <a class="btn btn-info me-2"
-                                               href="{% url 'persons:person-detail' pk=spouse.pk %}">
-                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات همسر' %}
-                                            </a>
-                                            <button class="btn btn-danger" type="button"
-                                                    hx-get="{% url 'persons:person-delete-spouse-confirmation' pk=spouse.pk %}"
-                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
-                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
-                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
-                                            </button>
-                                        </div>
+                                        {% if spouse.is_matching %}
+                                            {% if spouse.relation_request_related.is_awaiting_similar %}
+                                                <div class="text-center mt-3">
+                                                    <button class="btn btn-info" type="button" hx-target="closest .spouse-info"
+                                                            hx-swap="innerHTML"
+                                                            hx-get="{% url 'persons:relation-matching-request-select-similar' pk=spouse.relation_request_related.pk %}">
+                                                        <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات همسر' %}
+                                                    </button>
+                                                </div>
+                                            {% elif spouse.relation_request_related.is_awaiting_confirmation %}
+                                                <div class="text-center border border-success p-2 rounded mt-3">
+                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="d-flex justify-content-center mt-3">
+                                                <a class="btn btn-info me-2"
+                                                   href="{% url 'persons:person-detail' pk=spouse.pk %}">
+                                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات همسر' %}
+                                                </a>
+                                                <button class="btn btn-danger" type="button"
+                                                        hx-get="{% url 'persons:person-delete-spouse-confirmation' pk=spouse.pk %}"
+                                                        hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                        data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                    <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -313,7 +328,7 @@
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
                             {% for child in object.father_children.all %}
                                 <div class="col">
-                                    <div class="p-3 border rounded">
+                                    <div class="p-3 border rounded child-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ child.first_name }}
@@ -328,25 +343,41 @@
                                                 <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
                                             </div>
                                         </div>
-
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <a class="btn btn-info me-2"
-                                               href="{% url 'persons:person-detail' pk=child.pk %}">
-                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
-                                            </a>
-                                            <button class="btn btn-danger" type="button"
-                                                    hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
-                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
-                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
-                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
-                                            </button>
-                                        </div>
+                                        {% if child.is_matching %}
+                                            {% if child.relation_request_related.is_awaiting_similar %}
+                                                <div class="text-center mt-3">
+                                                    <button class="btn btn-info" type="button"
+                                                            hx-target="closest .child-info"
+                                                            hx-swap="innerHTML"
+                                                            hx-get="{% url 'persons:relation-matching-request-select-similar' pk=child.relation_request_related.pk %}">
+                                                        <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات فرزند' %}
+                                                    </button>
+                                                </div>
+                                            {% elif child.relation_request_related.is_awaiting_confirmation %}
+                                                <div class="text-center border border-success p-2 rounded mt-3">
+                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="d-flex justify-content-center mt-3">
+                                                <a class="btn btn-info me-2"
+                                                   href="{% url 'persons:person-detail' pk=child.pk %}">
+                                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
+                                                </a>
+                                                <button class="btn btn-danger" type="button"
+                                                        hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
+                                                        hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                        data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                    <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
                             {% for child in object.mother_children.all %}
                                 <div class="col">
-                                    <div class="p-3 border rounded">
+                                    <div class="p-3 border rounded child-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">
                                             <div class="col">
                                                 <span>{% trans 'نام' %}: </span>{{ child.first_name }}
@@ -361,19 +392,35 @@
                                                 <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
                                             </div>
                                         </div>
-
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <a class="btn btn-info me-2"
-                                               href="{% url 'persons:person-detail' pk=child.pk %}">
-                                                <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
-                                            </a>
-                                            <button class="btn btn-danger" type="button"
-                                                    hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
-                                                    hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
-                                                    data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
-                                                <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
-                                            </button>
-                                        </div>
+                                        {% if child.is_matching %}
+                                            {% if child.relation_request_related.is_awaiting_similar %}
+                                                <div class="text-center mt-3">
+                                                    <button class="btn btn-info" type="button"
+                                                            hx-target="closest .child-info"
+                                                            hx-swap="innerHTML"
+                                                            hx-get="{% url 'persons:relation-matching-request-select-similar' pk=child.relation_request_related.pk %}">
+                                                        <i class="fa-solid fa-info-circle"></i> {% trans 'تطابق اطلاعات فرزند' %}
+                                                    </button>
+                                                </div>
+                                            {% elif child.relation_request_related.is_awaiting_confirmation %}
+                                                <div class="text-center border border-success p-2 rounded mt-3">
+                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="d-flex justify-content-center mt-3">
+                                                <a class="btn btn-info me-2"
+                                                   href="{% url 'persons:person-detail' pk=child.pk %}">
+                                                    <i class="fa-solid fa-info-circle"></i> {% trans 'جزئیات اطلاعات فرزند' %}
+                                                </a>
+                                                <button class="btn btn-danger" type="button"
+                                                        hx-get="{% url 'persons:person-delete-descendant-confirmation' pk=child.pk %}"
+                                                        hx-target="#delete-relative-modal-body" hx-swap="innerHTML"
+                                                        data-bs-toggle="modal" data-bs-target="#delete-relative-modal">
+                                                    <i class="fa fa-minus-circle me-1"></i>{% trans 'حذف' %}
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}

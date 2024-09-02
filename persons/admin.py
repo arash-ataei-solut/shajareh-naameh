@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext as _
 
 from persons.models import Person, RelationMatchingRequest
 
@@ -24,3 +25,9 @@ class RelationMatchingRequestAdmin(admin.ModelAdmin):
         'similar_related_person__first_name',
         'similar_related_person__last_name',
     )
+    actions = ['undo_matching']
+
+    @admin.action(permissions=['change'], description=_('لغو انطباق'))
+    def undo_matching(self, request, queryset):
+        for matching in queryset:
+            matching.undo_the_matching()

@@ -95,7 +95,7 @@ class Person(models.Model):
         self.descendant_id_list = []
 
     def __str__(self):
-        return f'{self.full_name} - {self.get_gender_display()} - {self.birth_year}'
+        return f'{self.full_name} - {self.get_gender_display()} - {self.birth_year} - id: {self.id}'
 
     @property
     def full_name(self):
@@ -130,7 +130,7 @@ class Person(models.Model):
         main_person = main_person or self
         ancestors = {}
         if self.father:
-            if self.father.id in self.ancestors_id_list:
+            if self.father.id in self.ancestors_id_list and self.father.matching_status != enums:
                 raise LoopInTreeException()
             ancestors['father'] = {
                 'id': self.father.id,
@@ -239,11 +239,11 @@ class RelationMatchingRequest(models.Model):
                 self.similar_related_person.father = self.person
             elif self.person.gender == enums.GenderChoices.FEMALE:
                 self.similar_related_person.mother = self.person
-            self.similar_related_person.save()
         if self.relation == enums.RelationChoices.SPOUSE:
             self.person.spouses.add(self.similar_related_person)
 
         self.related_person.matching_status = enums.MatchingStatusChoices.MATCHED
+        self.similar_related_person.save()
         self.status = enums.RelationMatchingRequestStatusChoices.MATCHING_IS_DONE
         self.save()
 
@@ -255,14 +255,17 @@ class RelationMatchingRequest(models.Model):
         self.person.save()
         if self.relation == enums.RelationChoices.CHILD:
             if self.person.gender == enums.GenderChoices.MALE:
-                self.related_person.father = None
+                self.similar_related_person.father = None
+                self.related_person.father = self.person
             elif self.person.gender == enums.GenderChoices.FEMALE:
-                self.related_person.mother = None
-            self.related_person.save()
+                self.similar_related_person.mother = None
+                self.related_person.mother = self.person
+            self.similar_related_person.save()
         if self.relation == enums.RelationChoices.SPOUSE:
             self.person.spouses.remove(self.similar_related_person)
 
         self.related_person.matching_status = enums.MatchingStatusChoices.IS_MATCHING
+        self.related_person.save()
         self.status = enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION
         self.save()
 
