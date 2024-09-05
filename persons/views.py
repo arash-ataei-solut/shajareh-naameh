@@ -355,8 +355,7 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Person.objects.exclude_matched_persons().filter(
-            Q(matching_status=MatchingStatusChoices.NO_MATCH) &
-            (Q(user=self.request.user) | Q(created_by=self.request.user))
+            Q(user=self.request.user) | Q(created_by=self.request.user)
         )
 
 

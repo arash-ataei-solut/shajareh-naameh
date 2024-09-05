@@ -21,11 +21,10 @@ class RelationChoices(TextChoices):
 
 
 class RelationMatchingRequestStatusChoices(IntegerChoices):
-    AWAITING_SIMILAR = 0, _('در انتظار تعیین مشابه')
-    SIMILAR_IS_SET = 1, _('مشابه تعیین شده‌است')
+    AWAITING_SIMILAR = 1, _('در انتظار تعیین مشابه')
     AWAITING_CONFIRMATION = 2, _('در انتظار تایید تطابق')
-    MATCHING_IS_DONE = 3, _('تطابق انجام شده‌است')
-    REJECTED_SIMILARITY = 4, _('تشابه رد شد')
+    IS_DONE = 3, _('تطابق انجام شده')
+    REJECTED = 4, _('تطابق رد شده')
 
 
 class SeeTreePermissionRequestStatusChoices(IntegerChoices):

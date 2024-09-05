@@ -257,7 +257,7 @@
                         <hr class="mt-0">
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
                             {# TODO Handle husband #}
-                            {% for spouse in object.spouses.all %}
+                            {% for spouse in object.spouses.all.exclude_matched_persons %}
                                 <div class="col">
                                     <div class="p-3 border rounded spouse-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">
@@ -326,7 +326,7 @@
                         <h4>{% trans 'اطلاعات فرزندها' %}</h4>
                         <hr class="mt-0">
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
-                            {% for child in object.father_children.all %}
+                            {% for child in object.father_children.all.exclude_matched_persons %}
                                 <div class="col">
                                     <div class="p-3 border rounded child-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">
@@ -375,7 +375,7 @@
                                     </div>
                                 </div>
                             {% endfor %}
-                            {% for child in object.mother_children.all %}
+                            {% for child in object.mother_children.all.exclude_matched_persons %}
                                 <div class="col">
                                     <div class="p-3 border rounded child-info">
                                         <div class="row row-cols-xl-2 row-cols-lg-1 row-cols-md-2 row-cols-1 gx-1 gy-2">

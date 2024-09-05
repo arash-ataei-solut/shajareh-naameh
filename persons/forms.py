@@ -189,7 +189,7 @@ class RelationMatchingRequestSetSimilarForm(forms.ModelForm):
 
     def save(self, commit=True):
         if self.instance.similar_related_person is None:
-            self.instance.status = RelationMatchingRequestStatusChoices.REJECTED_SIMILARITY
+            self.instance.status = RelationMatchingRequestStatusChoices.REJECTED
             self.instance.related_person.matching_status = MatchingStatusChoices.NO_MATCH
             self.instance.related_person.save()
         else:

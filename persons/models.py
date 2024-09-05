@@ -1,11 +1,11 @@
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as j_models
 
 from users.models import ShnUser
 from . import managers, enums
-from .exceptions import LoopInTreeException
+from .exceptions import LoopInTreeException, RelationMatchingRequestStatusPriorityError
 
 
 class SeeTreePermissionRequest(models.Model):
@@ -228,7 +228,11 @@ class RelationMatchingRequest(models.Model):
     def is_awaiting_confirmation(self):
         return bool(self.status == enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION)
 
+    @transaction.atomic
     def do_the_matching(self):
+        if self.status != enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION:
+            raise RelationMatchingRequestStatusPriorityError()
+
         if self.relation == enums.RelationChoices.FATHER:
             self.person.father = self.similar_related_person
         elif self.relation == enums.RelationChoices.MOTHER:
@@ -239,15 +243,23 @@ class RelationMatchingRequest(models.Model):
                 self.similar_related_person.father = self.person
             elif self.person.gender == enums.GenderChoices.FEMALE:
                 self.similar_related_person.mother = self.person
+            self.similar_related_person.save()
         if self.relation == enums.RelationChoices.SPOUSE:
             self.person.spouses.add(self.similar_related_person)
 
         self.related_person.matching_status = enums.MatchingStatusChoices.MATCHED
-        self.similar_related_person.save()
-        self.status = enums.RelationMatchingRequestStatusChoices.MATCHING_IS_DONE
+        self.related_person.save()
+        self.status = enums.RelationMatchingRequestStatusChoices.IS_DONE
         self.save()
 
+    @transaction.atomic
     def undo_the_matching(self):
+        valid_statuses = [
+            enums.RelationMatchingRequestStatusChoices.IS_DONE,
+            enums.RelationMatchingRequestStatusChoices.REJECTED
+        ]
+        if self.status not in valid_statuses:
+            raise RelationMatchingRequestStatusPriorityError()
         if self.relation == enums.RelationChoices.FATHER:
             self.person.father = self.related_person
         elif self.relation == enums.RelationChoices.MOTHER:
@@ -269,6 +281,11 @@ class RelationMatchingRequest(models.Model):
         self.status = enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION
         self.save()
 
+    @transaction.atomic
     def reject_the_matching(self):
-        self.status = enums.RelationMatchingRequestStatusChoices.REJECTED_SIMILARITY
+        if self.status != enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION:
+            raise RelationMatchingRequestStatusPriorityError()
         self.related_person.matching_status = enums.MatchingStatusChoices.NO_MATCH
+        self.related_person.save()
+        self.status = enums.RelationMatchingRequestStatusChoices.REJECTED
+        self.save()
