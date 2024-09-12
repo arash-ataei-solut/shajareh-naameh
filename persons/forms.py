@@ -198,14 +198,14 @@ class RelationMatchingRequestSetSimilarForm(forms.ModelForm):
 
 
 class RelationMatchingRequestConfirmationForm(forms.ModelForm):
-    is_confirmed = forms.BooleanField(label=_('آیا تایید است؟'))
+    is_confirmed = forms.ChoiceField(label=_('آیا تایید است؟'), choices=(('yes', _('بله')), ('no', _('خیر'))))
 
     class Meta:
         model = RelationMatchingRequest
         fields = ['is_confirmed']
 
     def save(self, commit=True):
-        if self.cleaned_data['is_confirmed'] is True:
+        if self.cleaned_data['is_confirmed'] == 'yes':
             self.instance.do_the_matching()
         else:
             self.instance.reject_the_matching()

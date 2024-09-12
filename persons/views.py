@@ -8,12 +8,16 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
+from django.views.generic.detail import SingleObjectMixin
+from django_htmx.http import HttpResponseClientRefresh
 
 from common.mixins import HTMXViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin, \
     HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin
 from persons import forms
-from persons.enums import MatchingStatusChoices, RelationMatchingRequestStatusChoices, RelationChoices
+from persons.enums import RelationMatchingRequestStatusChoices, RelationChoices
+from persons.exceptions import RelationMatchingRequestStatusPriorityError
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest
@@ -463,10 +467,35 @@ class RelationMatchingRequestSelectSimilarView(LoginRequiredMixin, OnlyHTMXModel
     form_class = forms.RelationMatchingRequestSetSimilarForm
 
     def get_queryset(self):
-        return RelationMatchingRequest.objects.filter(status=RelationMatchingRequestStatusChoices.AWAITING_SIMILAR)
+        return RelationMatchingRequest.objects.filter(
+            related_person__created_by=self.request.user,
+            status=RelationMatchingRequestStatusChoices.AWAITING_SIMILAR
+        )
 
     def get_success_url(self):
         return reverse('persons:person-detail', kwargs={'pk': self.object.person.pk})
+
+
+class RelationMatchingRequestRemoveSimilarView(LoginRequiredMixin, OnlyHTMXViewMixin, SingleObjectMixin, View):
+    def get_queryset(self):
+        return RelationMatchingRequest.objects.filter(related_person__created_by_id=self.request.user.id)
+
+    def get(self, request, *args, **kwargs):
+        self.object: RelationMatchingRequest = self.get_object()
+        try:
+            self.object.remove_similar()
+            messages.success(
+                request,
+                _('درخواست تطابق مورد نظر با موفقیت لغو شد.')
+            )
+            return HttpResponseClientRefresh()
+        except RelationMatchingRequestStatusPriorityError:
+            messages.error(
+                request,
+                _('امکان لغو درخواست تطابق مورد نظر وجود ندارد.'),
+                extra_tags='danger'
+            )
+            return HttpResponseClientRefresh()
 
 
 class RelationMatchingRequestConfirmationView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
@@ -475,6 +504,12 @@ class RelationMatchingRequestConfirmationView(LoginRequiredMixin, OnlyHTMXModelF
 
     def get_queryset(self):
         return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)
+    
+    def form_invalid(self, form):
+        return super(RelationMatchingRequestConfirmationView, self).form_invalid(form)
+    
+    def form_valid(self, form):
+        return super(RelationMatchingRequestConfirmationView, self).form_valid(form)
 
 
 

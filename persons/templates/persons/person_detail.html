@@ -60,7 +60,15 @@
                                         </div>
                                     {% elif object.father.relation_request_related.is_awaiting_confirmation %}
                                         <div class="text-center border border-success p-2 rounded mt-3">
-                                            <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                            <div>
+                                                <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                            </div>
+                                            <div class="d-flex justify-content-center mt-2">
+                                                <button class="btn btn-warning" type="button"
+                                                        hx-get="{% url 'persons:relation-matching-request-remove-similar' pk=object.father.relation_request_related.pk %}">
+                                                    <i class="fa fa-close me-2"></i>{% trans 'لغو درخواست' %}
+                                                </button>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 {% else %}
@@ -117,7 +125,15 @@
                                         </div>
                                     {% elif object.mother.relation_request_related.is_awaiting_confirmation %}
                                         <div class="text-center border border-success p-2 rounded mt-3">
-                                            <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                            <div>
+                                                <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                            </div>
+                                            <div class="d-flex justify-content-center mt-2">
+                                                <button class="btn btn-warning" type="button"
+                                                        hx-get="{% url 'persons:relation-matching-request-remove-similar' pk=object.mother.relation_request_related.pk %}">
+                                                    <i class="fa fa-close me-2"></i>{% trans 'لغو درخواست' %}
+                                                </button>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 {% else %}
@@ -285,7 +301,15 @@
                                                 </div>
                                             {% elif spouse.relation_request_related.is_awaiting_confirmation %}
                                                 <div class="text-center border border-success p-2 rounded mt-3">
-                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    <div>
+                                                        <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    </div>
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <button class="btn btn-warning" type="button"
+                                                                hx-get="{% url 'persons:relation-matching-request-remove-similar' pk=spouse.relation_request_related.pk %}">
+                                                            <i class="fa fa-close me-2"></i>{% trans 'لغو درخواست' %}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             {% endif %}
                                         {% else %}
@@ -355,7 +379,15 @@
                                                 </div>
                                             {% elif child.relation_request_related.is_awaiting_confirmation %}
                                                 <div class="text-center border border-success p-2 rounded mt-3">
-                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    <div>
+                                                        <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    </div>
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <button class="btn btn-warning" type="button"
+                                                                hx-get="{% url 'persons:relation-matching-request-remove-similar' pk=child.relation_request_related.pk %}">
+                                                            <i class="fa fa-close me-2"></i>{% trans 'لغو درخواست' %}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             {% endif %}
                                         {% else %}
@@ -404,7 +436,15 @@
                                                 </div>
                                             {% elif child.relation_request_related.is_awaiting_confirmation %}
                                                 <div class="text-center border border-success p-2 rounded mt-3">
-                                                    <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    <div>
+                                                        <i class="fa fa-hourglass-half text-success"></i> {% trans 'در انتظار تایید درخواست تطابق ...' %}
+                                                    </div>
+                                                    <div class="d-flex justify-content-center mt-2">
+                                                        <button class="btn btn-warning" type="button"
+                                                                hx-get="{% url 'persons:relation-matching-request-remove-similar' pk=child.relation_request_related.pk %}">
+                                                            <i class="fa fa-close me-2"></i>{% trans 'لغو درخواست' %}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             {% endif %}
                                         {% else %}

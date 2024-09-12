@@ -13,14 +13,14 @@
         {% endfor %}
     </div>
     {% csrf_token %}
-    {% for error in form.similar_related_person.errors %}
+    {% for error in form.is_confirmed.errors %}
         <div class=" invalid-feedback d-block">{{ error }}</div>
     {% endfor %}
     <div class="col-12 d-flex justify-content-center mt-3">
-        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="true">
+        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="yes">
             {% trans 'بله' %}
         </button>
-        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="true">
+        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="no">
             {% trans 'خیر' %}
         </button>
     </div>

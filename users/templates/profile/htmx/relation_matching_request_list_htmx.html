@@ -38,15 +38,22 @@
                       hx-target="this" hx-swap="outerHTML"
                       novalidate>
                     {% csrf_token %}
-                    <div class="col-12 d-flex justify-content-center mt-3">
-                        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="true">
+                    <div class="d-flex justify-content-center mt-3">
+                        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="yes">
                             {% trans 'بله' %}
                         </button>
-                        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="true">
+                        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="no">
                             {% trans 'خیر' %}
                         </button>
                     </div>
                 </form>
+            {% elif object.status == status_choices.IS_DONE %}
+                <div class="text-center border border-success p-2 rounded mt-2">
+                    <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.IS_DONE.label }}
+            {% elif object.status == status_choices.REJECTED %}
+                <div class="text-center border border-secondary p-2 rounded mt-2">
+                    <i class="fa fa-warning text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
+                </div>
             {% endif %}
         </div>
     {% empty %}

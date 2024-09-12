@@ -289,3 +289,11 @@ class RelationMatchingRequest(models.Model):
         self.related_person.save()
         self.status = enums.RelationMatchingRequestStatusChoices.REJECTED
         self.save()
+
+    @transaction.atomic
+    def remove_similar(self):
+        if self.status != enums.RelationMatchingRequestStatusChoices.AWAITING_CONFIRMATION:
+            raise RelationMatchingRequestStatusPriorityError()
+        self.similar_related_person = None
+        self.status = enums.RelationMatchingRequestStatusChoices.AWAITING_SIMILAR
+        self.save()

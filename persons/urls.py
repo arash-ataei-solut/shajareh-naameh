@@ -103,8 +103,6 @@ urlpatterns = [
     path('person-update/<int:pk>/', views.PersonUpdateView.as_view(), name='person-update'),
     path('person-detail/<int:pk>/', views.PersonDetailView.as_view(), name='person-detail'),
 
-    path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
-
     # Relation matching request
     path(
         'relation-matching-request-select-similar/<int:pk>/',
@@ -112,11 +110,18 @@ urlpatterns = [
         name='relation-matching-request-select-similar'
     ),
     path(
+        'relation-matching-request-remove-similar/<int:pk>/',
+        views.RelationMatchingRequestRemoveSimilarView.as_view(),
+        name='relation-matching-request-remove-similar'
+    ),
+    path(
         'relation-matching-request-confirmation/<int:pk>/',
         views.RelationMatchingRequestConfirmationView.as_view(),
         name='relation-matching-request-confirmation'
     ),
 
+    # Tree
+    path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
     path(
         'see-tree-permission-request-create/<int:person_pk>/',
         views.SeeTreePermissionRequestCreateView.as_view(),
