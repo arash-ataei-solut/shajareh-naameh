@@ -8,7 +8,7 @@
                     <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button"
                             type="button" data-bs-toggle="dropdown" aria-expanded="false"
                             hx-get="{% url 'persons:person-actions-in-tree' pk=child.id %}"
-                            hx-target="next .dropdown-menu" hx-swap="innerHTML" hx-trigger="click"></button>
+                            hx-target="next .dropdown-menu" hx-swap="innerHTML"></button>
                     <div class="dropdown-menu">
                     </div>
                     <a class="btn btn-outline-light"
@@ -18,7 +18,7 @@
                     </a>
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
-                    <strong>{{ child.full_name }}</strong>
+                    <strong>{{ child.full_name }}, {% trans 'متولد' %} {{ child.birth_year }}</strong>
                 </div>
             </div>
             <div>

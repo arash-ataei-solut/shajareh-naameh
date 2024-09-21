@@ -9,7 +9,7 @@
                     <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button"
                             type="button" data-bs-toggle="dropdown" aria-expanded="false"
                             hx-get="{% url 'persons:person-actions-in-tree' pk=ancestors.father.id %}"
-                            hx-target="next .dropdown-menu" hx-swap="innerHTML" hx-trigger="click"></button>
+                            hx-target="next .dropdown-menu" hx-swap="innerHTML"></button>
                     <div class="dropdown-menu">
                     </div>
                     <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.father.id %}?previous_person_pk={{ object.pk }}" hx-boost="true" hx-target="#tree-container">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="me-2">{% trans 'پدر' %}:</span>
-                    <strong>{{ ancestors.father.full_name }}</strong>
+                    <strong>{{ ancestors.father.full_name }}, {% trans 'متولد' %} {{ ancestors.father.birth_year }}</strong>
                 </div>
             </div>
         {% endif %}
@@ -38,7 +38,7 @@
                     <button class="btn btn-outline-light dropdown-toggle dropdown-toggle-split" role="button"
                             type="button" data-bs-toggle="dropdown" aria-expanded="false"
                             hx-get="{% url 'persons:person-actions-in-tree' pk=ancestors.mother.id %}"
-                            hx-target="next .dropdown-menu" hx-swap="innerHTML" hx-trigger="click"></button>
+                            hx-target="next .dropdown-menu" hx-swap="innerHTML"></button>
                     <div class="dropdown-menu">
                     </div>
                     <a class="btn btn-outline-light" href="{% url 'persons:person-tree' pk=ancestors.mother.id %}?previous_person_pk={{ object.pk }}" hx-boost="true" hx-target="#tree-container">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="me-2">{% trans 'مادر' %}:</span>
-                    <strong>{{ ancestors.mother.full_name }}</strong>
+                    <strong>{{ ancestors.mother.full_name }}, {% trans 'متولد' %} {{ ancestors.mother.birth_year }}</strong>
                 </div>
             </div>
         {% endif %}

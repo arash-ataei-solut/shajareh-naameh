@@ -135,6 +135,7 @@ class Person(models.Model):
             ancestors['father'] = {
                 'id': self.father.id,
                 'full_name': self.father.full_name,
+                'birth_year': self.father.birth_year,
                 'ancestors': self.father.get_ancestors(main_person=main_person)
             }
             main_person.ancestors_id_list.append(self.father.id)
@@ -144,6 +145,7 @@ class Person(models.Model):
             ancestors['mother'] = {
                 'id': self.mother.id,
                 'full_name': self.mother.full_name,
+                'birth_year': self.mother.birth_year,
                 'ancestors': self.mother.get_ancestors(main_person=main_person)
             }
             main_person.ancestors_id_list.append(self.mother.id)
@@ -154,14 +156,16 @@ class Person(models.Model):
         descendant = []
         children = Person.objects.exclude_matched_persons().filter(
             Q(father_id=self.id) | Q(mother_id=self.id)
-        ).only('id', 'first_name', 'last_name', 'gender')
+        ).only('id', 'first_name', 'last_name', 'birth_year', 'gender')
         for child in children:
-            if child.id in main_person.descendant_id_list:
-                raise LoopInTreeException()
+            # TODO Should be handled
+            # if child.id in main_person.descendant_id_list:
+            #     raise LoopInTreeException()
             descendant.append(
                 {
                     'id': child.id,
                     'full_name': child.full_name,
+                    'birth_year': child.birth_year,
                     'gender': child.get_gender_display(),
                     'descendant': child.get_descendant(main_person=main_person)
                 }
@@ -174,6 +178,9 @@ class Person(models.Model):
 
     def can_update(self, user: ShnUser) -> bool:
         return self.created_by == user or self.user == user
+
+    def can_delete(self, user: ShnUser) -> bool:
+        return self.created_by == user
 
     def has_awaiting_see_tree_request(self, user: ShnUser) -> bool:
         return SeeTreePermissionRequest.objects.filter(

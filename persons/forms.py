@@ -22,7 +22,7 @@ class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         instance: Person = super().save(commit)
-        instance.can_see_tree_users.add(self.created_by)
+        instance.can_see_tree_users.add(instance.created_by)
         return instance
 
 
@@ -35,6 +35,11 @@ class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
         fields = [
             'user', 'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
         ]
+
+    def save(self, commit=True):
+        instance: Person = super().save(commit)
+        instance.can_see_tree_users.add(instance.created_by)
+        return instance
 
 
 class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
@@ -99,6 +104,7 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.MALE
         father: Person = super().save(commit)
+        father.can_see_tree_users.add(father.created_by)
         self.person.father = father
         self.person.save()
         if self.person.mother:
@@ -127,6 +133,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.FEMALE
         mother: Person = super().save(commit)
+        mother.can_see_tree_users.add(self.created_by)
         self.person.mother = mother
         self.person.save()
         if self.person.father:
@@ -147,6 +154,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         spouse: Person = super().save(commit)
+        spouse.can_see_tree_users.add(spouse.created_by)
         self.person.spouses.add(spouse)
         return spouse
 
@@ -164,6 +172,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
 
     def save(self, commit=True):
         child: Person = super().save(commit)
+        child.can_see_tree_users.add(child.created_by)
         if self.person.gender == enums.GenderChoices.MALE:
             child.father = self.person
         elif self.person.gender == enums.GenderChoices.FEMALE:

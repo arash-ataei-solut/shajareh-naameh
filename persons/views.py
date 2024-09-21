@@ -14,19 +14,18 @@ from django.views.generic.detail import SingleObjectMixin
 from django_htmx.http import HttpResponseClientRefresh
 
 from common.mixins import HTMXViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin, \
-    HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin
+    HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin, AtomicViewMixin, TemplatePermissionDeniedErrorHTMXViewMixin
 from persons import forms
 from persons.enums import RelationMatchingRequestStatusChoices, RelationChoices
 from persons.exceptions import RelationMatchingRequestStatusPriorityError
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.matchmakers import RelationMatchmaker
+from persons.mixins import CanUpdateThePersonMixin, CanDeleteThePersonMixin
 from persons.models import Person, RelationMatchingRequest
 from places.models import ResidencePlace
 
 
-class PersonAddView(LoginRequiredMixin, CreateView):
-    template_name = 'persons/person_add.html'
-    form_class = PersonAddForm
+class PersonAddViewMixin:
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -38,9 +37,14 @@ class PersonAddView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('persons:person-detail', kwargs={'pk': self.object.pk})
+    
+    
+class PersonAddView(AtomicViewMixin, LoginRequiredMixin, PersonAddViewMixin, CreateView):
+    template_name = 'persons/person_add.html'
+    form_class = PersonAddForm
 
 
-class PersonAddMyselfView(PersonAddView):
+class PersonAddMyselfViewMixin(AtomicViewMixin, LoginRequiredMixin, PersonAddViewMixin, CreateView):
     template_name = 'persons/person_add_myself.html'
     form_class = PersonAddMyselfForm
 
@@ -48,17 +52,9 @@ class PersonAddMyselfView(PersonAddView):
         kwargs = super().get_form_kwargs()
         if self.request.method == 'POST':
             data = kwargs['data']
-            data.update({'user': self.request.user})
+            data.update({'user': self.request.user, 'created_by': self.request.user})
             kwargs.update({'data': data})
         return kwargs
-
-
-class PersonUpdateView(OnlyHTMXModelFormViewMixin, UpdateView):
-    template_name = 'persons/htmx/person_update_htmx.html'
-    form_class = PersonUpdateForm
-
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(Q(user=self.request.user) | Q(created_by=self.request.user))
 
 
 class PersonAddResidencePlaceView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, CreateView):
@@ -130,6 +126,8 @@ class PersonDeleteResidencePlaceView(LoginRequiredMixin, OnlyHTMXFormViewMixin, 
 
 class PersonAddRelativeMixin(OnlyHTMXFormViewMixin):
     relation: RelationChoices = None
+    raise_exception = True
+    permission_denied_message = _('شما دسترسی لازم برای ویرایش یا مشاهده جزئیات اطلاعات این شخص را ندارید.')
 
     def get(self, request, *args, **kwargs):
         self.person = self.get_person()
@@ -145,8 +143,11 @@ class PersonAddRelativeMixin(OnlyHTMXFormViewMixin):
         return reverse('persons:person-detail', kwargs={'pk': self.person.pk})
 
     def get_person(self):
-        queryset = Person.objects.exclude_matched_persons().filter(Q(user=self.request.user) | Q(created_by=self.request.user))
-        return get_object_or_404(queryset, id=self.kwargs['person_pk'])
+        queryset = Person.objects.exclude_matched_persons()
+        obj = get_object_or_404(queryset, id=self.kwargs['person_pk'])
+        if obj.can_update(self.request.user):
+            return obj
+        return self.handle_no_permission()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -168,26 +169,26 @@ class PersonAddRelativeMixin(OnlyHTMXFormViewMixin):
         return super().form_valid(form)
 
 
-class PersonAddFatherView(PersonAddRelativeMixin, PersonAddView):
+class PersonAddFatherViewMixin(AtomicViewMixin, LoginRequiredMixin, PersonAddRelativeMixin, PersonAddViewMixin, CreateView):
     template_name = 'persons/htmx/person_add_father_htmx.html'
     form_class = forms.PersonAddFatherForm
     relation = RelationChoices.FATHER
     # TODO Handle loop
 
 
-class PersonAddMotherView(PersonAddRelativeMixin, PersonAddView):
+class PersonAddMotherViewMixin(AtomicViewMixin, LoginRequiredMixin, PersonAddRelativeMixin, PersonAddViewMixin, CreateView):
     template_name = 'persons/htmx/person_add_mother_htmx.html'
     form_class = forms.PersonAddMotherForm
     relation = RelationChoices.MOTHER
 
 
-class PersonAddSpouseView(PersonAddRelativeMixin, PersonAddView):
+class PersonAddSpouseViewMixin(AtomicViewMixin, LoginRequiredMixin, PersonAddRelativeMixin, PersonAddViewMixin, CreateView):
     template_name = 'persons/htmx/person_add_spouse_htmx.html'
     form_class = forms.PersonAddSpouseForm
     relation = RelationChoices.SPOUSE
 
 
-class PersonAddChildView(PersonAddRelativeMixin, PersonAddView):
+class PersonAddChildViewMixin(AtomicViewMixin, LoginRequiredMixin, PersonAddRelativeMixin, PersonAddViewMixin, CreateView):
     template_name = 'persons/htmx/person_add_child_htmx.html'
     form_class = forms.PersonAddChildForm
     relation = RelationChoices.CHILD
@@ -195,16 +196,20 @@ class PersonAddChildView(PersonAddRelativeMixin, PersonAddView):
 
 # Person delete relatives
 
-class PersonDeleteAncestorConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
+class PersonDeleteAncestorConfirmationView(
+    TemplatePermissionDeniedErrorHTMXViewMixin,
+    LoginRequiredMixin,
+    CanDeleteThePersonMixin,
+    OnlyHTMXViewMixin,
+    DetailView,
+):
     template_name = 'persons/htmx/person_delete_ancestor_confirmation_htmx.html'
+    queryset = Person.objects.exclude_matched_persons()
+    permission_denied_message = _('شما دسترسی لازم برای حذف این شخص را ندارید.')
 
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
-
-class PersonDeleteAncestorView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+class PersonDeleteAncestorView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHTMXFormViewMixin, DeleteView):
+    queryset = Person.objects.exclude_matched_persons()
 
     def get_failure_url(self):
         return reverse('persons:person-delete-ancestor-failure', kwargs={'pk': self.object.pk})
@@ -235,19 +240,20 @@ class PersonDeleteAncestorFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, Det
         return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
-class PersonDeleteDescendantConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
+class PersonDeleteDescendantConfirmationView(
+    TemplatePermissionDeniedErrorHTMXViewMixin,
+    LoginRequiredMixin,
+    CanDeleteThePersonMixin,
+    OnlyHTMXViewMixin,
+    DetailView,
+):
     template_name = 'persons/htmx/person_delete_descendant_confirmation_htmx.html'
-
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+    queryset = Person.objects.exclude_matched_persons()
+    permission_denied_message = _('شما دسترسی لازم برای حذف این شخص را ندارید.')
 
 
 class PersonDeleteDescendantView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
-
-    def get_failure_url(self):
-        return reverse('persons:person-delete-descendant-failure', kwargs={'pk': self.object.pk})
+    queryset = Person.objects.exclude_matched_persons()
 
     def form_valid(self, form):
         failure_conditions: list[bool] = [
@@ -273,16 +279,20 @@ class PersonDeleteDescendantFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, D
         return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
-class PersonDeleteSpouseConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
+class PersonDeleteSpouseConfirmationView(
+    TemplatePermissionDeniedErrorHTMXViewMixin,
+    LoginRequiredMixin,
+    CanDeleteThePersonMixin,
+    OnlyHTMXViewMixin,
+    DetailView
+):
     template_name = 'persons/htmx/person_delete_spouse_confirmation_htmx.html'
+    queryset = Person.objects.exclude_matched_persons()
+    permission_denied_message = _('شما دسترسی لازم برای حذف این شخص را ندارید.')
 
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
-
-class PersonDeleteSpouseView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+class PersonDeleteSpouseView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHTMXFormViewMixin, DeleteView):
+    queryset = Person.objects.exclude_matched_persons()
 
     def get_failure_url(self):
         return reverse('persons:person-delete-spouse-failure', kwargs={'pk': self.object.pk})
@@ -314,16 +324,20 @@ class PersonDeleteSpouseFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, Detai
 
 # Person delete
 
-class PersonDeleteConfirmationView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
+class PersonDeleteConfirmationView(
+    TemplatePermissionDeniedErrorHTMXViewMixin,
+    LoginRequiredMixin,
+    CanDeleteThePersonMixin,
+    OnlyHTMXViewMixin,
+    DetailView
+):
     template_name = 'persons/htmx/person_delete_confirmation_htmx.html'
+    queryset = Person.objects.exclude_matched_persons()
+    permission_denied_message = _('شما دسترسی لازم برای حذف این شخص را ندارید.')
 
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
-
-class PersonDeleteView(LoginRequiredMixin, OnlyHTMXFormViewMixin, DeleteView):
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+class PersonDeleteView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHTMXFormViewMixin, DeleteView):
+    queryset = Person.objects.exclude_matched_persons()
 
     def get_failure_url(self):
         return reverse('persons:person-delete-failure', kwargs={'pk': self.object.pk})
@@ -353,14 +367,16 @@ class PersonDeleteFailureView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView)
         return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
 
 
-class PersonDetailView(LoginRequiredMixin, DetailView):
+class PersonDetailView(LoginRequiredMixin, CanUpdateThePersonMixin, DetailView):
     template_name = 'persons/person_detail.html'
     model = Person
+    queryset = Person.objects.exclude_matched_persons()
 
-    def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(
-            Q(user=self.request.user) | Q(created_by=self.request.user)
-        )
+
+class PersonUpdateView(LoginRequiredMixin, CanUpdateThePersonMixin, OnlyHTMXModelFormViewMixin, UpdateView):
+    template_name = 'persons/htmx/person_update_htmx.html'
+    form_class = PersonUpdateForm
+    queryset = Person.objects.exclude_matched_persons()
 
 
 # Person tree
@@ -458,6 +474,15 @@ class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
 class PersonActionsInTreeView(LoginRequiredMixin, OnlyHTMXViewMixin, DetailView):
     template_name = 'persons/htmx/person_actions_in_tree_htmx.html'
     queryset = Person.objects.exclude_matched_persons()
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonActionsInTreeView, self).get_context_data(**kwargs)
+        context.update(
+            {
+                'can_update': self.object.can_update(self.request.user),
+            }
+        )
+        return context
 
 
 # Relation request

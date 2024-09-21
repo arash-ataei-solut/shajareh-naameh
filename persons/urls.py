@@ -6,13 +6,13 @@ app_name = 'persons'
 
 urlpatterns = [
     path('person-add/', views.PersonAddView.as_view(), name='person-add'),
-    path('person-add-myself/', views.PersonAddMyselfView.as_view(), name='person-add-myself'),
+    path('person-add-myself/', views.PersonAddMyselfViewMixin.as_view(), name='person-add-myself'),
 
     # Person add relatives
-    path('person-add-father/<int:person_pk>/', views.PersonAddFatherView.as_view(), name='person-add-father'),
-    path('person-add-mother/<int:person_pk>/', views.PersonAddMotherView.as_view(), name='person-add-mother'),
-    path('person-add-spouse/<int:person_pk>/', views.PersonAddSpouseView.as_view(), name='person-add-spouse'),
-    path('person-add-child/<int:person_pk>/', views.PersonAddChildView.as_view(), name='person-add-child'),
+    path('person-add-father/<int:person_pk>/', views.PersonAddFatherViewMixin.as_view(), name='person-add-father'),
+    path('person-add-mother/<int:person_pk>/', views.PersonAddMotherViewMixin.as_view(), name='person-add-mother'),
+    path('person-add-spouse/<int:person_pk>/', views.PersonAddSpouseViewMixin.as_view(), name='person-add-spouse'),
+    path('person-add-child/<int:person_pk>/', views.PersonAddChildViewMixin.as_view(), name='person-add-child'),
 
     # Residence place
     path(
