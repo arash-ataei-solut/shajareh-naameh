@@ -133,7 +133,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
     def save(self, commit=True):
         self.instance.gender = enums.GenderChoices.FEMALE
         mother: Person = super().save(commit)
-        mother.can_see_tree_users.add(self.created_by)
+        mother.can_see_tree_users.add(mother.created_by)
         self.person.mother = mother
         self.person.save()
         if self.person.father:

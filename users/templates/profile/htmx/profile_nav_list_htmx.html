@@ -11,13 +11,23 @@
    href="{{ notifications_list_url }}">
     <i class="fa-solid fa-bell"></i> {% trans 'لیست اعلان‌ها' %}
 </a>
-{% url 'users:change-password-profile' as change_profile_url %}
-<a class="list-group-item list-group-item-action{% if request.path == change_profile_url %} active{% endif %}"
-   href="{{ change_profile_url }}">
-    <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
+{% url 'users:person-list' as person_list_url %}
+<a class="list-group-item list-group-item-action{% if request.path == person_list_url %} active{% endif %}"
+   href="{{ person_list_url }}">
+    <i class="fa-solid fa-people-group"></i> {% trans 'لیست اشخاص' %}
 </a>
 {% url 'users:relation-matching-request-list' as relation_matching_request_list_url %}
 <a class="list-group-item list-group-item-action{% if request.path == relation_matching_request_list_url %} active{% endif %}"
    href="{{ relation_matching_request_list_url }}">
     <i class="fa-solid fa-code-merge"></i> {% trans 'درخواست‌های تطابق' %}
+</a>
+{% url 'users:my-relation-matching-request-list' as my_relation_matching_request_list_url %}
+<a class="list-group-item list-group-item-action{% if request.path == my_relation_matching_request_list_url %} active{% endif %}"
+   href="{{ my_relation_matching_request_list_url }}">
+    <i class="fa-solid fa-code-merge"></i> {% trans 'درخواست‌های تطابق من' %}
+</a>
+{% url 'users:change-password-profile' as change_profile_url %}
+<a class="list-group-item list-group-item-action{% if request.path == change_profile_url %} active{% endif %}"
+   href="{{ change_profile_url }}">
+    <i class="fa-solid fa-key"></i> {% trans 'تغییر گذرواژه' %}
 </a>

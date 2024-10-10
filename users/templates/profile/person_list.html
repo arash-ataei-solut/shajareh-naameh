@@ -1,0 +1,8 @@
+{% extends 'profile/user_profile_base.html' %}
+{% load jformat %}
+{% load i18n %}
+
+
+{% block profile_content %}
+    {% include 'profile/htmx/person_list_htmx.html' %}
+{% endblock %}

@@ -15,13 +15,13 @@
 <hr class="mt-0">
 <div class="list-group" hx-boost="false">
     {% for object in object_list %}
-        <a href="{% url 'users:personal-info-profile' %}" class="list-group-item list-group-item-action" aria-current="true">
+        <div class="list-group-item list-group-item-action mt-2">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">{{ object.title }}</h5>
                 <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
             </div>
             <p class="mb-1">{{ object.description }}</p>
-        </a>
+        </div>
     {% empty %}
         <div class="list-group-item text-center">
             {% trans 'اعلانی برای شما وجود ندارد.' %}

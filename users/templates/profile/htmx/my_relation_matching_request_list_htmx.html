@@ -10,7 +10,7 @@
 
 
 <h4>
-    <span>{% trans 'لیست درخواست‌های تطابق وابستگان' %} </span>
+    <span>{% trans 'لیست درخواست‌های تطابق وابستگان من' %} </span>
 </h4>
 <hr class="mt-0">
 <div class="list-group" hx-boost="false">
@@ -22,31 +22,25 @@
                 <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
             </div>
             <div class="mb-2">
-                <span class="me-2">{% trans 'آیا' %}</span>
-                <a href="{% url 'persons:person-tree' pk=object.similar_related_person.pk %}" target="_blank"
-                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده درخت‌خانوادگی' %}">
+                {% if object.similar_related_person %}
+                    <b class="me-2">"{{ object.similar_related_person.full_name }} {% trans 'متولد سال' %} {{ object.similar_related_person.birth_year }}"</b>
+                {% endif %}
+                <b class="me-2">{{ object.get_relation_display }}</b>
+                <a href="{% url 'persons:person-detail' pk=object.person.pk %}" target="_blank"
+                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده جزئیات و ویرایش' %}">
                     <b class="me-2">
-                        "{{ object.similar_related_person.full_name }} {% trans 'متولد سال' %} {{ object.similar_related_person.birth_year }}"
+                        "{{ object.person.full_name }} {% trans 'متولد سال' %} {{ object.person.birth_year }}"
                     </b>
                 </a>
-                <b class="me-2">{{ object.get_relation_display }}</b>
-                <b class="me-2">"{{ object.person.full_name }} {% trans 'متولد سال' %} {{ object.person.birth_year }}"</b>
-                <span>{% trans 'است؟' %}</span>
             </div>
             {% if object.status == status_choices.AWAITING_CONFIRMATION %}
-                <form hx-post="{% url 'persons:relation-matching-request-confirmation' pk=object.pk %}"
-                      hx-target="this" hx-swap="outerHTML"
-                      novalidate>
-                    {% csrf_token %}
-                    <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="yes">
-                            {% trans 'بله' %}
-                        </button>
-                        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="no">
-                            {% trans 'خیر' %}
-                        </button>
-                    </div>
-                </form>
+                <div class="text-center border border-black p-2 rounded mt-2">
+                    <i class="fa fa-hourglass-half text-black me-2"></i>{{ status_choices.AWAITING_CONFIRMATION.label }}
+                </div>
+            {% elif object.status == status_choices.AWAITING_SIMILAR %}
+                <div class="text-center border border-warning p-2 rounded mt-2">
+                    <i class="fa fa-hourglass-half text-warning me-2"></i>{{ status_choices.AWAITING_SIMILAR.label }}
+                </div>
             {% elif object.status == status_choices.IS_DONE %}
                 <div class="text-center border border-success p-2 rounded mt-2">
                     <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.IS_DONE.label }}

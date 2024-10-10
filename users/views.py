@@ -13,7 +13,7 @@ from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
 from persons.enums import RelationMatchingRequestStatusChoices
-from persons.models import RelationMatchingRequest
+from persons.models import RelationMatchingRequest, Person
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
@@ -236,12 +236,34 @@ class ChangePasswordDoneView(HTMXViewMixin, PasswordChangeDoneView):
     htmx_template_name = 'profile/htmx/change_password_done_profile_htmx.html'
 
 
+class PersonListView(LoginRequiredMixin, HTMXViewMixin, ListView):
+    template_name = 'profile/person_list.html'
+    htmx_template_name = 'profile/htmx/person_list_htmx.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+
+
 class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
     template_name = 'profile/relation_matching_request_list.html'
     htmx_template_name = 'profile/htmx/relation_matching_request_list_htmx.html'
 
     def get_queryset(self):
         return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'status_choices': RelationMatchingRequestStatusChoices})
+        return context
+
+
+class MyRelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
+    template_name = 'profile/my_relation_matching_request_list.html'
+    htmx_template_name = 'profile/htmx/my_relation_matching_request_list_htmx.html'
+
+    def get_queryset(self):
+        return RelationMatchingRequest.objects.filter(related_person__created_by=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
