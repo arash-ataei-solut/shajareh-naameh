@@ -28,3 +28,6 @@
         </div>
     {% endfor %}
 </div>
+
+{% url 'users:notifications-list-profile' as page_url %}
+{% include 'components/pagination.html' %}

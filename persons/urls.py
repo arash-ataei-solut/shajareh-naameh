@@ -123,6 +123,13 @@ urlpatterns = [
     # Tree
     path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
     path(
+        'person-actions-in-tree/<int:pk>/',
+        views.PersonActionsInTreeView.as_view(),
+        name='person-actions-in-tree'
+    ),
+
+    # SeeTreePermissionRequest
+    path(
         'see-tree-permission-request-create/<int:person_pk>/',
         views.SeeTreePermissionRequestCreateView.as_view(),
         name='see-tree-permission-request-create'
@@ -132,11 +139,10 @@ urlpatterns = [
         views.SeeTreePermissionRequestSuccessView.as_view(),
         name='see-tree-permission-request-success'
     ),
-
     path(
-        'person-actions-in-tree/<int:pk>/',
-        views.PersonActionsInTreeView.as_view(),
-        name='person-actions-in-tree'
+        'see-tree-permission-request-approval/<int:pk>/',
+        views.SeeTreePermissionRequestApprovalView.as_view(),
+        name='see-tree-permission-request-approval'
     ),
 
     path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),

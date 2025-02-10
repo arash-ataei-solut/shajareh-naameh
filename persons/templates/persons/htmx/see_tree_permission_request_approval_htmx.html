@@ -1,0 +1,27 @@
+{% load shn_filters %}
+{% load i18n %}
+
+<form class="{% if form.errors %} was-validated{% endif %}"
+      hx-post="{% url 'persons:see-tree-permission-request-approval' pk=object.pk %}"
+      hx-target="this" hx-swap="outerHTML"
+      novalidate>
+    <div>
+        {% for non_field_error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ non_field_error }}
+            </div>
+        {% endfor %}
+    </div>
+    {% csrf_token %}
+    {% for error in form.is_approved.errors %}
+        <div class=" invalid-feedback d-block">{{ error }}</div>
+    {% endfor %}
+    <div class="col-12 d-flex justify-content-center mt-3">
+        <button class="btn btn-success me-2" type="submit" name="is_approved" value="yes">
+            {% trans 'بله' %}
+        </button>
+        <button class="btn btn-secondary" type="submit" name="is_approved" value="no">
+            {% trans 'خیر' %}
+        </button>
+    </div>
+</form>

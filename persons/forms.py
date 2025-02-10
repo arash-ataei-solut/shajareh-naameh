@@ -244,6 +244,25 @@ class SeeTreePermissionRequestCreateForm(forms.ModelForm):
         return cleaned_data
 
 
+class SeeTreePermissionRequestApprovalForm(forms.ModelForm):
+    is_approved = forms.ChoiceField(label=_('آیا تایید است؟'), choices=(('yes', _('بله')), ('no', _('خیر'))))
+
+    class Meta:
+        model = SeeTreePermissionRequest
+        fields = [
+            'is_approved'
+        ]
+
+    def save(self, commit=True):
+        is_approved = self.cleaned_data['is_approved']
+        if is_approved == 'yes':
+            self.instance.status = enums.SeeTreePermissionRequestStatusChoices.APPROVED
+        else:
+            self.instance.status = enums.SeeTreePermissionRequestStatusChoices.REJECTED
+        self.instance.save()
+        return self.instance
+
+
 class FindMyselfForm(forms.Form):
     first_name = forms.CharField(label=_('نام'))
     last_name = forms.CharField(label=_('نام خانوادگی'))

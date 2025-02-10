@@ -21,7 +21,7 @@ from persons.exceptions import RelationMatchingRequestStatusPriorityError
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
 from persons.matchmakers import RelationMatchmaker
 from persons.mixins import CanUpdateThePersonMixin, CanDeleteThePersonMixin
-from persons.models import Person, RelationMatchingRequest
+from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.models import ResidencePlace
 
 
@@ -439,6 +439,14 @@ class SeeTreePermissionRequestSuccessView(TemplateView):
         return context
 
 
+class SeeTreePermissionRequestApprovalView(LoginRequiredMixin, OnlyHTMXModelFormViewMixin, UpdateView):
+    template_name = 'persons/htmx/see_tree_permission_request_approval_htmx.html'
+    form_class = forms.SeeTreePermissionRequestApprovalForm
+
+    def get_queryset(self):
+        return SeeTreePermissionRequest.objects.filter(person__created_by=self.request.user)
+
+
 class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person_tree_htmx.html'
@@ -535,7 +543,6 @@ class RelationMatchingRequestConfirmationView(LoginRequiredMixin, OnlyHTMXModelF
     
     def form_valid(self, form):
         return super(RelationMatchingRequestConfirmationView, self).form_valid(form)
-
 
 
 class FindMyselfView(LoginRequiredMixin, HTMXViewMixin, FormView):

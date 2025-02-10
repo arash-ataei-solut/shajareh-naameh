@@ -10,7 +10,7 @@
 
 
 <h4>
-    <span>{% trans 'لیست درخواست‌های تطابق وابستگان' %} </span>
+    <span>{% trans 'لیست درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی' %} </span>
 </h4>
 <hr class="mt-0">
 <div class="list-group" hx-boost="false">
@@ -22,34 +22,34 @@
                 <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
             </div>
             <div class="mb-2">
-                <span class="me-2">{% trans 'آیا' %}</span>
-                <a href="{% url 'persons:person-tree' pk=object.similar_related_person.pk %}" target="_blank"
+                <span class="me-2">{% trans 'آیا به' %}</span>
+                <b class="me-2">"{{ object.applicant.person.full_name }}"</b>
+                <span class="me-2">{% trans 'اجازه می‌دهید درخت‌خانوادگی' %}</span>
+                <a href="{% url 'persons:person-tree' pk=object.person.pk %}" target="_blank"
                    data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده درخت‌خانوادگی' %}">
                     <b class="me-2">
-                        "{{ object.similar_related_person.full_name }} {% trans 'متولد سال' %} {{ object.similar_related_person.birth_year }}"
+                        "{{ object.person.full_name }}"
                     </b>
                 </a>
-                <b class="me-2">{{ object.get_relation_display }}</b>
-                <b class="me-2">"{{ object.person.full_name }} {% trans 'متولد سال' %} {{ object.person.birth_year }}"</b>
-                <span>{% trans 'است؟' %}</span>
+                <span>{% trans 'را ببیند؟' %}</span>
             </div>
-            {% if object.status == status_choices.AWAITING_CONFIRMATION %}
-                <form hx-post="{% url 'persons:relation-matching-request-confirmation' pk=object.pk %}"
+            {% if object.status == status_choices.AWAITING_APPROVE %}
+                <form hx-post="{% url 'persons:see-tree-permission-request-approval' pk=object.pk %}"
                       hx-target="this" hx-swap="outerHTML"
                       novalidate>
                     {% csrf_token %}
                     <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="yes">
+                        <button class="btn btn-success me-2" type="submit" name="is_approved" value="yes">
                             {% trans 'بله' %}
                         </button>
-                        <button class="btn btn-secondary" type="submit" name="is_confirmed" value="no">
+                        <button class="btn btn-secondary" type="submit" name="is_approved" value="no">
                             {% trans 'خیر' %}
                         </button>
                     </div>
                 </form>
-            {% elif object.status == status_choices.IS_DONE %}
+            {% elif object.status == status_choices.APPROVED %}
                 <div class="text-center border border-success p-2 rounded mt-2">
-                    <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.IS_DONE.label }}
+                    <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.APPROVED.label }}
                 </div>
             {% elif object.status == status_choices.REJECTED %}
                 <div class="text-center border border-secondary p-2 rounded mt-2">

@@ -1,11 +1,18 @@
 from django.contrib import admin, messages
 from django.utils.translation import gettext as _
 
+from persons import models
 from persons.exceptions import RelationMatchingRequestStatusPriorityError
-from persons.models import Person, RelationMatchingRequest
 
 
-@admin.register(Person)
+@admin.register(models.SeeTreePermissionRequest)
+class SeeTreePermissionRequestAdmin(admin.ModelAdmin):
+    list_display = ['id', 'person', 'applicant', 'status']
+    search_fields = ['person__first_name', 'person__last_name', 'applicant__first_name', 'applicant__last_name']
+    list_filter = ['status']
+
+
+@admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'id', 'gender', 'birth_year', 'matching_status')
     search_fields = ('first_name', 'last_name', 'id', 'birth_year')
@@ -13,7 +20,7 @@ class PersonAdmin(admin.ModelAdmin):
     autocomplete_fields = ('father', 'mother', 'spouses')
 
 
-@admin.register(RelationMatchingRequest)
+@admin.register(models.RelationMatchingRequest)
 class RelationMatchingRequestAdmin(admin.ModelAdmin):
     list_display = ('id', 'person', 'related_person', 'similar_related_person', 'relation', 'status')
     list_select_related = ('person', 'related_person', 'similar_related_person')

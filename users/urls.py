@@ -34,11 +34,15 @@ urlpatterns = [
         views.ChangePasswordDoneView.as_view(),
         name='change-password-done-profile'
     ),
+
+    # Person
     path(
         'person-list/',
         views.PersonListView.as_view(),
         name='person-list'
     ),
+
+    # RelationMatchingRequest
     path(
         'relation-matching-request-list/',
         views.RelationMatchingRequestListView.as_view(),
@@ -48,5 +52,12 @@ urlpatterns = [
         'my-relation-matching-request-list/',
         views.MyRelationMatchingRequestListView.as_view(),
         name='my-relation-matching-request-list'
+    ),
+
+    # SeeTreePermissionRequest
+    path(
+        'see-tree-permission-request-list/',
+        views.SeeTreePermissionRequestListView.as_view(),
+        name='see-tree-permission-request-list'
     )
 ]

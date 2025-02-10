@@ -12,8 +12,8 @@ from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin
-from persons.enums import RelationMatchingRequestStatusChoices
-from persons.models import RelationMatchingRequest, Person
+from persons.enums import RelationMatchingRequestStatusChoices, SeeTreePermissionRequestStatusChoices
+from persons.models import RelationMatchingRequest, Person, SeeTreePermissionRequest
 from users import enums
 from users.exeptions import SendOTPError
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
@@ -220,6 +220,7 @@ class NotificationsListProfileView(LoginRequiredMixin, HTMXViewMixin, ListView):
     model = Notification
     template_name = 'profile/notifications_list_profile.html'
     htmx_template_name = 'profile/htmx/notifications_list_profile_htmx.html'
+    paginate_by = 5
 
     def get_queryset(self):
         return self.request.user.notification_set.all()
@@ -248,6 +249,7 @@ class PersonListView(LoginRequiredMixin, HTMXViewMixin, ListView):
 class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
     template_name = 'profile/relation_matching_request_list.html'
     htmx_template_name = 'profile/htmx/relation_matching_request_list_htmx.html'
+    paginate_by = 5
 
     def get_queryset(self):
         return RelationMatchingRequest.objects.filter(similar_related_person__created_by=self.request.user)
@@ -261,6 +263,7 @@ class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListVie
 class MyRelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
     template_name = 'profile/my_relation_matching_request_list.html'
     htmx_template_name = 'profile/htmx/my_relation_matching_request_list_htmx.html'
+    paginate_by = 5
 
     def get_queryset(self):
         return RelationMatchingRequest.objects.filter(related_person__created_by=self.request.user)
@@ -268,4 +271,18 @@ class MyRelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListV
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context.update({'status_choices': RelationMatchingRequestStatusChoices})
+        return context
+
+
+class SeeTreePermissionRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
+    template_name = 'profile/see_tree_permission_request_list.html'
+    htmx_template_name = 'profile/htmx/see_tree_permission_request_list_htmx.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return SeeTreePermissionRequest.objects.filter(person__created_by=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'status_choices': SeeTreePermissionRequestStatusChoices})
         return context

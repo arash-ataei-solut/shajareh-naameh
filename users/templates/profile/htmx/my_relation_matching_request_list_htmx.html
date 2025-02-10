@@ -18,7 +18,7 @@
         <div class="list-group-item list-group-item-action mt-2"
              aria-current="true">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ object.title }}</h5>
+                <h5 class="mb-1"></h5>
                 <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
             </div>
             <div class="mb-2">
@@ -57,3 +57,6 @@
         </div>
     {% endfor %}
 </div>
+
+{% url 'users:my-relation-matching-request-list' as page_url %}
+{% include 'components/pagination.html' %}
