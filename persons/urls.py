@@ -135,7 +135,7 @@ urlpatterns = [
         name='see-tree-permission-request-create'
     ),
     path(
-        'see-tree-permission-request-success/',
+        'see-tree-permission-request-success/<int:person_pk>/',
         views.SeeTreePermissionRequestSuccessView.as_view(),
         name='see-tree-permission-request-success'
     ),

@@ -59,5 +59,10 @@ urlpatterns = [
         'see-tree-permission-request-list/',
         views.SeeTreePermissionRequestListView.as_view(),
         name='see-tree-permission-request-list'
+    ),
+    path(
+        'my-see-tree-permission-request-list/',
+        views.MySeeTreePermissionRequestListView.as_view(),
+        name='my-see-tree-permission-request-list'
     )
 ]

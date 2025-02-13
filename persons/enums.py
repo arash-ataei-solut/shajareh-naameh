@@ -28,6 +28,6 @@ class RelationMatchingRequestStatusChoices(IntegerChoices):
 
 
 class SeeTreePermissionRequestStatusChoices(IntegerChoices):
-    AWAITING_APPROVE = 1, _('در انتظار تایید')
+    AWAITING_APPROVAL = 1, _('در انتظار تایید')
     APPROVED = 2, _('تایید شده')
     REJECTED = 3, _('رد شده')

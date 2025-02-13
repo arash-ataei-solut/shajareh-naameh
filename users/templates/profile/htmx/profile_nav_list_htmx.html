@@ -29,7 +29,12 @@
 {% url 'users:see-tree-permission-request-list' as see_tree_permission_request_list_url %}
 <a class="list-group-item list-group-item-action{% if request.path == see_tree_permission_request_list_url %} active{% endif %}"
    href="{{ see_tree_permission_request_list_url }}">
-    <i class="fa-solid fa-user-check"></i> {% trans 'درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی' %}
+    <i class="fa-solid fa-user-check"></i> {% trans 'درخواست‌های دسترسی مشاهده درخت‌خانوادگی' %}
+</a>
+{% url 'users:my-see-tree-permission-request-list' as my_see_tree_permission_request_list_url %}
+<a class="list-group-item list-group-item-action{% if request.path == my_see_tree_permission_request_list_url %} active{% endif %}"
+   href="{{ my_see_tree_permission_request_list_url }}">
+    <i class="fa-solid fa-user-check"></i> {% trans 'درخواست‌های دسترسی مشاهده درخت‌خانوادگی من' %}
 </a>
 {% url 'users:change-password-profile' as change_profile_url %}
 <a class="list-group-item list-group-item-action{% if request.path == change_profile_url %} active{% endif %}"

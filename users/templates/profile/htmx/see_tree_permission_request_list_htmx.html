@@ -10,7 +10,7 @@
 
 
 <h4>
-    <span>{% trans 'لیست درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی' %} </span>
+    <span>{% trans 'لیست درخواست‌های دسترسی مشاهده درخت‌خانوادگی' %} </span>
 </h4>
 <hr class="mt-0">
 <div class="list-group" hx-boost="false">
@@ -32,8 +32,20 @@
                     </b>
                 </a>
                 <span>{% trans 'را ببیند؟' %}</span>
+                <div class="my-2 d-flex justify-content-center">
+                    <a class="btn btn-info" data-bs-toggle="collapse"
+                       href="#see-tree-request-description-{{ object.id }}" role="button"
+                       aria-expanded="false" aria-controls="see-tree-request-description-{{ object.id }}">
+                        <i class="fa fa-info-circle me-2"></i>{% trans 'نمایش توضیحات' %}
+                    </a>
+                </div>
+                <div class="collapse" id="see-tree-request-description-{{ object.id }}">
+                    <div class="card card-body">
+                        {{ object.description|default:'-' }}
+                    </div>
+                </div>
             </div>
-            {% if object.status == status_choices.AWAITING_APPROVE %}
+            {% if object.status == status_choices.AWAITING_APPROVAL %}
                 <form hx-post="{% url 'persons:see-tree-permission-request-approval' pk=object.pk %}"
                       hx-target="this" hx-swap="outerHTML"
                       novalidate>
@@ -49,11 +61,11 @@
                 </form>
             {% elif object.status == status_choices.APPROVED %}
                 <div class="text-center border border-success p-2 rounded mt-2">
-                    <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.APPROVED.label }}
+                    <i class="fa fa-check text-success me-2"></i>{{ status_choices.APPROVED.label }}
                 </div>
             {% elif object.status == status_choices.REJECTED %}
                 <div class="text-center border border-secondary p-2 rounded mt-2">
-                    <i class="fa fa-warning text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
+                    <i class="fa fa-ban text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
                 </div>
             {% endif %}
         </div>
@@ -64,5 +76,5 @@
     {% endfor %}
 </div>
 
-{% url 'users:relation-matching-request-list' as page_url %}
+{% url 'users:see-tree-permission-request-list' as page_url %}
 {% include 'components/pagination.html' %}

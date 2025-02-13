@@ -3,13 +3,16 @@
 
 
 {% block form_content %}
-    <h4>{% trans 'عدم دسترسی!' %}</h4>
-    <hr class="mt-0">
-    <p>
-        {% trans 'شما دسترسی مشاهده درخت‌خانوادگی این شخص را ندارید.' %}{% trans 'نام و نام خانوادگی شخص:' %} {{ person.full_name }}
-    </p>
-    <p>
-        {% trans 'جهت مشاهده درخت‌خانوادگی این شخص لازم است درخواست دسترسی ثبت کنید.' %}
-    </p>
+    <div class="alert alert-warning text-center">
+        <h4><i class="fa fa-warning me-2"></i>{% trans 'عدم دسترسی!' %}</h4>
+        <hr>
+        <p>
+            {% trans 'درخت‌خانوادگی شخص مورد نظر توسط کاربر دیگری ثبت شده‌است و شما دسترسی مشاهده آن را ندارید.' %}
+        </p>
+        <p>{% trans 'نام و نام خانوادگی شخص:' %} <b>"{{ person.full_name }}"</b></p>
+        <p>
+            {% trans 'جهت مشاهده درخت‌خانوادگی این شخص لازم است درخواست دسترسی ثبت کنید.' %}
+        </p>
+    </div>
     {% include 'persons/htmx/see_tree_permission_request_create_htmx.html' %}
 {% endblock %}

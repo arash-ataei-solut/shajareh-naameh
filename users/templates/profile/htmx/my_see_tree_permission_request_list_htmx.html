@@ -1,0 +1,52 @@
+{% load jformat %}
+{% load i18n %}
+
+
+{% if request.htmx %}
+    <div id="profile-nav-list" hx-swap-oob="innerHTML">
+        {% include 'profile/htmx/profile_nav_list_htmx.html' %}
+    </div>
+{% endif %}
+
+
+<h4>
+    <span>{% trans 'لیست درخواست‌های دسترسی مشاهده درخت‌خانوادگی من' %} </span>
+</h4>
+<hr class="mt-0">
+<div class="list-group" hx-boost="false">
+    {% for object in object_list %}
+        <div class="list-group-item list-group-item-action mt-2"
+             aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"></h5>
+                <small>{{ object.created_at|jformat:'%A %d %B %Y %H:%M' }}</small>
+            </div>
+            <div class="mb-2">
+                <span class="me-2">{% trans 'دسترسی مشاهده درخت‌خانوادگی' %}</span>
+                <b class="me-2">
+                    "{{ object.person.full_name }}"
+                </b>
+            </div>
+            {% if object.status == status_choices.AWAITING_APPROVAL %}
+                <div class="text-center border border-black p-2 rounded mt-2">
+                    <i class="fa fa-hourglass-half text-black me-2"></i>{{ status_choices.AWAITING_APPROVAL.label }}
+                </div>
+            {% elif object.status == status_choices.APPROVED %}
+                <div class="text-center border border-success p-2 rounded mt-2">
+                    <i class="fa fa-check text-success me-2"></i>{{ status_choices.APPROVED.label }}
+                </div>
+            {% elif object.status == status_choices.REJECTED %}
+                <div class="text-center border border-secondary p-2 rounded mt-2">
+                    <i class="fa fa-ban text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
+                </div>
+            {% endif %}
+        </div>
+    {% empty %}
+        <div class="list-group-item text-center">
+            {% trans 'درخواستی برای شما وجود ندارد.' %}
+        </div>
+    {% endfor %}
+</div>
+
+{% url 'users:my-see-tree-permission-request-list' as page_url %}
+{% include 'components/pagination.html' %}

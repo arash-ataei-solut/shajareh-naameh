@@ -18,9 +18,10 @@ class SeeTreePermissionRequest(models.Model):
         'users.ShnUser', on_delete=models.CASCADE,
         verbose_name=_('کاربر متقاضی')
     )
+    description = models.TextField(max_length=2000, verbose_name=_('توضیحات'), null=True, blank=True)
     status = models.IntegerField(
         choices=enums.SeeTreePermissionRequestStatusChoices.choices,
-        default=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE,
+        default=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL,
         verbose_name=_('وضعیت'),
     )
     created_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
@@ -28,6 +29,16 @@ class SeeTreePermissionRequest(models.Model):
     class Meta:
         verbose_name = _('درخواست دریافت دسترسی مشاهده درخت‌خانوادگی')
         verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')
+        ordering = ['-created_at']
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if self.status == enums.SeeTreePermissionRequestStatusChoices.APPROVED:
+            self.person.can_see_tree_users.add(self.applicant)
+        if self.status == enums.SeeTreePermissionRequestStatusChoices.REJECTED:
+            self.person.can_see_tree_users.remove(self.applicant)
+        return super(SeeTreePermissionRequest, self).save(force_insert, force_update, using, update_fields)
 
 
 class Person(models.Model):
@@ -186,7 +197,7 @@ class Person(models.Model):
         return SeeTreePermissionRequest.objects.filter(
             person_id=self.id,
             applicant_id=user.id,
-            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL
         )
 
 

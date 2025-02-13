@@ -15,7 +15,7 @@ from django_htmx.http import HttpResponseClientRefresh
 
 from common.mixins import HTMXViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin, \
     HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin, AtomicViewMixin, TemplatePermissionDeniedErrorHTMXViewMixin
-from persons import forms
+from persons import forms, enums
 from persons.enums import RelationMatchingRequestStatusChoices, RelationChoices
 from persons.exceptions import RelationMatchingRequestStatusPriorityError
 from persons.forms import PersonAddForm, FindMyselfForm, PersonUpdateForm, PersonAddMyselfForm
@@ -383,7 +383,7 @@ class PersonUpdateView(LoginRequiredMixin, CanUpdateThePersonMixin, OnlyHTMXMode
 
 class SeeTreePermissionRequestCreateView(LoginRequiredMixin, HTMXModelFormViewMixin, CreateView):
     template_name = 'persons/see_tree_permission_request_create.html'
-    htmx_template_name = 'persons/htmx/person_see_tree_permission_request_htmx.html'
+    htmx_template_name = 'persons/htmx/see_tree_permission_request_create_htmx.html'
     form_class = forms.SeeTreePermissionRequestCreateForm
 
     def get(self, request, *args, **kwargs):
@@ -398,7 +398,7 @@ class SeeTreePermissionRequestCreateView(LoginRequiredMixin, HTMXModelFormViewMi
         return get_object_or_404(Person, id=self.kwargs['person_pk'])
 
     def get_success_url(self):
-        url = reverse('persons:see-tree-permission-request-success')
+        url = reverse('persons:see-tree-permission-request-success', kwargs={'person_pk': self.person.pk})
         previous_person_pk = self.request.GET.get('previous_person_pk') or ''
         return f'{url}?previous_person_pk={previous_person_pk}'
 
@@ -429,10 +429,25 @@ class SeeTreePermissionRequestCreateView(LoginRequiredMixin, HTMXModelFormViewMi
 class SeeTreePermissionRequestSuccessView(TemplateView):
     template_name = 'persons/see_tree_permission_request_success.html'
 
+    def get(self, request, *args, **kwargs):
+        self.person = self.get_person()
+        return super().get(request, *args, **kwargs)
+
+    def get_person(self):
+        queryset = Person.objects.filter(
+            seetreepermissionrequest__isnull=False,
+            seetreepermissionrequest__applicant_id=self.request.user.id,
+            seetreepermissionrequest__status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL,
+        )
+        return get_object_or_404(
+            queryset, id=self.kwargs['person_pk']
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(
             {
+                'person': self.person,
                 'previous_person_pk': self.request.GET.get('previous_person_pk')
             }
         )
@@ -444,7 +459,10 @@ class SeeTreePermissionRequestApprovalView(LoginRequiredMixin, OnlyHTMXModelForm
     form_class = forms.SeeTreePermissionRequestApprovalForm
 
     def get_queryset(self):
-        return SeeTreePermissionRequest.objects.filter(person__created_by=self.request.user)
+        return SeeTreePermissionRequest.objects.filter(
+            person__created_by=self.request.user,
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL,
+        )
 
 
 class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
@@ -458,7 +476,7 @@ class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
             return response
 
         if self.object.has_awaiting_see_tree_request(request.user):
-            url = reverse('persons:see-tree-permission-request-success')
+            url = reverse('persons:see-tree-permission-request-success', kwargs={'person_pk': self.object.pk})
             previous_person_pk = self.request.GET.get('previous_person_pk') or ''
             return self.htmx_http_redirect(f'{url}?previous_person_pk={previous_person_pk}')
 

@@ -286,3 +286,17 @@ class SeeTreePermissionRequestListView(LoginRequiredMixin, HTMXViewMixin, ListVi
         context = super().get_context_data()
         context.update({'status_choices': SeeTreePermissionRequestStatusChoices})
         return context
+
+
+class MySeeTreePermissionRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
+    template_name = 'profile/my_see_tree_permission_request_list.html'
+    htmx_template_name = 'profile/htmx/my_see_tree_permission_request_list_htmx.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return SeeTreePermissionRequest.objects.filter(applicant=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context.update({'status_choices': SeeTreePermissionRequestStatusChoices})
+        return context

@@ -1,0 +1,26 @@
+{% extends 'form_base.html' %}
+{% load i18n %}
+
+
+{% block form_content %}
+    <div class="alert alert-success text-center">
+        <h4><i class="fa fa-hourglass-half me-2"></i>{% trans 'درخواست دسترسی در انتظار تایید است.' %}</h4>
+        <hr>
+        <p>
+            {% trans 'درخت‌خانوادگی شخص مورد نظر توسط کاربر دیگری ثبت شده‌است و شما دسترسی مشاهده آن را ندارید.' %}
+        </p>
+        <p>{% trans 'نام و نام خانوادگی شخص:' %} <b>"{{ person.full_name }}"</b></p>
+        <p>
+            {% trans 'درخواست دسترسی شما ثبت شده و در انتظار تایید است.' %}
+        </p>
+    </div>
+    {% if previous_person_pk %}
+        <div class="d-flex justify-content-center mt-3">
+            {% if previous_person_pk %}
+                <a class="btn btn-secondary" href="{% url 'persons:person-tree' pk=previous_person_pk %}" hx-boost="false">
+                    {% trans 'بازگشت' %}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

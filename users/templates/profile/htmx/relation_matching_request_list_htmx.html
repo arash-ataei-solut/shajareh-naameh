@@ -49,11 +49,11 @@
                 </form>
             {% elif object.status == status_choices.IS_DONE %}
                 <div class="text-center border border-success p-2 rounded mt-2">
-                    <i class="fa fa-check-circle text-success me-2"></i>{{ status_choices.IS_DONE.label }}
+                    <i class="fa fa-check text-success me-2"></i>{{ status_choices.IS_DONE.label }}
                 </div>
             {% elif object.status == status_choices.REJECTED %}
                 <div class="text-center border border-secondary p-2 rounded mt-2">
-                    <i class="fa fa-warning text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
+                    <i class="fa fa-ban text-secondary me-2"></i>{{ status_choices.REJECTED.label }}
                 </div>
             {% endif %}
         </div>

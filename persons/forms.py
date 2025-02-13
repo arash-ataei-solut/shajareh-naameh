@@ -9,6 +9,7 @@ from persons.matchmakers import RelationMatchmaker
 from persons.models import Person, RelationMatchingRequest, SeeTreePermissionRequest
 from places.forms import PlaceWidget
 from places.models import ResidencePlace
+from users.models import ShnUser
 
 
 class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
@@ -225,7 +226,7 @@ class RelationMatchingRequestConfirmationForm(forms.ModelForm):
 class SeeTreePermissionRequestCreateForm(forms.ModelForm):
     class Meta:
         model = SeeTreePermissionRequest
-        fields = ['person', 'applicant']
+        fields = ['person', 'applicant', 'description']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -234,7 +235,7 @@ class SeeTreePermissionRequestCreateForm(forms.ModelForm):
         request_exists = SeeTreePermissionRequest.objects.filter(
             person_id=person.id,
             applicant_id=applicant.id,
-            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVE
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL
         ).exists()
         if request_exists:
             raise ValidationError(
