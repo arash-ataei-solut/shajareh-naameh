@@ -3,7 +3,7 @@ import copy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
@@ -398,7 +398,7 @@ class SeeTreePermissionRequestCreateView(LoginRequiredMixin, HTMXModelFormViewMi
         return get_object_or_404(Person, id=self.kwargs['person_pk'])
 
     def get_success_url(self):
-        url = reverse('persons:see-tree-permission-request-success', kwargs={'person_pk': self.person.pk})
+        url = reverse('persons:see-tree-permission-request-create-success', kwargs={'person_pk': self.person.pk})
         previous_person_pk = self.request.GET.get('previous_person_pk') or ''
         return f'{url}?previous_person_pk={previous_person_pk}'
 
@@ -426,7 +426,7 @@ class SeeTreePermissionRequestCreateView(LoginRequiredMixin, HTMXModelFormViewMi
         return context
 
 
-class SeeTreePermissionRequestSuccessView(TemplateView):
+class SeeTreePermissionRequestCreateSuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'persons/see_tree_permission_request_success.html'
 
     def get(self, request, *args, **kwargs):
@@ -434,14 +434,17 @@ class SeeTreePermissionRequestSuccessView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def get_person(self):
-        queryset = Person.objects.filter(
-            seetreepermissionrequest__isnull=False,
-            seetreepermissionrequest__applicant_id=self.request.user.id,
-            seetreepermissionrequest__status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL,
+        person = get_object_or_404(
+            Person, id=self.kwargs['person_pk']
         )
-        return get_object_or_404(
-            queryset, id=self.kwargs['person_pk']
-        )
+        awaiting_permission_request_exists = SeeTreePermissionRequest.objects.filter(
+            person_id=person,
+            applicant_id=self.request.user.id,
+            status=enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL
+        ).exists()
+        if not awaiting_permission_request_exists:
+            raise Http404('The person han no awaiting permission request')
+        return person
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -476,7 +479,7 @@ class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
             return response
 
         if self.object.has_awaiting_see_tree_request(request.user):
-            url = reverse('persons:see-tree-permission-request-success', kwargs={'person_pk': self.object.pk})
+            url = reverse('persons:see-tree-permission-request-create-success', kwargs={'person_pk': self.object.pk})
             previous_person_pk = self.request.GET.get('previous_person_pk') or ''
             return self.htmx_http_redirect(f'{url}?previous_person_pk={previous_person_pk}')
 

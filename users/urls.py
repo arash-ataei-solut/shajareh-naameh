@@ -6,7 +6,6 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
-    path('hx/', include('users.htmx.urls')),
     path('login/', views.ShnLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', views.RegisterView.as_view(), name='register'),
@@ -64,5 +63,18 @@ urlpatterns = [
         'my-see-tree-permission-request-list/',
         views.MySeeTreePermissionRequestListView.as_view(),
         name='my-see-tree-permission-request-list'
-    )
+    ),
+
+    # Notification
+
+    path(
+        'unread-notifications-icon-htmx/',
+        views.UnreadNotificationsIconHTMXView.as_view(),
+        name='unread-notifications-icon-htmx'
+    ),
+    path(
+        'unread-notifications-htmx/',
+        views.UnreadNotificationsHTMXView.as_view(),
+        name='unread-notifications-htmx'
+    ),
 ]

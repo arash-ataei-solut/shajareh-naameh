@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
 from common.htmx.forms import PlaceholderFormMixin
+from persons.enums import GenderChoices
 from users import enums
 from users.exeptions import OTPDoesNotExist, OTPExpired, OTPIsInvalid
 from users.models import ShnUser
@@ -69,4 +70,15 @@ class ConfirmResetPasswordForm(PlaceholderFormMixin, SetPasswordForm):
         if not self.user.has_valid_otp(enums.OTPUsageChoices.RESET_PASSWORD):
             raise ValidationError(_('شماره موبایل شما تایید نشده است.'))
         return super(ConfirmResetPasswordForm, self).clean()
+
+
+class PersonListFilterForm(PlaceholderFormMixin, forms.Form):
+    first_name = forms.CharField(label=_('نام'), required=False)
+    last_name = forms.CharField(label=_('نام‌خانوادگی'), required=False)
+    gender = forms.ChoiceField(
+        label=_('جنسیت'),
+        choices=[(None, '---'), *GenderChoices.choices],
+        required=False
+    )
+    birth_year = forms.IntegerField(min_value=0, max_value=3000, label=_('سال تولد'), required=False)
 

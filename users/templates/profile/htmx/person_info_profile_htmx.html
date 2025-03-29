@@ -11,30 +11,30 @@
 <h4>{% trans 'اطلاعات شخصی' %}</h4>
 <hr class="mt-0">
 {% if person %}
-    <div class="row row-cols-xxl-4 row-cols-md-2 row-cols-1 g-2">
+    <div class="row row-cols-md-2 row-cols-1 gy-2 gx-3">
         <div class="col">
-            <span>{% trans 'نام' %}: </span>{{ person.first_name }}
+            <span class="me-1">{% trans 'نام' %}:</span>{{ person.first_name }}
         </div>
         <div class="col">
-            <span>{% trans 'نام خانوادگی' %}: </span>{{ person.last_name }}
+            <span class="me-1">{% trans 'نام خانوادگی' %}:</span>{{ person.last_name }}
         </div>
         <div class="col">
-            <span>{% trans 'جنسیت' %}: </span>{{ person.get_gender_display }}
+            <span class="me-1">{% trans 'جنسیت' %}:</span>{{ person.get_gender_display }}
         </div>
         <div class="col">
-            <span>{% trans 'سال تولد' %}: </span>{{ person.birth_year }}
+            <span class="me-1">{% trans 'سال تولد' %}:</span>{{ person.birth_year }}
         </div>
         <div class="col">
-            <span>{% trans 'تاریخ تولد' %}: </span><span dir="ltr">{{ person.birth_date|default_if_none:'-' }}</span>
+            <span class="me-1">{% trans 'تاریخ تولد' %}:</span><span dir="ltr">{{ person.birth_date|default_if_none:'-' }}</span>
         </div>
         <div class="col">
-            <span>{% trans 'محل تولد' %}: </span>{{ person.birth_place|default_if_none:'-' }}
+            <span class="me-1">{% trans 'محل تولد' %}:</span>{{ person.birth_place|default_if_none:'-' }}
         </div>
         <div class="col">
-            <span>{% trans 'سال مرگ' %}: </span>{{ person.death_year|default_if_none:'-' }}
+            <span class="me-1">{% trans 'سال مرگ' %}:</span>{{ person.death_year|default_if_none:'-' }}
         </div>
         <div class="col">
-            <span>{% trans 'تاریخ مرگ' %}: </span><span dir="ltr">{{ person.death_date|default_if_none:'-' }}</span>
+            <span class="me-1">{% trans 'تاریخ مرگ' %}:</span><span dir="ltr">{{ person.death_date|default_if_none:'-' }}</span>
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">

@@ -14,7 +14,7 @@
     </button>
     <ul class="dropdown-menu dropdown-menu-lg-start dropdown-menu-end dropdown-menu-shn overflow-auto"
         aria-labelledby="notification-dropdown"
-        hx-get="{% url 'users:users-hx:unread-notifications-htmx' %}"
+        hx-get="{% url 'users:unread-notifications-htmx' %}"
         hx-trigger="show.bs.dropdown from:#notification-dropdown"
     >
     </ul>

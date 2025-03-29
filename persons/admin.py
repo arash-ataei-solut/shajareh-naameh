@@ -10,6 +10,26 @@ class SeeTreePermissionRequestAdmin(admin.ModelAdmin):
     list_display = ['id', 'person', 'applicant', 'status']
     search_fields = ['person__first_name', 'person__last_name', 'applicant__first_name', 'applicant__last_name']
     list_filter = ['status']
+    actions = [
+        'undo_see_tree_permission',
+        'approve_see_tree_permission',
+        'reject_see_tree_permission',
+    ]
+    
+    @admin.action(permissions=['change'], description=_('لغو دسترسی مشاهده درخت‌خانوادگی'))
+    def undo_see_tree_permission(self, request, queryset):
+        for permission_request in queryset:
+            permission_request.undo_permission_request()
+    
+    @admin.action(permissions=['change'], description=_('تایید دسترسی مشاهده درخت‌خانوادگی'))
+    def approve_see_tree_permission(self, request, queryset):
+        for permission_request in queryset:
+            permission_request.approve_permission_request()
+    
+    @admin.action(permissions=['change'], description=_('رد دسترسی مشاهده درخت‌خانوادگی'))
+    def reject_see_tree_permission(self, request, queryset):
+        for permission_request in queryset:
+            permission_request.reject_permission_request()
 
 
 @admin.register(models.Person)

@@ -31,14 +31,23 @@ class SeeTreePermissionRequest(models.Model):
         verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')
         ordering = ['-created_at']
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-        if self.status == enums.SeeTreePermissionRequestStatusChoices.APPROVED:
-            self.person.can_see_tree_users.add(self.applicant)
-        if self.status == enums.SeeTreePermissionRequestStatusChoices.REJECTED:
-            self.person.can_see_tree_users.remove(self.applicant)
-        return super(SeeTreePermissionRequest, self).save(force_insert, force_update, using, update_fields)
+    @transaction.atomic
+    def approve_permission_request(self):
+        self.status = enums.SeeTreePermissionRequestStatusChoices.APPROVED
+        self.save()
+        self.person.can_see_tree_users.add(self.applicant)
+
+    @transaction.atomic
+    def reject_permission_request(self):
+        self.status = enums.SeeTreePermissionRequestStatusChoices.REJECTED
+        self.save()
+        self.person.can_see_tree_users.remove(self.applicant)
+
+    @transaction.atomic
+    def undo_permission_request(self):
+        self.status = enums.SeeTreePermissionRequestStatusChoices.AWAITING_APPROVAL
+        self.save()
+        self.person.can_see_tree_users.remove(self.applicant)
 
 
 class Person(models.Model):

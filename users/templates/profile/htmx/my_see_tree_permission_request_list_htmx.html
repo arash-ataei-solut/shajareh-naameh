@@ -23,9 +23,18 @@
             </div>
             <div class="mb-2">
                 <span class="me-2">{% trans 'دسترسی مشاهده درخت‌خانوادگی' %}</span>
-                <b class="me-2">
-                    "{{ object.person.full_name }}"
-                </b>
+                {% if object.status == status_choices.APPROVED %}
+                    <a href="{% url 'persons:person-tree' pk=object.person.pk %}" target="_blank"
+                       data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده درخت‌خانوادگی' %}">
+                        <b class="me-2">
+                            "{{ object.person.full_name }}"
+                        </b>
+                    </a>
+                {% else %}
+                    <b class="me-2">
+                        "{{ object.person.full_name }}"
+                    </b>
+                {% endif %}
             </div>
             {% if object.status == status_choices.AWAITING_APPROVAL %}
                 <div class="text-center border border-black p-2 rounded mt-2">

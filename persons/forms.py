@@ -257,10 +257,9 @@ class SeeTreePermissionRequestApprovalForm(forms.ModelForm):
     def save(self, commit=True):
         is_approved = self.cleaned_data['is_approved']
         if is_approved == 'yes':
-            self.instance.status = enums.SeeTreePermissionRequestStatusChoices.APPROVED
+            self.instance.approve_permission_request()
         else:
-            self.instance.status = enums.SeeTreePermissionRequestStatusChoices.REJECTED
-        self.instance.save()
+            self.instance.reject_permission_request()
         return self.instance
 
 

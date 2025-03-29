@@ -11,11 +11,12 @@ from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django_htmx.http import HttpResponseClientRedirect
 
-from common.mixins import HTMXViewMixin, HTMXFormViewMixin
+from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin
 from persons.enums import RelationMatchingRequestStatusChoices, SeeTreePermissionRequestStatusChoices
 from persons.models import RelationMatchingRequest, Person, SeeTreePermissionRequest
-from users import enums
+from users import enums, forms
 from users.exeptions import SendOTPError
+from users.filters import PersonListFilter
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
 from users.models import ShnUser, Notification
 
@@ -242,8 +243,24 @@ class PersonListView(LoginRequiredMixin, HTMXViewMixin, ListView):
     htmx_template_name = 'profile/htmx/person_list_htmx.html'
     paginate_by = 5
 
+    def get(self, request, *args, **kwargs):
+        self.filter = PersonListFilter(
+            request.GET,
+            Person.objects.exclude_matched_persons().filter(created_by=request.user)
+        )
+        return super(PersonListView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
-        return Person.objects.exclude_matched_persons().filter(created_by=self.request.user)
+        return self.filter.qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PersonListView, self).get_context_data(object_list=object_list, **kwargs)
+        context.update(
+            {
+                'filter_form': self.filter.form
+            }
+        )
+        return context
 
 
 class RelationMatchingRequestListView(LoginRequiredMixin, HTMXViewMixin, ListView):
@@ -300,3 +317,25 @@ class MySeeTreePermissionRequestListView(LoginRequiredMixin, HTMXViewMixin, List
         context = super().get_context_data()
         context.update({'status_choices': SeeTreePermissionRequestStatusChoices})
         return context
+
+
+# Notification
+class UnreadNotificationsIconHTMXView(LoginRequiredMixin, OnlyHTMXViewMixin, TemplateView):
+    model = Notification
+    template_name = 'registration/htmx/unread_notifications_icon_htmx.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UnreadNotificationsIconHTMXView, self).get_context_data(**kwargs)
+        context.update({'object_list_count': self.request.user.unread_notifications().count()})
+        return context
+
+
+class UnreadNotificationsHTMXView(LoginRequiredMixin, OnlyHTMXViewMixin, ListView):
+    model = Notification
+    template_name = 'registration/htmx/unread_notifications_htmx.html'
+
+    def get_queryset(self):
+        pk_list = list(self.request.user.unread_notifications().values_list('pk', flat=True))
+        queryset = Notification.objects.filter(pk__in=pk_list)
+        queryset.update(read=True)
+        return queryset
