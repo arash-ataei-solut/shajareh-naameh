@@ -73,8 +73,8 @@ class ConfirmResetPasswordForm(PlaceholderFormMixin, SetPasswordForm):
 
 
 class PersonListFilterForm(PlaceholderFormMixin, forms.Form):
-    first_name = forms.CharField(label=_('نام'), required=False)
-    last_name = forms.CharField(label=_('نام‌خانوادگی'), required=False)
+    first_name = forms.CharField(label=_('اسم'), required=False)
+    last_name = forms.CharField(label=_('فامیلی'), required=False)
     gender = forms.ChoiceField(
         label=_('جنسیت'),
         choices=[(None, '---'), *GenderChoices.choices],

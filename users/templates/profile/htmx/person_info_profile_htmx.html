@@ -13,10 +13,10 @@
 {% if person %}
     <div class="row row-cols-md-2 row-cols-1 gy-2 gx-3">
         <div class="col">
-            <span class="me-1">{% trans 'نام' %}:</span>{{ person.first_name }}
+            <span class="me-1">{% trans 'اسم' %}:</span>{{ person.first_name }}
         </div>
         <div class="col">
-            <span class="me-1">{% trans 'نام خانوادگی' %}:</span>{{ person.last_name }}
+            <span class="me-1">{% trans 'فامیلی' %}:</span>{{ person.last_name }}
         </div>
         <div class="col">
             <span class="me-1">{% trans 'جنسیت' %}:</span>{{ person.get_gender_display }}

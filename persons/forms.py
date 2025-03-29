@@ -265,7 +265,7 @@ class SeeTreePermissionRequestApprovalForm(forms.ModelForm):
 
 class FindMyselfForm(forms.Form):
     first_name = forms.CharField(label=_('نام'))
-    last_name = forms.CharField(label=_('نام خانوادگی'))
+    last_name = forms.CharField(label=_('فامیلی'))
     father_name = forms.CharField(label=_('نام پدر'))
     mother_name = forms.CharField(label=_('نام مادر'))
 

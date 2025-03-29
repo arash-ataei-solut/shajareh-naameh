@@ -228,7 +228,7 @@ class PersonDeleteAncestorView(LoginRequiredMixin, CanDeleteThePersonMixin, Only
         self.object.delete()
         messages.success(
             self.request,
-            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+            _(f'شخص مورد نظر با اسم "{full_name}" با موفقیت حذف شد.')
         )
         return super().form_valid(form)
 
@@ -267,7 +267,7 @@ class PersonDeleteDescendantView(LoginRequiredMixin, OnlyHTMXFormViewMixin, Dele
         self.object.delete()
         messages.success(
             self.request,
-            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+            _(f'شخص مورد نظر با اسم "{full_name}" با موفقیت حذف شد.')
         )
         return super().form_valid(form)
 
@@ -310,7 +310,7 @@ class PersonDeleteSpouseView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHT
         self.object.delete()
         messages.success(
             self.request,
-            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+            _(f'شخص مورد نظر با اسم "{full_name}" با موفقیت حذف شد.')
         )
         return super().form_valid(form)
 
@@ -355,7 +355,7 @@ class PersonDeleteView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHTMXForm
         self.object.delete()
         messages.success(
             self.request,
-            _(f'شخص مورد نظر با نام "{full_name}" با موفقیت حذف شد.')
+            _(f'شخص مورد نظر با اسم "{full_name}" با موفقیت حذف شد.')
         )
         return super().form_valid(form)
 
