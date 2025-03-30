@@ -9,13 +9,22 @@
 {% endif %}
 
 
-<h4>
-    <span>{% trans 'لیست اشخاص ثبت شده توسط من' %} </span>
-</h4>
+<div class="d-flex justify-content-between">
+    <div>
+        <h4>
+            {% trans 'لیست اشخاص ثبت شده توسط من' %}
+        </h4>
+    </div>
+    <div hx-boost="false">
+        <a class="btn btn-outline-primary" href="{% url 'persons:person-create' %}">
+            <i class="fa fa-plus me-2"></i>{% trans 'ثبت شخص جدید' %}
+        </a>
+    </div>
+</div>
 
-<hr class="mt-0">
+<hr>
 
-<div class="list-group" hx-boost="false">
+<div>
     <form class="{% if filter_form.errors %} was-validated{% endif %}" novalidate
           hx-get="{% url 'users:person-list' %}" hx-target="#profile-content">
         <div>
@@ -72,9 +81,11 @@
             </a>
         </div>
     </form>
+</div>
+<div class="list-group" hx-boost="false">
     <hr>
     {% for object in object_list %}
-        <div class="list-group-item list-group-item-action mt-2"
+        <div class="list-group-item mt-2"
              aria-current="true">
             <div class="row row-cols-md-2 row-cols-1 gy-2 gx-3">
                 <div class="col">
@@ -91,11 +102,11 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center mt-3">
-                <a class="btn btn-primary me-2" href="{% url 'persons:person-detail' pk=object.pk %}" hx-boost="false"
+                <a class="btn btn-outline-primary me-2" href="{% url 'persons:person-detail' pk=object.pk %}" hx-boost="false"
                    target="_blank">
                     <i class="fa-solid fa-info-circle me-2"></i>{% trans 'جرئیات و ویرایش' %}
                 </a>
-                <a class="btn btn-primary" href="{% url 'persons:person-tree' pk=object.pk %}" hx-boost="false"
+                <a class="btn btn-outline-primary" href="{% url 'persons:person-tree' pk=object.pk %}" hx-boost="false"
                    target="_blank">
                     <i class="fa-solid fa-tree me-2"></i>{% trans 'درخت‌خانوادگی' %}
                 </a>

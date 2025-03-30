@@ -5,7 +5,7 @@ from persons import views
 app_name = 'persons'
 
 urlpatterns = [
-    path('person-add/', views.PersonAddView.as_view(), name='person-add'),
+    path('person-create/', views.PersonCreateView.as_view(), name='person-create'),
     path('person-add-myself/', views.PersonAddMyselfViewMixin.as_view(), name='person-add-myself'),
 
     # Person add relatives

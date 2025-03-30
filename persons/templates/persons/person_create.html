@@ -13,9 +13,9 @@
 {% endblock %}
 
 {% block form_content %}
-    <h2 class="fw-bold mb-3">{% trans 'ثبت فرد جدید' %}</h2>
-    <p class="mb-3">{% trans 'لطفا اطلاعات شخص مورد نظر را وارد نمایید.' %}</p>
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add' %}" method="post"
+    <h4>{% trans 'ثبت فرد جدید' %}</h4>
+    <hr>
+    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-create' %}" method="post"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}

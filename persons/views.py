@@ -39,8 +39,8 @@ class PersonAddViewMixin:
         return reverse('persons:person-detail', kwargs={'pk': self.object.pk})
     
     
-class PersonAddView(AtomicViewMixin, LoginRequiredMixin, PersonAddViewMixin, CreateView):
-    template_name = 'persons/person_add.html'
+class PersonCreateView(AtomicViewMixin, LoginRequiredMixin, PersonAddViewMixin, CreateView):
+    template_name = 'persons/person_create.html'
     form_class = PersonAddForm
 
 

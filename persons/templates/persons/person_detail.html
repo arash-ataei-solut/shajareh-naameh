@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات پدر' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div id="father-info">
                             {% if object.father %}
                                 <div class="row row-cols-xl-2 row-cols-md-1 row-cols-sm-2 row-cols-1 g-2">
@@ -100,7 +100,7 @@
                 <div class="col-md-6">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات مادر' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div id="mother-info">
                             {% if object.mother %}
                                 <div class="row row-cols-xl-2 row-cols-md-1 row-cols-sm-2 row-cols-1 g-2">
@@ -166,7 +166,7 @@
                 <div class="col-12">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات شخص' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div id="personal-info">
                             <div class="row row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 g-2">
                                 <div class="col">
@@ -217,7 +217,7 @@
                 <div class="col-12">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات محل سکونت' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
                             {# TODO Handle husband #}
                             {% for place in object.residenceplace_set.all %}
@@ -270,7 +270,7 @@
                 <div class="col-12">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات همسر' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
                             {# TODO Handle husband #}
                             {% for spouse in object.spouses.all.exclude_matched_persons %}
@@ -348,7 +348,7 @@
                 <div class="col-12">
                     <div class="py-5 px-3 px-sm-5 shadow bg-light-blur rounded">
                         <h4>{% trans 'اطلاعات فرزندها' %}</h4>
-                        <hr class="mt-0">
+                        <hr>
                         <div class="row row-cols-lg-2 row-cols-1 g-2">
                             {% for child in object.father_children.all.exclude_matched_persons %}
                                 <div class="col">
