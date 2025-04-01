@@ -468,6 +468,15 @@ class SeeTreePermissionRequestApprovalView(LoginRequiredMixin, OnlyHTMXModelForm
         )
 
 
+class MyPersonTreeView(LoginRequiredMixin, View):
+    def get(self, request):
+        if hasattr(request.user, 'person'):
+            redirect_url = reverse('persons:person-tree', kwargs={'pk': request.user.person.pk})
+        else:
+            redirect_url = reverse('users:personal-info-profile')
+        return HttpResponseRedirect(redirect_url)
+
+
 class PersonTreeView(LoginRequiredMixin, HTMXViewMixin, DetailView):
     template_name = 'persons/person_tree.html'
     htmx_template_name = 'persons/htmx/person_tree_htmx.html'

@@ -121,6 +121,7 @@ urlpatterns = [
     ),
 
     # Tree
+    path('my-person-tree/', views.MyPersonTreeView.as_view(), name='my-person-tree'),
     path('person-tree/<int:pk>/', views.PersonTreeView.as_view(), name='person-tree'),
     path(
         'person-actions-in-tree/<int:pk>/',

@@ -42,45 +42,45 @@
                     <li class="nav-item">
                         <a class="nav-link border-end" aria-current="page"
                            href="{% if request.path != '/' %}/{% endif %}#hero">
-                            <i class="fa-solid fa-house"></i> <span>{% trans 'خانه' %}</span>
+                            <i class="fa-solid fa-house me-2"></i>{% trans 'خانه' %}
                         </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle border-end" href="#" id="services-dropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-compass"></i> <span>{% trans 'خدمات' %}</span>
+                            <i class="fa-solid fa-compass me-2"></i>{% trans 'خدمات' %}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="services-dropdown">
                             <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fa-solid fa-tree"></i> <span>{% trans "درخت‌خانوادگی" %}</span>
+                                <a class="dropdown-item" href="{% url 'persons:my-person-tree' %}">
+                                    <i class="fa-solid fa-tree me-2"></i>{% trans "درخت‌خانوادگی" %}
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fa-solid fa-list"></i> <span>{% trans 'لیست اشخاص' %}</span>
+                                <a class="dropdown-item" href="{% url 'users:person-list' %}">
+                                    <i class="fa-solid fa-list me-2"></i>{% trans 'لیست اشخاص' %}
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'persons:person-create' %}">
-                                    <i class="fa-solid fa-user-plus"></i> <span>{% trans 'ایجاد درخت‌خانوادگی جدید' %}</span>
+                                    <i class="fa-solid fa-user-plus me-2"></i>{% trans 'ایجاد درخت‌خانوادگی جدید' %}
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#facts">
-                            <i class="fa-solid fa-chart-line"></i> <span>{% trans 'آمار سایت' %}</span>
+                            <i class="fa-solid fa-chart-line me-2"></i>{% trans 'آمار سایت' %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link border-end" href="{% if request.path != '/' %}/{% endif %}#about">
-                            <i class="fa-solid fa-circle-info"></i> <span>{% trans 'درباره ما' %}</span>
+                            <i class="fa-solid fa-circle-info me-2"></i>{% trans 'درباره ما' %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% if request.path != '/' %}/{% endif %}#contact">
-                            <i class="fa-solid fa-envelope"></i> <span>{% trans 'تماس با ما' %}</span>
+                            <i class="fa-solid fa-envelope me-2"></i>{% trans 'تماس با ما' %}
                         </a>
                     </li>
                 </ul>
@@ -88,25 +88,24 @@
                     <div class="dropdown">
                         <button class="btn btn-outline-warning dropdown-toggle" id="profile-dropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-user"></i> <span>{{ request.user.mobile }}</span>
+                            <i class="fa-solid fa-user me-2"></i>{{ request.user.mobile }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profile-dropdown">
                             <li class="dropdown-item">
                                 <a href="{% url 'users:personal-info-profile' %}">
-                                    <i class="fa-solid fa-address-card"></i> <span>{% trans 'پروفایل' %}</span>
+                                    <i class="fa-solid fa-address-card me-2"></i>{% trans 'پروفایل' %}
                                 </a>
                             </li>
                             {% if request.user.is_staff %}
                                 <li class="dropdown-item">
                                     <a href="{% url 'admin:index' %}">
-                                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                                        <span>{% trans 'پنل مدیریت' %}</span>
+                                        <i class="fa-solid fa-screwdriver-wrench me-2"></i>{% trans 'پنل مدیریت' %}
                                     </a>
                                 </li>
                             {% endif %}
                             <li class="dropdown-item">
                                 <a href="{% url 'users:logout' %}">
-                                    <i class="fa-solid fa-right-from-bracket"></i> <span>{% trans 'خروج' %}</span>
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>{% trans 'خروج' %}
                                 </a>
                             </li>
                         </ul>
@@ -114,7 +113,7 @@
                 {% else %}
                     <a class="btn btn-outline-warning" href="{% url 'users:login' %}" hx-boost="true"
                        hx-target="#login-modal-body" data-bs-toggle="modal" data-bs-target="#login-modal">
-                        <i class="fa-solid fa-right-to-bracket me-2"></i><span>{% trans 'ورود/ثبت‌نام' %}</span>
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>{% trans 'ورود/ثبت‌نام' %}
                     </a>
                 {% endif %}
             </div>
