@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block form_content %}
-    <h4>{% trans 'ثبت فرد جدید' %}</h4>
+    <h4>{% trans 'ثبت شخص جدید' %}</h4>
     <hr>
     <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-create' %}" method="post"
           novalidate>
@@ -66,7 +66,7 @@
 
         <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-primary" type="submit">
-                {% trans 'ذخیره' %}
+                <i class="fa fa-floppy-disk me-2"></i>{% trans 'ذخیره' %}
             </button>
         </div>
     </form>

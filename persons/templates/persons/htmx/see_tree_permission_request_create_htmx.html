@@ -21,7 +21,7 @@
         </div>
         <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-primary me-3" type="submit">
-                {% trans 'ثبت درخواست دسترسی' %}
+                <i class="fa fa-floppy-disk me-2"></i>{% trans 'ثبت درخواست دسترسی' %}
             </button>
             {% if previous_person_pk %}
                 <a class="btn btn-secondary" href="{% url 'persons:person-tree' pk=previous_person_pk %}" hx-boost="false">

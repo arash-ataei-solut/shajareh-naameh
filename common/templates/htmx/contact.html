@@ -29,7 +29,9 @@
             <div class=" invalid-feedback d-block">{{ error }}</div>
         {% endfor %}
     </div>
-    <div class="text-center">
-        <button class="btn btn-primary mt-4" type="submit">{% trans 'ارسال' %}</button>
+    <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-paper-plane me-2"></i>{% trans 'ارسال' %}
+        </button>
     </div>
 </form>

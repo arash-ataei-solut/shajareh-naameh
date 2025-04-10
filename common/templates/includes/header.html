@@ -92,26 +92,26 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profile-dropdown">
                             <li class="dropdown-item">
-                                <a href="{% url 'users:personal-info-profile' %}">
+                                <a class="d-block" href="{% url 'users:personal-info-profile' %}">
                                     <i class="fa-solid fa-address-card me-2"></i>{% trans 'پروفایل' %}
                                 </a>
                             </li>
                             {% if request.user.is_staff %}
                                 <li class="dropdown-item">
-                                    <a href="{% url 'admin:index' %}">
+                                    <a class="d-block" href="{% url 'admin:index' %}">
                                         <i class="fa-solid fa-screwdriver-wrench me-2"></i>{% trans 'پنل مدیریت' %}
                                     </a>
                                 </li>
                             {% endif %}
                             <li class="dropdown-item">
-                                <a href="{% url 'users:logout' %}">
+                                <a class="d-block" href="{% url 'users:logout' %}">
                                     <i class="fa-solid fa-right-from-bracket me-2"></i>{% trans 'خروج' %}
                                 </a>
                             </li>
                         </ul>
                     </div>
                 {% else %}
-                    <a class="btn btn-outline-warning" href="{% url 'users:login' %}" hx-boost="true"
+                    <a class="btn btn-outline-warning d-block" href="{% url 'users:login' %}" hx-boost="true"
                        hx-target="#login-modal-body" data-bs-toggle="modal" data-bs-target="#login-modal">
                         <i class="fa-solid fa-right-to-bracket me-2"></i>{% trans 'ورود/ثبت‌نام' %}
                     </a>

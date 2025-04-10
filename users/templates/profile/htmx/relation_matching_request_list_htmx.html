@@ -40,10 +40,10 @@
                     {% csrf_token %}
                     <div class="d-flex justify-content-center mt-3">
                         <button class="btn btn-success me-2" type="submit" name="is_confirmed" value="yes">
-                            {% trans 'بله' %}
+                            <i class="fa fa-check me-2"></i>{% trans 'بله' %}
                         </button>
                         <button class="btn btn-secondary" type="submit" name="is_confirmed" value="no">
-                            {% trans 'خیر' %}
+                            <i class="fa fa-close me-2"></i>{% trans 'خیر' %}
                         </button>
                     </div>
                 </form>

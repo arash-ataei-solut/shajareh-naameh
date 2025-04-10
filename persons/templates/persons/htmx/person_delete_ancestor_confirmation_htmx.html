@@ -11,10 +11,10 @@
             {% csrf_token %}
             <div class="d-flex justify-content-center">
                 <button class="btn btn-danger me-2" type="submit">
-                    {% trans 'بله' %}
+                    <i class="fa fa-check me-2"></i>{% trans 'بله' %}
                 </button>
                 <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
-                    {% trans 'خیر' %}
+                    <i class="fa fa-close me-2"></i>{% trans 'خیر' %}
                 </button>
             </div>
         </form>

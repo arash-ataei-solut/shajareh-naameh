@@ -37,18 +37,18 @@
         <div class="row row-cols-md-2 row-cols-1 g-3">
             <div class="col">
                 <div class="form-floating">
-                    {{ filter_form.first_name__icontains|add_class:'form-control' }}
-                    <label for="{{ filter_form.first_name__icontains.id_for_label }}">{{ filter_form.first_name__icontains.label }}</label>
-                    {% for error in filter_form.first_name__icontains.errors %}
+                    {{ filter_form.first_name|add_class:'form-control' }}
+                    <label for="{{ filter_form.first_name.id_for_label }}">{{ filter_form.first_name.label }}</label>
+                    {% for error in filter_form.first_name.errors %}
                         <div class=" invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
             </div>
             <div class="col">
                 <div class="form-floating">
-                    {{ filter_form.last_name__icontains|add_class:'form-control' }}
-                    <label for="{{ filter_form.last_name__icontains.id_for_label }}">{{ filter_form.last_name__icontains.label }}</label>
-                    {% for error in filter_form.last_name__icontains.errors %}
+                    {{ filter_form.last_name|add_class:'form-control' }}
+                    <label for="{{ filter_form.last_name.id_for_label }}">{{ filter_form.last_name.label }}</label>
+                    {% for error in filter_form.last_name.errors %}
                         <div class=" invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
@@ -67,6 +67,24 @@
                     {{ filter_form.birth_year|add_class:'form-control' }}
                     <label for="{{ filter_form.birth_year.id_for_label }}">{{ filter_form.birth_year.label }}</label>
                     {% for error in filter_form.birth_year.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ filter_form.father_first_name|add_class:'form-control' }}
+                    <label for="{{ filter_form.father_first_name.id_for_label }}">{{ filter_form.father_first_name.label }}</label>
+                    {% for error in filter_form.father_first_name.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    {{ filter_form.mother_first_name|add_class:'form-control' }}
+                    <label for="{{ filter_form.mother_first_name.id_for_label }}">{{ filter_form.mother_first_name.label }}</label>
+                    {% for error in filter_form.mother_first_name.errors %}
                         <div class=" invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                 </div>
