@@ -1,21 +1,101 @@
-version: '3.1'
+version: '3.8'
+
+name: shajarehnaameh
 
 volumes:
   postgres_data:
+    name: shn_postgres_data
+  redis_data:
+    name: shn_redis_data
 
 networks:
-  SHN_NETWORK:
+  shn_network:
+    name: shn_network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
 
 services:
   db:
     image: postgres:14-alpine
+    container_name: shn_db
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - ./deploy/docker/db/:/docker-entrypoint-initdb.d/initdb.sql
+      - ./deploy/docker/db/:/docker-entrypoint-initdb.d/
     env_file:
       - .env
     networks:
-      - SHN_NETWORK
+      - shn_network
     ports:
       - "5442:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  redis:
+    image: redis:7-alpine
+    container_name: shn_redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - shn_network
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shn_web
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/venv
+      - /app/__pycache__
+      - /app/*.pyc
+    env_file:
+      - .env
+    networks:
+      - shn_network
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
