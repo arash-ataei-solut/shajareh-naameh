@@ -1,16 +1,11 @@
-version: '3.8'
-
-name: shajarehnaameh
+version: '3.3'
 
 volumes:
   postgres_data:
-    name: shn_postgres_data
   redis_data:
-    name: shn_redis_data
 
 networks:
   shn_network:
-    name: shn_network
     driver: bridge
     ipam:
       driver: default
@@ -22,6 +17,9 @@ services:
     image: postgres:14-alpine
     container_name: shn_db
     restart: unless-stopped
+    dns:
+      - 185.51.200.2
+      - 178.22.122.100
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - ./deploy/docker/db/:/docker-entrypoint-initdb.d/
@@ -30,13 +28,12 @@ services:
     networks:
       - shn_network
     ports:
-      - "5442:5432"
+      - "5432:5442"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
     deploy:
       resources:
         limits:
@@ -48,6 +45,9 @@ services:
     image: redis:7-alpine
     container_name: shn_redis
     restart: unless-stopped
+    dns:
+      - 185.51.200.2
+      - 178.22.122.100
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
     volumes:
       - redis_data:/data
@@ -60,7 +60,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 10s
     deploy:
       resources:
         limits:
@@ -74,8 +73,11 @@ services:
       dockerfile: Dockerfile
     container_name: shn_web
     restart: unless-stopped
+    dns:
+      - 185.51.200.2
+      - 178.22.122.100
     volumes:
-      - .:/app
+      - ./src:/app
       - /app/venv
       - /app/__pycache__
       - /app/*.pyc
@@ -86,12 +88,11 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - db
+      - redis
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "sleep 10 &&
+             python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     deploy:
       resources:
