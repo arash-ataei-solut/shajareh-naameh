@@ -17,9 +17,6 @@ services:
     image: postgres:14-alpine
     container_name: shn_db
     restart: unless-stopped
-    dns:
-      - 185.51.200.2
-      - 178.22.122.100
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - ./deploy/docker/db/:/docker-entrypoint-initdb.d/
@@ -45,16 +42,11 @@ services:
     image: redis:7-alpine
     container_name: shn_redis
     restart: unless-stopped
-    dns:
-      - 185.51.200.2
-      - 178.22.122.100
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
     volumes:
       - redis_data:/data
     networks:
       - shn_network
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -67,36 +59,62 @@ services:
         reservations:
           memory: 128M
 
-  web:
+  django_wsgi:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: shn_web
+    container_name: django_wsgi
     restart: unless-stopped
-    dns:
-      - 185.51.200.2
-      - 178.22.122.100
-    volumes:
-      - ./src:/app
-      - /app/venv
-      - /app/__pycache__
-      - /app/*.pyc
     env_file:
       - .env
     networks:
       - shn_network
-    ports:
-      - "8000:8000"
     depends_on:
       - db
       - redis
-    command: >
-      sh -c "sleep 10 &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+    command: gunicorn -b 0.0.0.0 -p 8000 shajarehnaameh.wsgi:application
     deploy:
       resources:
         limits:
           memory: 512M
         reservations:
           memory: 256M
+    ports:
+      - "8080:8000"
+
+  django_asgi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_asgi
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - shn_network
+    depends_on:
+      - db
+      - redis
+    command: daphne -b 0.0.0.0 -p 8000 shajarehnaameh.asgi:application
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    ports:
+      - "8000:8000"
+
+  nginx:
+    container_name: shn_nginx
+    image: nginx:1.27.5-alpine-slim
+    depends_on:
+      - django_asgi
+      - django_wsgi
+    volumes:
+      - ./deploy/docker/nginx:/etc/nginx/conf.d
+      - .src/static:/static
+    networks:
+      - shn_network
+    ports:
+      - "9000:80"
