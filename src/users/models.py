@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from django.conf import settings
@@ -12,6 +13,9 @@ from . import enums
 from .exeptions import SendOTPError, OTPDoesNotExist, OTPExpired, OTPIsInvalid
 from .managers import AuthOTPManager, ShnUserManager
 from .validators import MobileNumberValidator
+
+
+logger = logging.getLogger(__name__)
 
 
 class ShnUser(AbstractBaseUser, PermissionsMixin):
@@ -128,7 +132,7 @@ class AuthOTP(models.Model):
         return timezone.now() > expiration_time
 
     def send_by_sms(self):
-        print(self.code)
+        logger.info(self.code)
 
 
 class Notification(models.Model):

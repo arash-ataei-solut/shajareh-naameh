@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 volumes:
   postgres_data:
@@ -21,7 +21,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
       - ./deploy/docker/db/:/docker-entrypoint-initdb.d/
     env_file:
-      - .env
+      - ./src/.env
     networks:
       - shn_network
     ports:
@@ -59,37 +59,14 @@ services:
         reservations:
           memory: 128M
 
-  django_wsgi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: django_wsgi
-    restart: unless-stopped
-    env_file:
-      - .env
-    networks:
-      - shn_network
-    depends_on:
-      - db
-      - redis
-    command: gunicorn -b 0.0.0.0 -p 8000 shajarehnaameh.wsgi:application
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
-    ports:
-      - "8080:8000"
-
   django_asgi:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: django_asgi
+    container_name: shn_django_asgi
     restart: unless-stopped
     env_file:
-      - .env
+      - ./src/.env
     networks:
       - shn_network
     depends_on:
@@ -102,19 +79,17 @@ services:
           memory: 512M
         reservations:
           memory: 256M
-    ports:
-      - "8000:8000"
 
   nginx:
     container_name: shn_nginx
     image: nginx:1.27.5-alpine-slim
     depends_on:
       - django_asgi
-      - django_wsgi
     volumes:
       - ./deploy/docker/nginx:/etc/nginx/conf.d
-      - .src/static:/static
+      - ./src/static:/static
+      - ./src/media:/media
     networks:
       - shn_network
     ports:
-      - "9000:80"
+      - "8000:80"
