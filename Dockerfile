@@ -16,10 +16,10 @@ RUN --mount=type=cache,target=/root/.cache pip install -r requirements.txt
 
 # Copy project files
 COPY src /app/
-COPY deploy/docker/app/entrypoint.sh /app/
+COPY deploy/docker/app/ /app/
 
 # Create a non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "entrypoint.sh"]
