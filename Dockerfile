@@ -15,8 +15,8 @@ COPY requirements.txt /app/
 RUN --mount=type=cache,target=/root/.cache pip install -r requirements.txt
 
 # Copy project files
-COPY src /app/
-COPY deploy/docker/app/ /app/
+VOLUME src /app/
+VOLUME deploy/docker/app/ /app/
 
 # Create a non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
