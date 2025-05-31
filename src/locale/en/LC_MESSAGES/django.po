@@ -81,7 +81,7 @@ msgstr ""
 
 #: common/templates/includes/header.html:23 common/templates/index.html:13
 #: templates/base.html:19 users/templates/login.html:8
-msgid "درخت‌خانوادگی"
+msgid "ترینامه"
 msgstr ""
 
 #: common/templates/includes/header.html:42
@@ -93,7 +93,7 @@ msgid "خدمات"
 msgstr ""
 
 #: common/templates/includes/header.html:53 common/templates/index.html:44
-msgid "درخت‌خانوادگی"
+msgid "ترینامه"
 msgstr ""
 
 #: common/templates/includes/header.html:58 common/templates/index.html:59
@@ -101,7 +101,7 @@ msgid "لیست اشخاص"
 msgstr ""
 
 #: common/templates/includes/header.html:63 common/templates/index.html:75
-msgid "ایجاد درخت‌خانوادگی جدید"
+msgid "ایجاد شجره‌نامه جدید"
 msgstr ""
 
 #: common/templates/includes/header.html:70 common/templates/index.html:91
@@ -146,7 +146,7 @@ msgid "ثبت یک شخص جدید و اضافه کردن ریشه‌ها و ش�
 msgstr ""
 
 #: common/templates/index.html:92
-msgid "آمار اطلاعات ذخیره شده در سایت درخت‌خانوادگی"
+msgid "آمار اطلاعات ذخیره شده در سایت ترینامه"
 msgstr ""
 
 #: persons/enums.py:6
@@ -338,21 +338,21 @@ msgid "عکس پروفایل"
 msgstr ""
 
 #: users/models.py:32
-msgid "کاربر ثبت کننده درخت‌خانوادگی"
+msgid "کاربر ثبت کننده شجره‌نامه"
 msgstr ""
 
 #: users/models.py:33
-msgid "مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به درخت‌خانوادگی اضافه کند یا خیر."
+msgid "مشخص می‌کند که آیا کاربر می‌تواند شخص جدید به شجره‌نامه اضافه کند یا خیر."
 msgstr ""
 
 #: users/models.py:36
-msgid "کاربر تایید کننده درخت‌خانوادگی"
+msgid "کاربر تایید کننده شجره‌نامه"
 msgstr ""
 
 #: users/models.py:38
 msgid ""
-"مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به درخت‌خانوادگی اضافه کند و یا "
-"اشخاص اضافه شده به درخت‌خانوادگی توسط کاربران ثبت‌کننده را تایید کند یا خیر."
+"مشخص می‌کند که کاربر می‌تواند شخص جدید و تایید شده به شجره‌نامه اضافه کند و یا "
+"اشخاص اضافه شده به شجره‌نامه توسط کاربران ثبت‌کننده را تایید کند یا خیر."
 msgstr ""
 
 #: users/models.py:44
@@ -526,7 +526,7 @@ msgid "کدملی"
 msgstr ""
 
 #: users/templates/profile/personal_info_profile.html:48
-msgid "اطلاعات شخصی در درخت‌خانوادگی"
+msgid "اطلاعات شخصی در شجره‌نامه"
 msgstr ""
 
 #: users/templates/profile/user_profile_base.html:29
@@ -534,7 +534,7 @@ msgid "اطلاعات شخصی"
 msgstr ""
 
 #: users/templates/profile/user_profile_base.html:32
-msgid "دسترسی ثبت/تایید درخت‌خانوادگی"
+msgid "دسترسی ثبت/تایید شجره‌نامه"
 msgstr ""
 
 #: users/templates/profile/user_profile_base.html:40

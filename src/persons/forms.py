@@ -239,7 +239,7 @@ class SeeTreePermissionRequestCreateForm(forms.ModelForm):
         ).exists()
         if request_exists:
             raise ValidationError(
-                'شما یک درخواست برای دریافت دسترسی مشاهده درخت‌خانوادگی این شخص ثبت کرده‌اید. '
+                'شما یک درخواست برای دریافت دسترسی مشاهده شجره‌نامه این شخص ثبت کرده‌اید. '
                 'لطغا منتظر تایید آن بمانید.'
             )
         return cleaned_data

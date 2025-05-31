@@ -10,7 +10,7 @@
 
 
 <h4>
-    <span>{% trans 'لیست درخواست‌های دسترسی مشاهده درخت‌خانوادگی' %} </span>
+    <span>{% trans 'لیست درخواست‌های دسترسی مشاهده شجره‌نامه' %} </span>
 </h4>
 <hr>
 <div class="list-group" hx-boost="false">
@@ -24,9 +24,9 @@
             <div class="mb-2">
                 <span class="me-2">{% trans 'آیا به' %}</span>
                 <b class="me-2">"{{ object.applicant.person.full_name }}"</b>
-                <span class="me-2">{% trans 'اجازه می‌دهید درخت‌خانوادگی' %}</span>
+                <span class="me-2">{% trans 'اجازه می‌دهید شجره‌نامه' %}</span>
                 <a href="{% url 'persons:person-tree' pk=object.person.pk %}" target="_blank"
-                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده درخت‌خانوادگی' %}">
+                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده شجره‌نامه' %}">
                     <b class="me-2">
                         "{{ object.person.full_name }}"
                     </b>

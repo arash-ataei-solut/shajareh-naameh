@@ -12,7 +12,7 @@ class SeeTreePermissionRequest(models.Model):
     person = models.ForeignKey(
         'persons.Person', on_delete=models.CASCADE,
         verbose_name=_('شخص'),
-        help_text=_('شخصی که کاربر میخواهد دسترسی مشاهده درخت‌خانوادگی او را داشته باشد.')
+        help_text=_('شخصی که کاربر میخواهد دسترسی مشاهده شجره‌نامه او را داشته باشد.')
     )
     applicant = models.ForeignKey(
         'users.ShnUser', on_delete=models.CASCADE,
@@ -27,8 +27,8 @@ class SeeTreePermissionRequest(models.Model):
     created_at = j_models.jDateTimeField(auto_now=True, verbose_name=_('زمان ایجاد'))
 
     class Meta:
-        verbose_name = _('درخواست دریافت دسترسی مشاهده درخت‌خانوادگی')
-        verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده درخت‌خانوادگی')
+        verbose_name = _('درخواست دریافت دسترسی مشاهده شجره‌نامه')
+        verbose_name_plural = _('درخواست‌های دریافت دسترسی مشاهده شجره‌نامه')
         ordering = ['-created_at']
 
     @transaction.atomic
@@ -100,7 +100,7 @@ class Person(models.Model):
     can_see_tree_users = models.ManyToManyField(
         'users.ShnUser',
         related_name='can_see_persons_tree',
-        verbose_name=_('کاربرانی که می‌توانند درخت‌خانوادگی این شخص را ببینند.')
+        verbose_name=_('کاربرانی که می‌توانند شجره‌نامه این شخص را ببینند.')
     )
 
     objects = managers.PersonManager()

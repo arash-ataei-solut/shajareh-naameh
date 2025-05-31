@@ -42,7 +42,7 @@
             <i class="fa-solid fa-info-circle me-2"></i>{% trans 'جرئیات و ویرایش' %}
         </a>
         <a class="btn btn-outline-primary" href="{% url 'persons:person-tree' pk=person.pk %}" hx-boost="false">
-            <i class="fa-solid fa-tree me-2"></i>{% trans 'درخت‌خانوادگی' %}
+            <i class="fa-solid fa-tree me-2"></i>{% trans 'شجره‌نامه' %}
         </a>
     </div>
 {% else %}
@@ -50,10 +50,10 @@
         <h1>
             <i class="fa-solid fa-triangle-exclamation"></i>
         </h1>
-        <p>{% trans 'اطلاعات شما در درخت‌خانوادگی یافت نشد.' %}</p>
-        <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در درخت‌خانوادگی پیدا کنید.' %}</p>
+        <p>{% trans 'اطلاعات شما در ترینامه یافت نشد.' %}</p>
+        <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در ترینامه پیدا کنید.' %}</p>
         <a class="btn btn-primary" href="{% url 'persons:find-myself' %}" hx-boost="false">
-            <i class="fa-solid fa-magnifying-glass me-2"></i>{% trans 'جستجو در درخت‌خانوادگی' %}
+            <i class="fa-solid fa-magnifying-glass me-2"></i>{% trans 'جستجو در شجره‌نامه' %}
         </a>
     </div>
 {% endif %}

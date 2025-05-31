@@ -16,17 +16,17 @@ class SeeTreePermissionRequestAdmin(admin.ModelAdmin):
         'reject_see_tree_permission',
     ]
     
-    @admin.action(permissions=['change'], description=_('لغو دسترسی مشاهده درخت‌خانوادگی'))
+    @admin.action(permissions=['change'], description=_('لغو دسترسی مشاهده شجره‌نامه'))
     def undo_see_tree_permission(self, request, queryset):
         for permission_request in queryset:
             permission_request.undo_permission_request()
     
-    @admin.action(permissions=['change'], description=_('تایید دسترسی مشاهده درخت‌خانوادگی'))
+    @admin.action(permissions=['change'], description=_('تایید دسترسی مشاهده شجره‌نامه'))
     def approve_see_tree_permission(self, request, queryset):
         for permission_request in queryset:
             permission_request.approve_permission_request()
     
-    @admin.action(permissions=['change'], description=_('رد دسترسی مشاهده درخت‌خانوادگی'))
+    @admin.action(permissions=['change'], description=_('رد دسترسی مشاهده شجره‌نامه'))
     def reject_see_tree_permission(self, request, queryset):
         for permission_request in queryset:
             permission_request.reject_permission_request()

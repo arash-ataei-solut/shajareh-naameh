@@ -24,7 +24,7 @@
             <div class="mb-2">
                 <span class="me-2">{% trans 'آیا' %}</span>
                 <a href="{% url 'persons:person-tree' pk=object.similar_related_person.pk %}" target="_blank"
-                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده درخت‌خانوادگی' %}">
+                   data-bs-toggle="tooltip" data-bs-title="{% trans 'مشاهده شجره‌نامه' %}">
                     <b class="me-2">
                         "{{ object.similar_related_person.full_name }} {% trans 'متولد سال' %} {{ object.similar_related_person.birth_year }}"
                     </b>
