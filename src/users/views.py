@@ -9,18 +9,16 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import CreateView, FormView, ListView, TemplateView
-from django_htmx.http import HttpResponseClientRedirect
 
 from common.mixins import HTMXViewMixin, HTMXFormViewMixin, OnlyHTMXViewMixin
 from persons.enums import RelationMatchingRequestStatusChoices, SeeTreePermissionRequestStatusChoices
 from persons.models import RelationMatchingRequest, Person, SeeTreePermissionRequest
-from users import enums, forms
+from users import enums
+from users.exeptions import SendOTPBySMSError
 from users.exeptions import SendOTPError
 from users.filters import PersonListFilter
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
 from users.models import ShnUser, Notification
-
-from src.users.exeptions import SendOTPBySMSError
 
 OTP_USER_SESSION = 'registered_user_id'
 RESET_PASSWORD_USER_SESSION = 'reset_password_user_id'
