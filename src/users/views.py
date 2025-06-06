@@ -41,7 +41,7 @@ class ShnLoginView(HTMXFormViewMixin, LoginView):
         return super().form_valid(form)
 
 
-class RegisterView(HTMXViewMixin, CreateView):
+class RegisterView(HTMXFormViewMixin, CreateView):
     model = ShnUser
     form_class = RegisterForm
     template_name = 'registration/register.html'
@@ -157,7 +157,7 @@ class ConfirmLoginOTPView(ConfirmOTOViewMixin, HTMXFormViewMixin, FormView):
         return response
 
 
-class ResetPasswordView(HTMXViewMixin, FormView):
+class ResetPasswordView(HTMXFormViewMixin, FormView):
     form_class = ResetPasswordForm
     template_name = 'registration/reset_password.html'
     htmx_template_name = 'registration/htmx/reset_password_htmx.html'
@@ -187,7 +187,7 @@ class ConfirmResetPasswordOTPView(ConfirmOTOViewMixin, HTMXFormViewMixin, FormVi
         return super(ConfirmResetPasswordOTPView, self).form_valid(form)
 
 
-class ConfirmResetPasswordView(HTMXViewMixin, FormView):
+class ConfirmResetPasswordView(HTMXFormViewMixin, FormView):
     form_class = ConfirmResetPasswordForm
     template_name = 'registration/confirm_reset_password.html'
     htmx_template_name = 'registration/htmx/confirm_reset_password_htmx.html'
@@ -233,7 +233,7 @@ class NotificationsListProfileView(LoginRequiredMixin, HTMXViewMixin, ListView):
         return self.request.user.notification_set.all()
 
 
-class ChangePasswordView(HTMXViewMixin, PasswordChangeView):
+class ChangePasswordView(HTMXFormViewMixin, PasswordChangeView):
     template_name = 'profile/change_password_profile.html'
     success_url = reverse_lazy('users:change-password-done-profile')
     htmx_template_name = 'profile/htmx/change_password_profile_htmx.html'
