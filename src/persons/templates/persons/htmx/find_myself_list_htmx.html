@@ -2,6 +2,7 @@
 <div>
     {% if myself_person_exists %}
         <h2>{% trans 'لیست اشخاص با اطلاعات شما' %}</h2>
+    <hr>
         <p>{% trans 'لطفا از لیست اشخاص پیدا شده با اطلاعات شما، خودتان را انتخاب نمایید.' %}</p>
         <ul class="list-group">
             {% for myself_person in myself_person_list %}

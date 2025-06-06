@@ -14,6 +14,7 @@
 
 {% block form_content %}
     <h2 class="fw-bold mb-3">{% trans 'ثبت فرد جدید' %}</h2>
+    <hr>
     <p class="mb-3">{% trans 'لطفا اطلاعات شخص مورد نظر را وارد نمایید.' %}</p>
     <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-add-myself' %}" method="post"
           novalidate>
