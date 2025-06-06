@@ -12,3 +12,7 @@ class OTPExpired(Exception):
 
 class OTPIsInvalid(Exception):
     pass
+
+
+class SendOTPBySMSError(Exception):
+    pass

@@ -20,6 +20,8 @@ from users.filters import PersonListFilter
 from users.forms import LoginForm, RegisterForm, ConfirmOTPForm, ResetPasswordForm, ConfirmResetPasswordForm
 from users.models import ShnUser, Notification
 
+from src.users.exeptions import SendOTPBySMSError
+
 OTP_USER_SESSION = 'registered_user_id'
 RESET_PASSWORD_USER_SESSION = 'reset_password_user_id'
 
@@ -86,6 +88,12 @@ class SendOTPView(View):
             messages.error(
                 request,
                 _('ارسال رمز یک‌بارمصرف با خطا روبرو شد. لطفا لحظاتی بعد دوباره تلاش کنید.'),
+                extra_tags='danger'
+            )
+        except SendOTPBySMSError:
+            messages.error(
+                request,
+                _('ارسال رمز یک‌بارمصرف امکان‌پذیر نیست. لطفا لحظاتی بعد دوباره تلاش کنید.'),
                 extra_tags='danger'
             )
         return HttpResponseRedirect(self.get_confirm_otp_url())

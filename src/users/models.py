@@ -1,6 +1,7 @@
 import logging
 import uuid
 
+import requests
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -10,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as j_models
 
 from . import enums
-from .exeptions import SendOTPError, OTPDoesNotExist, OTPExpired, OTPIsInvalid
+from .exeptions import SendOTPError, OTPDoesNotExist, OTPExpired, OTPIsInvalid, SendOTPBySMSError
 from .managers import AuthOTPManager, ShnUserManager
 from .validators import MobileNumberValidator
 
@@ -132,7 +133,21 @@ class AuthOTP(models.Model):
         return timezone.now() > expiration_time
 
     def send_by_sms(self):
-        logger.info(self.code)
+        data = {
+            'username': settings.MELIPAYAMAK_USERNAME,
+            'password': settings.MELIPAYAMAK_PASSWORD,
+            'to': self.user.mobile,
+            'text': f'{self.code}',
+            'bodyId': settings.MELIPAYAMAK_OTP_MESSAGE_ID,
+        }
+        response = requests.post(
+            settings.MELIPAYAMAK_SHARED_URL,
+            data=data
+        )
+        if response.status_code != 200:
+            raise SendOTPBySMSError
+        if response.json().get('RetStatus') != 1:
+            raise SendOTPBySMSError
 
 
 class Notification(models.Model):

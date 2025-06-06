@@ -217,3 +217,11 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# SMS
+# Melipayamak
+
+MELIPAYAMAK_SHARED_URL = 'https://rest.payamak-panel.com/api/SendSMS/BaseServiceNumber'
+MELIPAYAMAK_USERNAME = config('MELIPAYAMAK_USERNAME', default='username', cast=str)
+MELIPAYAMAK_PASSWORD = config('MELIPAYAMAK_PASSWORD', default='password', cast=str)
+MELIPAYAMAK_OTP_MESSAGE_ID = config('MELIPAYAMAK_OTP_MESSAGE_ID', default='1', cast=str)
