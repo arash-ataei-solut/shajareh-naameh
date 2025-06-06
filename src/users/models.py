@@ -27,7 +27,9 @@ class ShnUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
         validators=[mobile_validator],
         error_messages={
-            'unique': _("کاربری با این شماره موبایل موجود است."),
+            'unique': _(
+                'کاربری با این شماره موبایل موجود است. لطفا از طریق "فراموشی رمز عبور" اقدام به تعیین رمز عبور کنید.'
+            ),
         },
     )
     image = models.ImageField(verbose_name=_('عکس پروفایل'), default='user.png')
