@@ -52,7 +52,7 @@ class SeeTreePermissionRequest(models.Model):
 
 class Person(models.Model):
     user = models.OneToOneField(
-        'users.ShnUser', on_delete=models.SET_NULL,
+        'users.ShnUser', on_delete=models.PROTECT,
         related_name='person',
         null=True, blank=True,
     )
