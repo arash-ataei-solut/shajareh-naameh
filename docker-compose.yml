@@ -65,6 +65,8 @@ services:
       dockerfile: Dockerfile
     container_name: shn_django_asgi
     restart: unless-stopped
+    volumes:
+      - ./src:/app
     env_file:
       - ./src/.env
     networks:

@@ -266,13 +266,19 @@ class SeeTreePermissionRequestApprovalForm(forms.ModelForm):
 class FindMyselfForm(forms.Form):
     first_name = forms.CharField(label=_('نام'))
     last_name = forms.CharField(label=_('فامیلی'))
+    birth_year = forms.IntegerField(label=_('سال تولد'))
     father_name = forms.CharField(label=_('نام پدر'))
     mother_name = forms.CharField(label=_('نام مادر'))
 
     def find_myself_queryset(self):
         first_name = self.cleaned_data['first_name']
         last_name = self.cleaned_data['last_name']
+        birth_year = self.cleaned_data['birth_year']
         father_name = self.cleaned_data['father_name']
         mother_name = self.cleaned_data['mother_name']
-        my_person_qs = Person.objects.find_myself(first_name, last_name, father_name, mother_name)
+        my_person_qs = Person.objects.filter(
+            first_name__icontains=first_name, last_name__icontains=last_name,
+            birth_year=birth_year,
+            father__first_name__icontains=father_name, mother__first_name__icontains=mother_name
+        )
         return my_person_qs

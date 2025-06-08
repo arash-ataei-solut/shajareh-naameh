@@ -14,7 +14,8 @@ from django.views.generic.detail import SingleObjectMixin
 from django_htmx.http import HttpResponseClientRefresh
 
 from common.mixins import HTMXViewMixin, OnlyHTMXViewMixin, OnlyHTMXFormViewMixin, \
-    HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin, AtomicViewMixin, TemplatePermissionDeniedErrorHTMXViewMixin
+    HTMXModelFormViewMixin, OnlyHTMXModelFormViewMixin, AtomicViewMixin, TemplatePermissionDeniedErrorHTMXViewMixin, \
+    HTMXFormViewMixin
 from persons import forms, enums
 from persons.enums import RelationMatchingRequestStatusChoices, RelationChoices
 from persons.exceptions import RelationMatchingRequestStatusPriorityError
@@ -573,29 +574,3 @@ class RelationMatchingRequestConfirmationView(LoginRequiredMixin, OnlyHTMXModelF
     
     def form_valid(self, form):
         return super(RelationMatchingRequestConfirmationView, self).form_valid(form)
-
-
-class FindMyselfView(LoginRequiredMixin, HTMXViewMixin, FormView):
-    form_class = FindMyselfForm
-    template_name = 'persons/find_myself.html'
-    htmx_template_name = 'persons/htmx/find_myself_htmx.html'
-
-    def form_valid(self, form):
-        myself_person_queryset = form.find_myself_queryset()
-        context = self.get_context_data()
-        context.update(
-            {
-                'myself_person_list': myself_person_queryset,
-                'myself_person_exists': myself_person_queryset.exists(),
-            }
-        )
-        if self.request.htmx:
-            list_template_name = 'persons/htmx/find_myself_list_htmx.html'
-        else:
-            list_template_name = 'persons/find_myself_list.html'
-
-        return TemplateResponse(
-            request=self.request,
-            template=list_template_name,
-            context=context,
-        )

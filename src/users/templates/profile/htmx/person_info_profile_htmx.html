@@ -51,9 +51,9 @@
             <i class="fa-solid fa-triangle-exclamation"></i>
         </h1>
         <p>{% trans 'اطلاعات شما در ترینامه یافت نشد.' %}</p>
-        <p>{% trans 'شما می‌توانید از طریق لینک زیر خود را در ترینامه پیدا کنید.' %}</p>
-        <a class="btn btn-primary" href="{% url 'persons:find-myself' %}" hx-boost="false">
-            <i class="fa-solid fa-magnifying-glass me-2"></i>{% trans 'جستجو در شجره‌نامه' %}
+        <p>{% trans 'شما می‌توانید از طریق لینک زیر اطلاعات خود و شجره‌نامه خود را در ترینامه اضافه کنید.' %}</p>
+        <a class="btn btn-primary" href="{% url 'persons:person-add-myself' %}" hx-boost="false">
+            <i class="fa-solid fa-plus me-2"></i>{% trans 'ثبت اطلاعات' %}
         </a>
     </div>
 {% endif %}

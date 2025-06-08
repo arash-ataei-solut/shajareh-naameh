@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Set the working directory
 WORKDIR /app
+VOLUME /app
 
 # Copy requirements file
 COPY requirements.txt /app/
@@ -15,7 +16,6 @@ COPY requirements.txt /app/
 RUN --mount=type=cache,target=/root/.cache pip install -r requirements.txt
 
 # Copy project files
-COPY src /app/
-COPY deploy/docker/app/ /app/
+COPY deploy/docker/app/entrypoint.sh /entrypoint/
 
-CMD ["sh", "entrypoint.sh"]
+CMD ["sh", "/entrypoint/entrypoint.sh"]

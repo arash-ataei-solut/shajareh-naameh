@@ -103,7 +103,7 @@ class Person(models.Model):
         verbose_name=_('کاربرانی که می‌توانند شجره‌نامه این شخص را ببینند.')
     )
 
-    objects = managers.PersonManager()
+    objects = managers.PersonQueryset.as_manager()
 
     class Meta:
         verbose_name = _('شخص')

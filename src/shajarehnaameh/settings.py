@@ -28,12 +28,13 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['treenameh.ir'], cast=list)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'treenameh.ir'], cast=list)
 
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=True, cast=bool)
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default=['https://treenameh.ir'], cast=list)
 
 # Application definition
+
 
 INSTALLED_APPS = [
     'daphne',

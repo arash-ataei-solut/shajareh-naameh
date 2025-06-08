@@ -145,6 +145,4 @@ urlpatterns = [
         views.SeeTreePermissionRequestApprovalView.as_view(),
         name='see-tree-permission-request-approval'
     ),
-
-    path('find-myself/', views.FindMyselfView.as_view(), name='find-myself'),
 ]
