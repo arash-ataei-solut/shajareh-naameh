@@ -17,6 +17,5 @@ RUN --mount=type=cache,target=/root/.cache pip install -r requirements.txt
 # Copy project files
 COPY src /app/
 COPY deploy/docker/app/ /app/
-RUN python manage.py collectstatic --noinput
 
 CMD ["sh", "entrypoint.sh"]
