@@ -84,7 +84,7 @@ class Person(models.Model):
     death_date = j_models.jDateField(verbose_name=_('تاریخ وفات'), null=True, blank=True)
 
     created_by = models.ForeignKey(
-        'users.ShnUser', on_delete=models.CASCADE,
+        'users.ShnUser', on_delete=models.PROTECT,
         related_name='created_persons', related_query_name='created_person',
         verbose_name=_('ثبت شده توسط')
     )
