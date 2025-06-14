@@ -3,7 +3,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
@@ -77,6 +77,10 @@ class SendOTPView(View):
 
     def get_user_from_session(self):
         registered_user_id = self.request.session.get(OTP_USER_SESSION)
+        if registered_user_id is None:
+            return Http404(
+                'The user did not register.'
+            )
         return get_object_or_404(ShnUser, pk=registered_user_id)
 
     def get(self, request):
