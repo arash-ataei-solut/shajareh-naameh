@@ -46,7 +46,9 @@ class RegisterView(HTMXFormViewMixin, CreateView):
     form_class = RegisterForm
     template_name = 'registration/register.html'
     htmx_template_name = 'registration/htmx/register_htmx.html'
-    success_url = reverse_lazy('users:send-otp-register')
+
+    def get_success_url(self):
+        return reverse('users:send-otp-register')
 
     def form_valid(self, form):
         response = super(RegisterView, self).form_valid(form)
