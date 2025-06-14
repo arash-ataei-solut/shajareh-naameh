@@ -51,10 +51,9 @@ class RegisterView(HTMXFormViewMixin, CreateView):
         return reverse('users:send-otp-register')
 
     def form_valid(self, form):
-        response = super(RegisterView, self).form_valid(form)
-        registered_user_id = form.get_user_id()
-        self.request.session[OTP_USER_SESSION] = registered_user_id
-        return response
+        self.object = form.save()
+        self.request.session[OTP_USER_SESSION] = self.object.id
+        return super(RegisterView, self).form_valid(form)
 
 
 class SendOTPView(View):

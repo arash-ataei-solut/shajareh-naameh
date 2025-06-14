@@ -21,9 +21,6 @@ class RegisterForm(PlaceholderFormMixin, UserCreationForm):
         fields = ('mobile', )
         field_classes = {"mobile": UsernameField}
 
-    def get_user_id(self) -> str:
-        return str(self.instance.id)
-
 
 class ConfirmOTPForm(PlaceholderFormMixin, forms.Form):
     otp = forms.CharField(max_length=5, min_length=5, label=_('رمز یک‌بارمصرف'))
