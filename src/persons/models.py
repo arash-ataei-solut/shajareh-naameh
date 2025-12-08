@@ -125,7 +125,7 @@ class Person(models.Model):
             name += f' {self.last_name}'
         if self.nickname:
             name += f' ({self.nickname})'
-        return
+        return name
 
     @property
     def is_matching(self):
