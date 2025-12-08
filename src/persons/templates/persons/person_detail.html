@@ -43,13 +43,13 @@
                                         <span>{% trans 'اسم' %}: </span>{{ object.father.first_name }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'فامیلی' %}: </span>{{ object.father.last_name }}
+                                        <span>{% trans 'فامیلی' %}: </span>{{ object.father.last_name|default_if_none:'-' }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.father.nickname }}
+                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.father.nickname|default_if_none:'-' }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
+                                        <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year|default_if_none:'-' }}
                                     </div>
                                 </div>
                                 {% if object.father.is_matching %}
@@ -111,13 +111,13 @@
                                         <span>{% trans 'اسم' %}: </span>{{ object.mother.first_name }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'فامیلی' %}: </span>{{ object.mother.last_name }}
+                                        <span>{% trans 'فامیلی' %}: </span>{{ object.mother.last_name|default_if_none:'-' }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.mother.nickname }}
+                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.mother.nickname|default_if_none:'-' }}
                                     </div>
                                     <div class="col">
-                                        <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
+                                        <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year|default_if_none:'-' }}
                                     </div>
                                 </div>
                                 {% if object.mother.is_matching %}
@@ -179,16 +179,16 @@
                                     <span>{% trans 'اسم' %}: </span>{{ object.first_name }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'فامیلی' %}: </span>{{ object.last_name }}
+                                    <span>{% trans 'فامیلی' %}: </span>{{ object.last_name|default_if_none:'-' }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'اسم مستعار' %}: </span>{{ object.nickname }}
+                                    <span>{% trans 'اسم مستعار' %}: </span>{{ object.nickname|default_if_none:'-' }}
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
                                 </div>
                                 <div class="col">
-                                    <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year }}
+                                    <span>{% trans 'سال تولد' %}: </span>{{ object.birth_year|default_if_none:'-' }}
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'تاریخ تولد' %}: </span><span
@@ -290,16 +290,16 @@
                                                 <span>{% trans 'اسم' %}: </span>{{ spouse.first_name }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'فامیلی' %}: </span>{{ spouse.last_name }}
+                                                <span>{% trans 'فامیلی' %}: </span>{{ spouse.last_name|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'اسم مستعار' %}: </span>{{ spouse.nickname }}
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ spouse.nickname|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ spouse.get_gender_display }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year }}
+                                                <span>{% trans 'سال تولد' %}: </span>{{ spouse.birth_year|default_if_none:'-' }}
                                             </div>
                                         </div>
                                         {% if spouse.is_matching %}
@@ -370,16 +370,16 @@
                                                 <span>{% trans 'اسم' %}: </span>{{ child.first_name }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'فامیلی' %}: </span>{{ child.last_name }}
+                                                <span>{% trans 'فامیلی' %}: </span>{{ child.last_name|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname }}
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year|default_if_none:'-' }}
                                             </div>
                                         </div>
                                         {% if child.is_matching %}
@@ -430,16 +430,16 @@
                                                 <span>{% trans 'اسم' %}: </span>{{ child.first_name }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'فامیلی' %}: </span>{{ child.last_name }}
+                                                <span>{% trans 'فامیلی' %}: </span>{{ child.last_name|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname }}
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname|default_if_none:'-' }}
                                             </div>
                                             <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
                                             </div>
                                             <div class="col">
-                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year }}
+                                                <span>{% trans 'سال تولد' %}: </span>{{ child.birth_year|default_if_none:'-' }}
                                             </div>
                                         </div>
                                         {% if child.is_matching %}
