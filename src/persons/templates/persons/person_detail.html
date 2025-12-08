@@ -46,6 +46,9 @@
                                         <span>{% trans 'فامیلی' %}: </span>{{ object.father.last_name }}
                                     </div>
                                     <div class="col">
+                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.father.nickname }}
+                                    </div>
+                                    <div class="col">
                                         <span>{% trans 'سال تولد' %}: </span>{{ object.father.birth_year }}
                                     </div>
                                 </div>
@@ -111,6 +114,9 @@
                                         <span>{% trans 'فامیلی' %}: </span>{{ object.mother.last_name }}
                                     </div>
                                     <div class="col">
+                                        <span>{% trans 'اسم مستعار' %}: </span>{{ object.mother.nickname }}
+                                    </div>
+                                    <div class="col">
                                         <span>{% trans 'سال تولد' %}: </span>{{ object.mother.birth_year }}
                                     </div>
                                 </div>
@@ -174,6 +180,9 @@
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'فامیلی' %}: </span>{{ object.last_name }}
+                                </div>
+                                <div class="col">
+                                    <span>{% trans 'اسم مستعار' %}: </span>{{ object.nickname }}
                                 </div>
                                 <div class="col">
                                     <span>{% trans 'جنسیت' %}: </span>{{ object.get_gender_display }}
@@ -284,6 +293,9 @@
                                                 <span>{% trans 'فامیلی' %}: </span>{{ spouse.last_name }}
                                             </div>
                                             <div class="col">
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ spouse.nickname }}
+                                            </div>
+                                            <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ spouse.get_gender_display }}
                                             </div>
                                             <div class="col">
@@ -361,6 +373,9 @@
                                                 <span>{% trans 'فامیلی' %}: </span>{{ child.last_name }}
                                             </div>
                                             <div class="col">
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname }}
+                                            </div>
+                                            <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}
                                             </div>
                                             <div class="col">
@@ -416,6 +431,9 @@
                                             </div>
                                             <div class="col">
                                                 <span>{% trans 'فامیلی' %}: </span>{{ child.last_name }}
+                                            </div>
+                                            <div class="col">
+                                                <span>{% trans 'اسم مستعار' %}: </span>{{ child.nickname }}
                                             </div>
                                             <div class="col">
                                                 <span>{% trans 'جنسیت' %}: </span>{{ child.get_gender_display }}

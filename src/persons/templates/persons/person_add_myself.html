@@ -47,6 +47,15 @@
             </div>
             <div class="col">
                 <div class="form-floating">
+                    {{ form.nickname|add_class:'form-control' }}
+                    <label for="{{ form.nickname.id_for_label }}">{{ form.nickname.label }}</label>
+                    {% for error in form.nickname.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
                     {{ form.gender|add_class:'form-control' }}
                     <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
                     {% for error in form.gender.errors %}
