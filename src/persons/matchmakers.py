@@ -68,7 +68,7 @@ class RelationMatchmaker(Matchmaker):
             'spouses', 'father_children', 'mother_children'
         )
         for person in queryset:
-            choice_label = f'{person.first_name} {person.last_name} ({person.nickname})'
+            choice_label = person.full_name
             main_person_is_father = bool(
                 self.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.MALE
             )
