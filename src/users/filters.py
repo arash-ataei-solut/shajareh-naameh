@@ -7,6 +7,7 @@ from persons.models import Person
 class PersonListFilter(django_filters.FilterSet):
     first_name = django_filters.CharFilter(field_name='first_name', lookup_expr='icontains', label=_('اسم'))
     last_name = django_filters.CharFilter(field_name='last_name', lookup_expr='icontains', label=_('فامیلی'))
+    nickname = django_filters.CharFilter(field_name='nickname', lookup_expr='icontains', label=_('اسم مستعار'))
     father_first_name = django_filters.CharFilter(
         field_name='father__first_name', lookup_expr='icontains', label=_('اسم پدر')
     )
