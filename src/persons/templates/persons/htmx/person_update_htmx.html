@@ -13,8 +13,10 @@
     {{ form.media.js }}
 </div>
 
-<div hx-boost="true" hx-target="this" hx-swap="outerHTML">
-    <form class="{% if form.errors %} was-validated{% endif %}" action="{% url 'persons:person-update' pk=object.pk %}" method="post"
+<div id="person-update">
+    <form class="{% if form.errors %} was-validated{% endif %}"
+           hx-post="{% url 'persons:person-update' pk=object.pk %}"
+           hx-target="#person-update" hx-swap="outerHTML"
           novalidate>
         <div>
             {% for non_field_error in form.non_field_errors %}
