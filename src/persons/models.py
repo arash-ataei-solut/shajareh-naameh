@@ -57,7 +57,8 @@ class Person(models.Model):
         null=True, blank=True,
     )
     first_name = models.CharField(max_length=150, verbose_name=_('اسم'))
-    last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'))
+    last_name = models.CharField(max_length=150, verbose_name=_('فامیلی'), null=True, blank=True)
+    nickname = models.CharField(max_length=150, verbose_name=_('اسم مستعار'), null=True, blank=True)
     gender = models.IntegerField(verbose_name=_('جنسیت'), choices=enums.GenderChoices.choices)
     father = models.ForeignKey(
         'self', on_delete=models.SET_NULL,
@@ -75,7 +76,7 @@ class Person(models.Model):
         'self',
         verbose_name=_('همسر'), blank=True
     )
-    birth_year = models.SmallIntegerField(verbose_name=_('سال تولد'))
+    birth_year = models.SmallIntegerField(verbose_name=_('سال تولد'), null=True, blank=True)
     birth_date = j_models.jDateField(verbose_name=_('تاریخ تولد'), null=True, blank=True)
     birth_place = models.ForeignKey(
         'places.Place', on_delete=models.PROTECT, verbose_name=_('محل تولد'), null=True, blank=True
@@ -119,7 +120,7 @@ class Person(models.Model):
 
     @property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.first_name} {self.last_name} ({self.nickname})'
 
     @property
     def is_matching(self):

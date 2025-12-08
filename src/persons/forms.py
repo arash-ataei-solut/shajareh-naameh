@@ -18,7 +18,7 @@ class PersonAddForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
+            'first_name', 'last_name', 'nickname', 'gender', 'birth_year', 'created_by',
         ]
 
     def save(self, commit=True):
@@ -34,7 +34,7 @@ class PersonAddMyselfForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'user', 'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
+            'user', 'first_name', 'last_name', 'nickname', 'gender', 'birth_year', 'created_by',
         ]
 
     def save(self, commit=True):
@@ -47,7 +47,7 @@ class PersonUpdateForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year',
+            'first_name', 'last_name', 'nickname', 'gender', 'birth_year',
             'birth_date', 'birth_place', 'death_year', 'death_date'
         ]
         widgets = {
@@ -88,7 +88,7 @@ class PersonAddFatherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'birth_year', 'created_by',
+            'first_name', 'last_name', 'nickname', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -117,7 +117,7 @@ class PersonAddMotherForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'birth_year', 'created_by',
+            'first_name', 'last_name', 'nickname', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -146,7 +146,7 @@ class PersonAddSpouseForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
+            'first_name', 'last_name', 'nickname', 'gender', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -164,7 +164,7 @@ class PersonAddChildForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = Person
         fields = [
-            'first_name', 'last_name', 'gender', 'birth_year', 'created_by',
+            'first_name', 'last_name', 'nickname', 'gender', 'birth_year', 'created_by',
         ]
 
     def __init__(self, *args, **kwargs):

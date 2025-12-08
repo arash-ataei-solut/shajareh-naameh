@@ -1,4 +1,4 @@
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django.utils.translation import gettext as _
 
 from persons.enums import GenderChoices, RelationChoices, MatchingStatusChoices
@@ -21,12 +21,18 @@ class Matchmaker:
         self.queryset = self.match_queryset()
 
     def match_queryset(self) -> QuerySet:
-        return Person.objects.exclude_matched_persons().filter(
+        queryset = Person.objects.exclude_matched_persons().filter(
             first_name__icontains=self.person.first_name,
-            last_name__icontains=self.person.last_name,
-            birth_year=self.person.birth_year,
             gender=self.person.gender
         ).exclude(id=self.person.id)
+        if self.person.last_name:
+            queryset = queryset.filter(Q(last_name__icontains=self.person.last_name) | Q(last_name__isnull=True))
+        if self.person.nickname:
+            queryset = queryset.filter(Q(nickname__icontains=self.person.nickname) | Q(nickname__isnull=True))
+        if self.person.birth_year:
+            queryset = queryset.filter(Q(birth_year=self.person.birth_year) | Q(birth_year__isnull=True))
+
+        return queryset
 
     def match_exists(self) -> bool:
         return self.queryset.exists()
@@ -62,7 +68,7 @@ class RelationMatchmaker(Matchmaker):
             'spouses', 'father_children', 'mother_children'
         )
         for person in queryset:
-            choice_label = f'{person.first_name} {person.last_name}'
+            choice_label = f'{person.first_name} {person.last_name} ({person.nickname})'
             main_person_is_father = bool(
                 self.relation == RelationChoices.CHILD and self.person.gender == GenderChoices.MALE
             )
