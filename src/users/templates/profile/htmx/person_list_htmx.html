@@ -64,6 +64,15 @@
             </div>
             <div class="col">
                 <div class="form-floating">
+                    {{ filter_form.nickname|add_class:'form-control' }}
+                    <label for="{{ filter_form.nickname.id_for_label }}">{{ filter_form.nickname.label }}</label>
+                    {% for error in filter_form.nickname.errors %}
+                        <div class=" invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
                     {{ filter_form.gender|add_class:'form-control' }}
                     <label for="{{ filter_form.gender.id_for_label }}">{{ filter_form.gender.label }}</label>
                     {% for error in filter_form.gender.errors %}
@@ -119,7 +128,10 @@
                     <span class="me-1">{% trans 'اسم' %}:</span>{{ object.first_name }}
                 </div>
                 <div class="col">
-                    <span class="me-1">{% trans 'فامیلی' %}:</span>{{ object.last_name }}
+                    <span class="me-1">{% trans 'فامیلی' %}:</span>{{ object.last_name|default_if_none:'-' }}
+                </div>
+                <div class="col">
+                    <span class="me-1">{% trans 'اسم مستعار' %}:</span>{{ object.nickname|default_if_none:'-' }}
                 </div>
                 <div class="col">
                     <span class="me-1">{% trans 'جنسیت' %}:</span>{{ object.get_gender_display }}

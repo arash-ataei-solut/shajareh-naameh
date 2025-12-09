@@ -16,7 +16,10 @@
             <span class="me-1">{% trans 'اسم' %}:</span>{{ person.first_name }}
         </div>
         <div class="col">
-            <span class="me-1">{% trans 'فامیلی' %}:</span>{{ person.last_name }}
+            <span class="me-1">{% trans 'فامیلی' %}:</span>{{ person.last_name|default_if_none:'-' }}
+        </div>
+        <div class="col">
+            <span class="me-1">{% trans 'اسم مستعار' %}:</span>{{ person.nickname|default_if_none:'-' }}
         </div>
         <div class="col">
             <span class="me-1">{% trans 'جنسیت' %}:</span>{{ person.get_gender_display }}
