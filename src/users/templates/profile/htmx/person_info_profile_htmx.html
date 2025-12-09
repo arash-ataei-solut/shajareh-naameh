@@ -25,7 +25,7 @@
             <span class="me-1">{% trans 'جنسیت' %}:</span>{{ person.get_gender_display }}
         </div>
         <div class="col">
-            <span class="me-1">{% trans 'سال تولد' %}:</span>{{ person.birth_year }}
+            <span class="me-1">{% trans 'سال تولد' %}:</span>{{ person.birth_year|default_if_none:'-' }}
         </div>
         <div class="col">
             <span class="me-1">{% trans 'تاریخ تولد' %}:</span><span dir="ltr">{{ person.birth_date|default_if_none:'-' }}</span>

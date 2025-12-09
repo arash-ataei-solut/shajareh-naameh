@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView, DetailView, TemplateView, DeleteView
@@ -337,8 +337,9 @@ class PersonDeleteConfirmationView(
     permission_denied_message = _('شما دسترسی لازم برای حذف این شخص را ندارید.')
 
 
-class PersonDeleteView(LoginRequiredMixin, CanDeleteThePersonMixin, OnlyHTMXFormViewMixin, DeleteView):
+class PersonDeleteView(LoginRequiredMixin, CanDeleteThePersonMixin, HTMXFormViewMixin, DeleteView):
     queryset = Person.objects.exclude_matched_persons()
+    success_url = reverse_lazy('users:person-list')
 
     def get_failure_url(self):
         return reverse('persons:person-delete-failure', kwargs={'pk': self.object.pk})
