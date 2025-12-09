@@ -14,6 +14,7 @@ class PersonListFilter(django_filters.FilterSet):
     mother_first_name = django_filters.CharFilter(
         field_name='mother__first_name', lookup_expr='icontains', label=_('اسم مادر')
     )
+
     class Meta:
         model = Person
         fields = {
